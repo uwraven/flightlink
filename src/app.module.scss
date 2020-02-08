@@ -1,0 +1,37 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: stretch;
+    height: 100vh;
+    width: 100vw;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-basis: 100vh;
+    width: 100vw;
+    flex-grow: 1;
+}
+
+.header {
+    height: 54px;
+    width: calc(100vw - 2 * var(--b-l));
+    padding: 0 var(--b-l);
+    border-bottom: var(--border-medium) 1px solid;
+    display: flex;
+    align-items: center;
+}
+
+.monitor {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-grow: 1;
+    flex-basis: 100vw;
+}
+

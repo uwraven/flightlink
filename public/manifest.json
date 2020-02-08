@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Flight Link",
+  "name": "Flight Link ground station software",
   "icons": [
     {
       "src": "favicon.ico",

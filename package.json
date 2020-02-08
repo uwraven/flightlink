@@ -6,15 +6,31 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "bindings": "^1.5.0",
+    "chart.js": "^2.9.3",
+    "chartjs": "^0.3.24",
+    "chartjs-plugin-streaming": "^1.8.0",
+    "electron-is-dev": "^1.1.0",
+    "electron-rebuild": "^1.8.8",
+    "node-sass": "^4.13.0",
+    "nodemon": "^2.0.2",
     "react": "^16.12.0",
+    "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0"
+    "react-scripts": "3.3.0",
+    "serialport": "^8.0.6",
+    "three": "^0.112.1",
+    "uuid": "^3.3.3"
   },
+  "main": "public/electron.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "react-live": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-live": "nodemon --watch ./public/**/* --exec 'yarn react-live'",
+    "rebuild-modules": "./node_modules/.bin/electron-rebuild"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,5 +46,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "electron": "^7.1.8",
+    "electron-builder": "^21.2.0",
+    "wait-on": "^3.3.0"
   }
 }

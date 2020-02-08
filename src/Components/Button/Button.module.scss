@@ -1,0 +1,40 @@
+.wrapper {
+    cursor: pointer;
+    padding: var(--b);
+    border: var(--border);
+    border-radius: var(--root-border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: var(--border-medium) 1px solid;
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: var(--f);
+}
+
+.primary {
+    color: var(--green);
+    background-color: white;
+}
+
+.destructive {
+    color: var(--red);
+    background-color: white;
+}
+
+.positive {
+    color: white;
+    background-color: var(--green);
+}
+
+.wrapper:hover:not(.disabled) {
+    // background-color: var(--fill-light);
+    filter: brightness(96%);
+}
+
+.disabled {
+    cursor: default;
+    background-color: white;
+    color: var(--text-disabled);
+}
