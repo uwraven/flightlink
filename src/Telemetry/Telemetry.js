@@ -16,7 +16,6 @@ class Telemetry extends Component {
     componentDidMount() {
         window.arcc.api.attachListener("data", "telemetryListener", this.onData)
         this.startDate = Date.now();
-
         this.sum = 0;
     }
 
@@ -39,9 +38,19 @@ class Telemetry extends Component {
 
     render() {
         return (
-            <div className={styles.chart}>
-                <ThreeRenderer/>
-            <Line
+            <div className={styles.module}>
+                <div className={styles.container}>
+                    <div className={styles.threeContainerFullWidth}>
+                        <ThreeRenderer className={styles.threeRenderer}/>
+                    </div>
+                    <div className={styles.chartContainer}>
+                        <p>Chart</p>
+                    </div>
+                </div>
+                <div className={styles.controlPanel}>
+                    
+                </div>
+            {/*<Line
                 ref={ref => this.chart = ref}
                 type={'line'}
                 data={{
@@ -100,11 +109,11 @@ class Telemetry extends Component {
                     },
                     plugins: {
                         streaming: {
-                            frameRate: 30
+                            frameRate: 24
                         }
                     }
                 }}
-            />
+            />*/}
             </div>
         );
     }

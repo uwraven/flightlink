@@ -17,7 +17,7 @@ export default class App extends Component {
 		super(props);
 		this.state = {
 			wsConnected: false,
-			showSerial: true,
+			showSerial: false,
 			interface: 0,
 			data: []
 		}
