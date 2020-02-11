@@ -16,7 +16,7 @@
 }
 
 .controlPanel {
-    justify-self: stretch;
+    // justify-self: stretch;
     flex-basis: 24vw;
 }
 
@@ -24,12 +24,13 @@
     height: 60vh;
     // background-color: mediumturquoise;
     // padding: var(--b-l);
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .chartContainer {
-    background-color: lightgray;
+    // background-color: lightgray;
 }
+
 
 .threeRenderer {
     // ThreeJS div container

@@ -1,0 +1,16 @@
+.header {
+    height: 54px;
+    width: calc(100vw - 2 * var(--b-l));
+    padding: 0 var(--b-l);
+    border-bottom: var(--border-medium) 1px solid;
+    display: flex;
+    align-items: center;
+}
+
+.serialStatus {
+    padding: 0 var(--b-m) 0 0;
+}
+
+.serialStatusConnected {
+    color: var(--positive);
+}

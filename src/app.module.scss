@@ -18,15 +18,6 @@
     flex-grow: 1;
 }
 
-.header {
-    height: 54px;
-    width: calc(100vw - 2 * var(--b-l));
-    padding: 0 var(--b-l);
-    border-bottom: var(--border-medium) 1px solid;
-    display: flex;
-    align-items: center;
-}
-
 .monitor {
     display: flex;
     flex-direction: row;
@@ -35,5 +26,6 @@
     flex-grow: 1;
     flex-basis: 100vw;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 

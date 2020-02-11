@@ -60,7 +60,7 @@ class SerialManager extends Component {
             }, (response) => {
                 if (response.status === 200) {
                     this.setState({ portStatus: PS.OPEN })
-
+                    this.props.setStatus(true);
                 } else if (response.status === 500) {
                     console.log("bad response");
                     console.log(response);
@@ -79,6 +79,7 @@ class SerialManager extends Component {
                 action: this.actions.CLOSESERIAL,
             }, (response) => {
                 this.setState({ portStatus: PS.CLOSED })
+                this.props.setStatus(false);
             })
         }
     }
@@ -99,7 +100,7 @@ class SerialManager extends Component {
                         options={this.state.ports.map(port => port.path)}
                         innerLabel={"Select serial port"}
                         callback={this.onPortSelect}
-                        disabled={this.state.portStatus === PS.OPEN}
+                        disabled={this.state.portStatus === PS.OPEN || this.state.portStatus === PS.OPENING}
                     />
                     <Button disabled={!openButtonEnabled} onClick={this.openSelectedPort} type={"primary"}>Open Port</Button>
                 </div>

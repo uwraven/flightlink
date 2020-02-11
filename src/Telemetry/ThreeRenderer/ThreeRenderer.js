@@ -12,6 +12,7 @@ class ThreeRenderer extends Component {
         }
         this.initializeScene = this.initializeScene.bind(this);
         this.createSceneObjects = this.createSceneObjects.bind(this);
+        this.renderVectorLabel = this.renderVectorLabel.bind(this);
     }
 
     componentDidMount() {
@@ -26,6 +27,17 @@ class ThreeRenderer extends Component {
         }
         this.sceneRoot.appendChild(this.manager.renderer.domElement);
         this.manager.controls = new OrbitControls(this.manager.camera, this.manager.renderer.domElement);
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const el = entry.target;
+                const w = el.clientWidth;
+                const h = el.clientHeight;
+                this.manager.camera.aspect = w / h;
+                this.manager.camera.updateProjectionMatrix();
+                this.manager.renderer.setSize(w, h);
+            }
+        })
+        resizeObserver.observe(this.sceneRoot);
         this.initializeScene();
     }
 
@@ -47,31 +59,26 @@ class ThreeRenderer extends Component {
         renderer.shadowMap.needsUpdate = true;
         renderer.render(scene, cam);
         controls.maxDistance = 50;
-        controls.maxPolarAngle = Math.PI / 2 - 0.02;
+        controls.minDistance = 3;
+        controls.maxPolarAngle = Math.PI / 2 - 0.0005;
         controls.target = new Vector3(0, 0, 1);
 
         this.createSceneObjects()
 
-        this.onResize = () => {
-            const w = this.sceneRoot.clientWidth;
-            const h = this.sceneRoot.clientHeight;
-            cam.aspect = w / h;
-            cam.updateProjectionMatrix();
-            renderer.setSize(w, h);
-        }
-
-        this.onResize = this.onResize.bind(this);
-        window.addEventListener('resize', this.onResize);
-
-        var animate = () => {
+        let animate = () => {
             requestAnimationFrame(animate);
-            // vehicle.rotation.x += 0.001;
-            // vehicle.rotation.z += 0.001;
             renderer.render(scene, cam);
 
             const vehicle = scene.getObjectByName("vehicle");
-            vehicle.rotation.z += 0.01;
-            // if (vehicle) controls.target = vehicle.position;
+        
+            if (this.props.renderedState) {
+                const {r, v, q, w} = this.props.renderedState;
+
+                vehicle.setRotationFromQuaternion((new THREE.Quaternion(q.x, q.y, q.z, q.w)).normalize());
+                vehicle.position.set(r.x, r.y, r.z);
+            }
+
+            // vehicle.rotation.z += 0.01;
 
             controls.update();
         };
@@ -80,80 +87,102 @@ class ThreeRenderer extends Component {
     }
 
     createSceneObjects() {
-        const bound_x = 400;
-        const bound_y = 400;
+        const bound_x = 500;
+        const bound_y = 500;
 
         // Create a ground grid
-        var groundGrid = new THREE.GridHelper(bound_x, bound_y, 0xd8d8d8, 0xdfdfdf);
+        let groundGrid = new THREE.GridHelper(bound_x, bound_y, 0xd8d8d8, 0xdfdfdf);
         // groundGrid.up.set(0, 0, 1);
         groundGrid.rotation.x = Math.PI / 2;
-        groundGrid.position.z = -0.001;
+        groundGrid.position.z = -0.005;
         this.manager.scene.add(groundGrid);
 
         // Create a ground plane to receive shadows
-        var groundPlaneGeometry = new THREE.PlaneGeometry(bound_x, bound_y, 1, 1);
-        var groundPlaneMaterial = new THREE.MeshLambertMaterial({
+        let groundPlaneGeometry = new THREE.PlaneGeometry(bound_x, bound_y, 1, 1);
+        let groundPlaneMaterial = new THREE.MeshLambertMaterial({
             color: 0xe8e8e8,
             metalness: 0.1,
         })
-        var groundPlane = new THREE.Mesh(groundPlaneGeometry, groundPlaneMaterial);
+        let groundPlane = new THREE.Mesh(groundPlaneGeometry, groundPlaneMaterial);
         groundPlane.receiveShadow = true;
         // groundPlane.rotation.x = -Math.PI / 2;
-        groundPlane.position.z = -0.002;
+        groundPlane.position.z = -0.015;
         this.manager.scene.add(groundPlane);
 
-        var globalLight = new THREE.AmbientLight(0xffffff, 0.5);
+        let globalLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.manager.scene.add(globalLight);
 
         // Create a directional light
-        var dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        let dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
         dirLight.target.position.set(groundPlane.position);
         dirLight.castShadow = true;
-        dirLight.position.x = 0;
-        dirLight.position.y = 0;
+        dirLight.position.x = 30;
+        dirLight.position.y = 10;
         dirLight.position.z = 100;
         dirLight.shadow.mapSize.width = 1024;
         dirLight.shadow.mapSize.height = 1024;
         this.manager.scene.add(dirLight);
 
-        var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshLambertMaterial({color: 0xff3300});
-        var vehicle = new THREE.Mesh(geometry, material);
+        let geometry = new THREE.BoxGeometry(1, 1, 1);
+        let material = new THREE.MeshLambertMaterial({color: 0xff3300});
+        let vehicle = new THREE.Mesh(geometry, material);
         vehicle.position.z = 1;
         vehicle.castShadow = true;
         vehicle.name = "vehicle";
         this.manager.scene.add(vehicle);
 
-        var vehicleAxesHelper = new THREE.AxesHelper(2);
+        let vehicleAxesHelper = new THREE.AxesHelper(2);
         vehicle.add(vehicleAxesHelper);
 
-        var sceneAxesHelper = new THREE.AxesHelper(100);
+        let sceneAxesHelper = new THREE.AxesHelper(100);
         this.manager.scene.add(sceneAxesHelper);
 
         const cam = this.manager.camera;
-        cam.position.y = -2;
-        cam.position.x = -10;
+        cam.position.y = -10;
+        cam.position.x = 2;
         cam.position.z = 4;
         cam.lookAt(new THREE.Vector3(0, 0, 0));
 
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.onResize)
-    }
-
     render() {
         return(
             <div ref={ref => this.sceneRoot = ref} className={this.props.className}>
-                {/* <div className={styles.panelLeft}>
-                    <h1>Label</h1>
-                </div>
-                <div className={styles.panelRight}>
+                { this.props.displayHUD && 
+                    <div className={styles.panelLeft}>
+                        <p>Position</p>
+                        {this.renderVectorLabel(this.props.renderedState.r, ["x", "y", "z"])}
+                        <p>Velocity</p>
+                        {this.renderVectorLabel(this.props.renderedState.v, ["x", "y", "z"])}
+                        <p>Attitude</p>
+                        {this.renderVectorLabel(this.props.renderedState.q, ["w", "x", "y", "z"])}
+                        <p>Angular</p>
+                        {this.renderVectorLabel(this.props.renderedState.r, ["x", "y", "z"])}
+                    </div>
+                }
+                {/* <div className={styles.panelRight}>
                     <h1>Other</h1>
                 </div> */}
             </div>
         )
     }
+
+    renderVectorLabel(vector, labels) {
+        return(
+            <div className={styles.vectorLabel}>
+                { Object.values(vector).map((value, i) => {
+                    return(
+                        <div className={styles.vectorLabelRow}>
+                            <span>{labels[i]}</span>
+                            <span>{value.toFixed(2)}</span>
+                        </div>
+                    );
+                })}
+            </div>
+        )
+    }
+
+
 }
 
 export default ThreeRenderer;

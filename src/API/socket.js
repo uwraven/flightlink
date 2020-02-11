@@ -41,7 +41,11 @@ function receiveMessage(message) {
                 // TODO Handle
                 if (packet.type === api.keys.requests.DATA) {
                     // window.arcc.storage.receivedData.push([packet.payload]);
-                    api.listeners.data.map(listener => listener.callback(packet));
+                    try {
+                        api.listeners.data.map(listener => listener.callback(packet));
+                    } catch(err) {
+                        console.log("error with data callback");
+                    }
                 }
             }
         } catch(err) {

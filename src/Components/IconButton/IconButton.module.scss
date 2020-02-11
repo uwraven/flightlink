@@ -15,6 +15,7 @@
 
 .wrapper:not(.disabled):hover {
     cursor: pointer;
+    background-color: var(--fill-light);
 }
 
 .disabled {

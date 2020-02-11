@@ -119,17 +119,23 @@ function openSerialPort(socket, packet) {
     queueRequest(packet);
     const options = (packet.payload.options) || {
         autoOpen: true,
-
     }
     options.autoOpen = true; // override auto open preference
     serialport = new SerialPort(packet.payload.path, options, (error) => {
-        // returnErrorToClient(socket, `Serial port could not be updated, received path: ${packet.payload.path}`, err, packet.id);
         if (error) {
             returnErrorToClient(socket, `Serial port could not be opened, received path: ${packet.payload.path}`, error, packet.id)
         } else {
             serialport.flush();
             serialport.on('data', (data) => receiveSerialData(socket, data));
             completeRequest(socket, packet.id);
+            // serialport.on('error', (error) => );
+            // var X0 = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0];
+            // var t0 = 0;
+            // streamFauxSerialData(socket, {
+            //     interval: 0.015,
+            //     timeout: 5,
+            //     rates: [0.1, 0.1, 0.1, 0.1]
+            // }, t0, X0)
         }
     })
 }
@@ -165,6 +171,39 @@ function completeRequest(socket, id, payload) {
     }))
 }
 
+// Helper function to send data for front end debugging
+function streamFauxSerialData(socket, config, t_prev, X_prev) {
+    // Data format: [r1 r2 r3 v1 v2 v3 q0 q1 q2 q3 w1 w2 w3]
+
+    let t = t_prev + config.interval;
+    let X = X_prev;
+
+    X[0] = Math.sin(t) * 2;
+    X[1] = Math.cos(t) * 2;
+    X[2] = 1;
+
+    for (let i = 0; i < 4; i++) {
+        X[i + 6] +=  (Math.random() - 0.5) * config.interval + 4 * config.rates[i] * config.interval;
+    }
+
+    const norm = Math.sqrt(X.slice(6, 10).reduce((acc, x) => acc + x * x)) + 1e-6;
+    X.slice(6, 10).map((x, i) => {X[i + 6] = x / norm});
+
+    socket.send(JSON.stringify({
+        type: requests.DATA,
+        payload: X
+    }));
+
+    if (t + config.interval <= config.timeout && serialport) {
+        setTimeout(() => {
+            streamFauxSerialData(socket, config, t, X)
+        }, config.interval * 1000);
+    } else {
+        console.log(t, config.interval)
+    }
+
+}
+
 
 var parser = {
     headerType: null,
@@ -176,7 +215,7 @@ var parser = {
     dataCache: [],
     properties: {
         rowsOnSend: 1,
-        maximumDelayMS: 500
+        maximumDelayMS: 15
     }
 }
 
@@ -249,6 +288,7 @@ function terminateMessage() {
 }
 
 function byteArrayToFloat32Array(byteArr) {
+    // TODO Make this more robust, add error handling
     return new Float32Array(new Uint8Array(byteArr).buffer);
 }
 
