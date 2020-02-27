@@ -21,21 +21,17 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true
         }
-    })
+    });
 
-    hiddenWindow.loadURL(isDev ? 'http://localhost:3000/backgroundWorker.html' : `file://${path.join(__dirname, '../build/backgroundWorker.html')}`);
+    hiddenWindow.loadURL(isDev ? 'http://localhost:3000/backgroundWorker.html' : `file://${path.join(__dirname, '/build/backgroundWorker.html')}`).then(result => {
+        if (isDev) hiddenWindow.webContents.openDevTools();
+    }).catch(error => {});
 
     // if in dev env, use a live build
-    mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
-
-    if (isDev) {
-        // uncomment to open dev tools on app start
-        hiddenWindow.webContents.openDevTools();
-        mainWindow.webContents.openDevTools();
-
-    }
-
-    mainWindow.on('closed', () => mainWindow = null);
+    mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '/build/index.html')}`).then(result => {
+        if (isDev) hiddenWindow.webContents.openDevTools();
+        mainWindow.on('closed', () => mainWindow = null);
+    }).catch(error => {});
 }
 
 app.on('ready', createWindow);

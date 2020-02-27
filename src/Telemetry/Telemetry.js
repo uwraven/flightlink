@@ -71,7 +71,7 @@ class Telemetry extends Component {
                 this.setState({renderedState: {...this.state.renderedState, r: r}})
             }
         }
-
+        
 
     }
 
