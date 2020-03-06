@@ -2,32 +2,25 @@ import React, { Component } from 'react';
 import styles from './Telemetry.module.scss';
 import ThreeRenderer from './ThreeRenderer/ThreeRenderer';
 import SignalConfiguration from './Config.js';
-import Plot from 'react-plotly.js';
-
-let xd = [];
-let yd = [];
-
-for (let i = 0; i < 10000; i++) {
-    xd.push(i);
-    yd.push(Math.sin(i / 100));
-}
+import WebGLPlot from './GLPlot/WebGLPlot';
+import BufferLine from './GLPlot/BufferLine';
+import BufferColorRGBA from './GLPlot/BufferColorRGBA';
 
 class Telemetry extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
-            renderScene: true,
+            renderScene: false,
             renderedState: {
                 r: {x: 0, y: 0, z: 1},
                 v: {x: 0, y: 0, z: 0},
                 q: {w: 1, x: 0, y: 0, z: 0},
                 w: {x: 0, y: 0, z: 0}
-            },
-            x: xd,
-            y: yd,
+            }
         }
         this.onData = this.onData.bind(this);
+        this.t = 0;
     }
 
     componentDidMount() {
@@ -37,6 +30,36 @@ class Telemetry extends Component {
             attitudeConfiguration: SignalConfiguration.signals.find(signal => signal.signalMode === SignalConfiguration.SignalModes.ATTITUDE.QUATERNION),
             positionConfiguration: SignalConfiguration.signals.find(signal => signal.signalMode === SignalConfiguration.SignalModes.POSITION),
         }
+
+        // Test webgl renderer
+        if (this.canvas) {
+            console.log("canvas found");
+            let glPlot = new WebGLPlot(this.canvas, {
+                antialias: true,
+                transparent: false
+            })
+
+            let numPoints = 50;
+
+            for (let j = 0; j < 10; j++) {
+                let line = new BufferLine(
+                    new BufferColorRGBA(Math.random(), Math.random(), Math.random(), 1),
+                    numPoints);
+                line.fill(0, 2 / numPoints, 0);
+                glPlot.addLine(line);
+            }
+
+            let t = 0;
+
+            const nextFrame = () => {
+                t += 1 / 60;
+                glPlot.lines.map((line, i) => line.shiftAdd(new Float32Array([1 / i * Math.sin(t + i)])));
+                glPlot.update();
+                window.requestAnimationFrame(nextFrame);
+            }
+            window.requestAnimationFrame(nextFrame);
+        }
+        
     }
 
     onData(newData) {
@@ -87,24 +110,7 @@ class Telemetry extends Component {
                         />
                     </div> }
                     <div className={styles.chartContainer}>
-                        <Plot
-                            data={[
-                                {
-                                    x: this.state.x,
-                                    y: this.state.y,
-                                    type: 'scattergl',
-                                    mode: 'lines',
-                                    line: {
-                                        width: 1,
-                                        color: 'rgb(255, 0, 0)'
-                                    }
-                                }
-                            ]}
-                            config={{
-                                displayModeBar: false,
-                                staticPlot: true,
-                            }}
-                        />
+                        <canvas width={500} height={500} ref={ref => this.canvas = ref}/>
                     </div>
                 </div>
                 <div className={styles.controlPanel}>

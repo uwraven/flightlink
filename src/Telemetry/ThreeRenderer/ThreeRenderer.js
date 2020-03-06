@@ -87,8 +87,8 @@ class ThreeRenderer extends Component {
     }
 
     createSceneObjects() {
-        const bound_x = 500;
-        const bound_y = 500;
+        const bound_x = 100;
+        const bound_y = 100;
 
         // Create a ground grid
         let groundGrid = new THREE.GridHelper(bound_x, bound_y, 0xd8d8d8, 0xdfdfdf);
@@ -101,13 +101,16 @@ class ThreeRenderer extends Component {
         let groundPlaneGeometry = new THREE.PlaneGeometry(bound_x, bound_y, 1, 1);
         let groundPlaneMaterial = new THREE.MeshLambertMaterial({
             color: 0xe8e8e8,
-            metalness: 0.1,
+            // metalness: 0.1,
         })
         let groundPlane = new THREE.Mesh(groundPlaneGeometry, groundPlaneMaterial);
         groundPlane.receiveShadow = true;
         // groundPlane.rotation.x = -Math.PI / 2;
         groundPlane.position.z = -0.015;
         this.manager.scene.add(groundPlane);
+
+        this.manager.scene.fog = new THREE.Fog(0xffffff, 20, 45);
+        this.manager.scene.background = 0xffffff;
 
         let globalLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.manager.scene.add(globalLight);
