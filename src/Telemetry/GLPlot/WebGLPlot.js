@@ -11,6 +11,7 @@ class WebGLPlot {
     gl;
     size;
     lines;
+    grid;
     
     /**
      * @param  {HTMLCanvasElement} context
@@ -21,8 +22,8 @@ class WebGLPlot {
         let pixelRatio = window.devicePixelRatio || 1;
 
         this.size = {
-            width: canvas.clientWidth * pixelRatio,
-            height: canvas.clientHeight * pixelRatio
+            width: canvas.width * pixelRatio,
+            height: canvas.height * pixelRatio
         }
         let gl = canvas.getContext("webgl", params);
 
@@ -30,6 +31,7 @@ class WebGLPlot {
         this.scaleY = 1 / pixelRatio;
         // this.ratioXY = this.size.width / this.size.height;
         this.ratioXY = 1;
+        // Offsets are normalized to canvas space
         this.offsetX = -1.0;
         this.offsetY = -0.5;
 

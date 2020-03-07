@@ -9,24 +9,16 @@ const SignalModes = {
 }
 
 const RenderModes = {
-    VISUAL: "visual", // Render in the 3D visual
+    VISUAL: "visual", // Render in 3D
     STREAM: "stream", // Render in streaming line plot for each channel
 }
 
 const TelemetryConfiguration = {
     signals: [
         {
-            name: "Attitude",
-            dataIndexStart: 6,
-            renderMode: [
-                RenderModes.VISUAL, 
-                RenderModes.STREAM
-            ],
-            signalMode: SignalModes.ATTITUDE.QUATERNION,
-        },
-        {
             name: "Position",
             dataIndexStart: 0,
+            dataLength: 3,
             renderMode: [
                 RenderModes.VISUAL, 
                 RenderModes.STREAM
@@ -35,15 +27,23 @@ const TelemetryConfiguration = {
         },
         {
             name: "Angular Rates",
-            dataIndices: {
-                start: 3,
-                end: 5,
-            },
+            dataIndexStart: 3,
+            dataLength: 3,
             renderMode: [
                 RenderModes.STREAM
             ],
             signalMode: SignalModes.VECTOR
-        }
+        },
+        {
+            name: "Attitude",
+            dataIndexStart: 6,
+            dataLength: 4,
+            renderMode: [
+                RenderModes.VISUAL, 
+                RenderModes.STREAM
+            ],
+            signalMode: SignalModes.ATTITUDE.QUATERNION,
+        },
     ],
     SignalModes: SignalModes,
     RenderModes: RenderModes

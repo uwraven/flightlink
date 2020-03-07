@@ -40,12 +40,14 @@
 .threeRenderer {
     // ThreeJS div container
     height: 100%;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     background-color: var(--scene-bg-light);
     // border-radius: var(--root-border-radius);
-    // border: 1px solid var(--border-medium);
-    width: inherit;
+    border-bottom: 1px solid var(--border-medium);
+    box-sizing: border-box;
+    // width: inherit;
     overflow: hidden;
     position: relative;
 
@@ -57,4 +59,9 @@
         cursor: orbit;
         // border: 1px solid red;
     }
+}
+
+.glPlot {
+    width: 400px;
+    height: 400px;
 }
