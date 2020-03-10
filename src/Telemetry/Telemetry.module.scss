@@ -1,39 +1,31 @@
 .module {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
-    flex-grow: 1;
+    // align-items: stretch;
+    // flex-grow: 1;
 }
 
-.container {
-    // background-color: lightblue;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    flex-grow: 1;
-    overflow-x: hidden;
-}
-
-.controlPanel {
-    // justify-self: stretch;
-    flex-basis: 24vw;
-}
+// .content {
+//     // background-color: lightblue;
+//     display: flex;
+//     flex-direction: row;
+//     // align-items: stretch;
+//     // justify-content: flex-start;
+//     // flex-grow: 1;
+//     // overflow-x: hidden;
+// }
 
 .threeContainerFullWidth {
-    height: 60vh;
+    // height: 60vh;
     // background-color: mediumturquoise;
     // padding: var(--b-l);
-    overflow-x: hidden;
+    // overflow-x: hidden;
 }
 
 .chartContainer {
-    // background-color: lightgray;
-    width: 500px;
-    height: 200px;
-
-    canvas {
-    }
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
 }
 
 
@@ -45,8 +37,8 @@
     justify-content: flex-start;
     background-color: var(--scene-bg-light);
     // border-radius: var(--root-border-radius);
-    border-bottom: 1px solid var(--border-medium);
-    box-sizing: border-box;
+    // border-bottom: 1px solid var(--border-medium);
+    // box-sizing: border-box;
     // width: inherit;
     overflow: hidden;
     position: relative;

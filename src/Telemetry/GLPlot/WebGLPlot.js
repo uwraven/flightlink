@@ -1,3 +1,5 @@
+import BufferLine from "./BufferLine";
+
 // This is a Javascript ES6 implementation of danchitnis' awesome typescript webgl stream plotting library
 // https://github.com/danchitnis/webgl-plot/tree/master/src
 
@@ -12,6 +14,7 @@ class WebGLPlot {
     size;
     lines;
     grid;
+    axis;
     
     /**
      * @param  {HTMLCanvasElement} context
@@ -168,7 +171,6 @@ class WebGLPlot {
         this.lines.push(line);
 
     }
-
 }
 
 export default WebGLPlot

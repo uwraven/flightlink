@@ -1,0 +1,12 @@
+.container {
+    width: 100vw;
+    height: 26px;
+    // border-bottom: 1px solid var(--border-medium);
+    -webkit-app-region: drag;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    font-size: 14px;
+    color: gray;
+}

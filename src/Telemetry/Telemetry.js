@@ -120,22 +120,20 @@ class Telemetry extends Component {
         console.log("render called");
         return (
             <div className={styles.module}>
-                <div className={styles.container}>
-                    { this.state.renderScene &&
-                    <div className={styles.threeContainerFullWidth}>
-                        <ThreeRenderer 
-                            className={styles.threeRenderer}
-                            renderedState={this.state.renderedState}
-                        />
-                    </div> }
-                    <div className={styles.chartContainer}>
-                        { this.state.streams.map((stream, i) => <canvas 
-                            className={styles.glPlot} 
-                            width={800} 
-                            height={800} 
-                            ref={ref => this.streamContexts[i] = ref} 
-                        />)}
-                    </div>
+                { this.state.renderScene &&
+                <div className={styles.threeContainerFullWidth}>
+                    <ThreeRenderer 
+                        className={styles.threeRenderer}
+                        renderedState={this.state.renderedState}
+                    />
+                </div> }
+                <div className={styles.chartContainer}>
+                    { this.state.streams.map((stream, i) => <canvas 
+                        className={styles.glPlot} 
+                        width={800} 
+                        height={800} 
+                        ref={ref => this.streamContexts[i] = ref} 
+                    />)}
                 </div>
                 <TelemetryController
                     toggleRenderState={(state) => this.setState({renderScene: !this.state.renderScene})}

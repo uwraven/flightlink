@@ -10,6 +10,7 @@ import { ReactComponent as ConsoleIcon } from './Assets/Icons/console.svg';
 import { ReactComponent as GraphIcon } from './Assets/Icons/graph.svg';
 import Telemetry from './Telemetry/Telemetry';
 import Header from './Components/Header/Header';
+import ApplicationHeader from './Components/ApplicationHeader/ApplicationHeader';
 
 export default class App extends Component {
 	constructor(props) {
@@ -37,6 +38,7 @@ export default class App extends Component {
 	render() {
 		return(
 			<div className={styles.app}>
+				{/* <ApplicationHeader title={"Teensyduino - Serial"}/> */}
 				<Header
 					toggleSerial={() => this.setState({showSerial: !this.state.showSerial})}
 					showSerial={this.state.showSerial}
