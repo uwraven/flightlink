@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Footer.module.scss';
+import Button from '../Button/Button';
 
 class Footer extends Component {
     constructor(props) {
@@ -15,11 +16,26 @@ class Footer extends Component {
     render() {
         return (
             <div className={styles.container}>
-                <p className={styles.socketStatus}>
-                    { (this.props.socketConnected) && "Socket Connected" }
-                </p>
+                <div className={styles.left}>
+                    <Button 
+                        onClick={this.props.toggleCommPanel}
+                        type={"small"}>
+                            Toggle panel
+                    </Button>
+                    <Button 
+                        onClick={this.props.openConsole}
+                        type={"small"}>
+                            Open console
+                    </Button>
+                    <p className={styles.socketStatus}>
+                        { (this.props.websocketConnected) ? "Socket OK" : "Socket Disconnected"}
+                    </p>
+                    <p className={styles.socketStatus}>
+                        { (this.props.deviceConnected) ? "Device OK" : "No Device Connected" }
+                    </p>
+                </div>
                 <p>
-                    Flight Link Pre Alpha V0.1
+                    Flightlink pre-alpha V0.1
                 </p>
             </div>
         );

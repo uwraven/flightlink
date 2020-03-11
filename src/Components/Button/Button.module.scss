@@ -9,12 +9,12 @@
     border: var(--border-medium) 1px solid;
     color: black;
     white-space: nowrap;
-    overflow: hidden;
+    // overflow: hidden;
     font-size: var(--f);
 }
 
 .primary {
-    color: var(--green);
+    color: var(--positive);
     background-color: white;
 }
 
@@ -25,7 +25,11 @@
 
 .positive {
     color: white;
-    background-color: var(--green);
+    background-color: var(--positive);
+}
+
+.small {
+    padding: var(--b-s);
 }
 
 .wrapper:hover:not(.disabled) {

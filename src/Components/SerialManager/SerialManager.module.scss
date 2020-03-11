@@ -18,7 +18,7 @@
     padding: var(--b-l);
 }
 
-.header > div:first-child {
+.header > div:not(:last-child) {
     margin-bottom: var(--b-l);
 }
 

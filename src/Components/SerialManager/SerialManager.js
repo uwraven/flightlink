@@ -12,17 +12,31 @@ const PS = {
     OPEN: 2,
 }
 
+const supportedConnections = [
+    'Serial',
+];
+
+const supportedProtocols = [
+    'Flightlink',
+];
+
 class SerialManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedPortIndex: -1,
+            selectedProtocolIndex: 0,
+            selectedConnectionIndex: 0,
             ports: [],
             portStatus: PS.CLOSED
         }
+        this.onConnectionSelect = this.onConnectionSelect.bind(this);
+        this.onProtocolSelect = this.onProtocolSelect.bind(this);
+
         this.onPortSelect = this.onPortSelect.bind(this);
         this.openSelectedPort = this.openSelectedPort.bind(this);
         this.closeSelectedPort = this.closeSelectedPort.bind(this);
+
         this.requests = window.arcc.api.keys.requests;
         this.actions = window.arcc.api.keys.actions;
     }
@@ -43,6 +57,14 @@ class SerialManager extends Component {
                 });
             }
         })
+    }
+
+    onConnectionSelect(index) {
+        if (index !== this.state.selectedConnectionIndex) this.setState({selectedConnectionIndex: index});
+    }
+
+    onProtocolSelect(index) {
+        if (index !== this.state.selectedProtocolIndex) this.setState({selectedProtocolIndex: index});
     }
 
     onPortSelect(index) {
@@ -88,6 +110,8 @@ class SerialManager extends Component {
         const port = this.state.ports[this.state.selectedPortIndex];
         const openButtonEnabled = this.state.selectedPortIndex >= 0 && this.state.portStatus === PS.CLOSED;
         const closeButtonEnabled = this.state.selectedPortIndex >= 0 && this.state.portStatus === PS.OPEN;
+
+        const dropdownsEnabled = this.state.portStatus === PS.OPEN || this.state.portStatus === PS.OPENING;
         
         return(            
             <div className={style([{className: styles.container}, {
@@ -96,11 +120,28 @@ class SerialManager extends Component {
             }])}>
                 <div className={styles.header}>
                     <DropdownSelect
+                        selected={this.state.selectedConnectionIndex}
+                        options={supportedConnections}
+                        innerLabel={"Connection"}
+                        callback={this.onConnectionSelect}
+                        disabled={dropdownsEnabled}
+                        placeholder={"Select connection type"}
+                    />
+                    <DropdownSelect
+                        selected={this.state.selectedProtocolIndex}
+                        options={supportedProtocols}
+                        innerLabel={"Protocol"}
+                        callback={this.onProtocolSelect}
+                        disabled={dropdownsEnabled}
+                        placeholder={"Select protocol"}
+                    />
+                    <DropdownSelect
                         selected={this.state.selectedPortIndex}
                         options={this.state.ports.map(port => port.path)}
-                        innerLabel={"Select serial port"}
+                        innerLabel={"Serial port"}
                         callback={this.onPortSelect}
-                        disabled={this.state.portStatus === PS.OPEN || this.state.portStatus === PS.OPENING}
+                        disabled={dropdownsEnabled}
+                        placeholder={"Select serial port"}
                     />
                     <Button disabled={!openButtonEnabled} onClick={this.openSelectedPort} type={"primary"}>Open Port</Button>
                 </div>
@@ -112,7 +153,7 @@ class SerialManager extends Component {
                         <Button disabled={!closeButtonEnabled} onClick={this.closeSelectedPort} type={"destructive"}>Close Port</Button>
                     </div>
                 </> : <div className={styles.empty}>
-                    No port active
+                    No device active
                 </div> }
             </div>
         )

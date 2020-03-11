@@ -129,13 +129,13 @@ function openSerialPort(socket, packet) {
             serialport.on('data', (data) => receiveSerialData(socket, data));
             completeRequest(socket, packet.id);
             // serialport.on('error', (error) => );
-            // var X0 = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0];
-            // var t0 = 0;
-            // streamFauxSerialData(socket, {
-            //     interval: 0.015,
-            //     timeout: 5,
-            //     rates: [0.1, 0.1, 0.1, 0.1]
-            // }, t0, X0)
+            var X0 = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0];
+            var t0 = 0;
+            streamFauxSerialData(socket, {
+                interval: 0.015,
+                timeout: 1000,
+                rates: [0.1, 0.1, 0.1, 0.1]
+            }, t0, X0)
         }
     })
 }
@@ -193,6 +193,8 @@ function streamFauxSerialData(socket, config, t_prev, X_prev) {
         type: requests.DATA,
         payload: X
     }));
+
+    console.log("senidng");
 
     if (t + config.interval <= config.timeout && serialport) {
         setTimeout(() => {

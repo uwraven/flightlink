@@ -10,6 +10,7 @@ class Button extends Component {
             case "primary": buttonType = styles.primary; break;
             case "positive": buttonType = styles.positive; break;
             case "destructive": buttonType = styles.destructive; break;
+            case "small": buttonType = styles.small; break;
             default: buttonType = ""; break;
         }
         const buttonStyle = style([
@@ -21,7 +22,7 @@ class Button extends Component {
             }])
         return (
             <div className={buttonStyle} onClick={
-                (!this.props.disabled) ?this.props.onClick : () => {}}>
+                (!this.props.disabled) ? this.props.onClick : () => {}}>
                 {this.props.children}
             </div>
         );
@@ -29,7 +30,9 @@ class Button extends Component {
 }
 
 Button.propTypes = {
-
+    disabled: PropTypes.bool,
+    children: PropTypes.node,
+    onClick: PropTypes.func.isRequired
 };
 
 export default Button;

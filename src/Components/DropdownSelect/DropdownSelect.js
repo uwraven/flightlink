@@ -47,7 +47,7 @@ class DropdownSelect extends Component {
                     { className: styles.disabled, disabled: !this.props.disabled }
                 ])} onClick={this.toggle} >
                     {
-                        this.props.options.length > 0 && (this.props.selected >= 0) ? this.props.options[this.props.selected] : <span className={styles.selectedPlaceholderText}>Select a serial port</span>
+                        this.props.options.length > 0 && (this.props.selected >= 0) ? this.props.options[this.props.selected] : <span className={styles.selectedPlaceholderText}>{this.props.placeholder}</span>
                     }
                 </div>
                 <div className={style([
@@ -75,7 +75,8 @@ DropdownSelect.propTypes = {
     options: PropTypes.arrayOf(PropTypes.string),
     callback: PropTypes.func.isRequired,
     innerLabel: PropTypes.string,
-    style: PropTypes.string
+    style: PropTypes.string,
+    placeholder: PropTypes.string.isRequired
 }
 
 export default DropdownSelect

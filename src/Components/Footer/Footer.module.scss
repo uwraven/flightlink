@@ -1,6 +1,5 @@
 .container {
-    height: 32px;
-    width: 100vw;
+    height: 36px;
     border-top: var(--border-medium) 1px solid;
     background-color: var(--fill-light);
     display: flex;
@@ -8,9 +7,24 @@
     align-items: center;
     justify-content: space-between;
 
+    .left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        div {
+            margin-left: var(--b-s);
+        }
+    }
+
     p {
-        margin: 0 var(--b-m);
+        margin: 0 var(--b);
         font-size: var(--f-s);
         color: var(--label-dark);
+    }
+
+    * {
+        box-sizing: border-box;
     }
 }

@@ -61,7 +61,7 @@ class ThreeRenderer extends Component {
         controls.maxDistance = 20;
         controls.minDistance = 3;
         controls.maxPolarAngle = Math.PI / 2 - 0.0005;
-        controls.target = new Vector3(0, 0, 1);
+        controls.target = new Vector3(0, 0, 0);
 
         this.createSceneObjects()
 

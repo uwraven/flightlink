@@ -1,0 +1,26 @@
+.container {
+    height: 32px;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--fill);
+    width: 184px;
+    border-radius: var(--root-border-radius);
+}
+
+.option {
+    width: 92px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--root-border-radius);
+    cursor: pointer;
+    color: var(--label-light);
+}
+
+.selected {
+    background-color: var(--positive);
+    color: white;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
+}

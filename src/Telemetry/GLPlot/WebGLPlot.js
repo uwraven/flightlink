@@ -1,4 +1,5 @@
 import BufferLine from "./BufferLine";
+import BufferColorRGBA from "./BufferColorRGBA";
 
 // This is a Javascript ES6 implementation of danchitnis' awesome typescript webgl stream plotting library
 // https://github.com/danchitnis/webgl-plot/tree/master/src
@@ -45,6 +46,7 @@ class WebGLPlot {
         this.gl = gl;
 
         this.lines = [];
+        
     }
     /**
      * @description Updates plot contents

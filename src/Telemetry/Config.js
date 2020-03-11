@@ -17,6 +17,7 @@ const TelemetryConfiguration = {
     signals: [
         {
             name: "Position",
+            units: "m",
             dataIndexStart: 0,
             dataLength: 3,
             renderMode: [
@@ -24,18 +25,16 @@ const TelemetryConfiguration = {
                 RenderModes.STREAM
             ],
             signalMode: SignalModes.POSITION,
-        },
-        {
-            name: "Angular Rates",
-            dataIndexStart: 3,
-            dataLength: 3,
-            renderMode: [
-                RenderModes.STREAM
-            ],
-            signalMode: SignalModes.VECTOR
+            streamConfiguration: {
+                scale: {
+                    x: 1,
+                    y: 10,
+                }
+            }
         },
         {
             name: "Attitude",
+            units: "",
             dataIndexStart: 6,
             dataLength: 4,
             renderMode: [
@@ -43,6 +42,44 @@ const TelemetryConfiguration = {
                 RenderModes.STREAM
             ],
             signalMode: SignalModes.ATTITUDE.QUATERNION,
+            streamConfiguration: {
+                scale: {
+                    x: 1,
+                    y: 1.1,
+                }
+            }
+        },
+        {
+            name: "Angular Rates",
+            units: "rad/s",
+            dataIndexStart: 10,
+            dataLength: 3,
+            renderMode: [
+                RenderModes.STREAM
+            ],
+            signalMode: SignalModes.ANGULAR,
+            streamConfiguration: {
+                scale: {
+                    x: 1,
+                    y: 1,
+                }
+            }
+        },
+        {
+            name: "Velocity",
+            units: "m/s",
+            dataIndexStart: 3,
+            dataLength: 3,
+            renderMode: [
+                RenderModes.STREAM
+            ],
+            signalMode: SignalModes.VECTOR,
+            streamConfiguration: {
+                scale: {
+                    x: 1,
+                    y: 1,
+                }
+            }
         },
     ],
     SignalModes: SignalModes,
