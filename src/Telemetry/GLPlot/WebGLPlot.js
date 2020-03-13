@@ -6,16 +6,16 @@ import BufferColorRGBA from "./BufferColorRGBA";
 
 class WebGLPlot {
 
-    scaleX;
-    scaleY;
-    ratioXY;
-    offsetX;
-    offsetY;
+    _scaleX;
+    _scaleY;
+    _ratioXY;
+    _offsetX;
+    _offsetY;
     gl;
     size;
     lines;
     grid;
-    axis;
+    axes;
     
     /**
      * @param  {HTMLCanvasElement} context
@@ -23,21 +23,27 @@ class WebGLPlot {
      */
     constructor(canvas, params) {
         this.renderTarget = canvas;
-        let pixelRatio = window.devicePixelRatio || 1;
+        this.pixelRatio = window.devicePixelRatio || 1;
+
+        console.log(this.pixelRatio);
 
         this.size = {
-            width: canvas.width * pixelRatio,
-            height: canvas.height * pixelRatio
+            width: canvas.width,
+            height: canvas.height
         }
+        // this.size = {
+        //     width: canvas.width,
+        //     height: canvas.height
+        // }
         let gl = canvas.getContext("webgl", params);
 
-        this.scaleX = 1 / pixelRatio;
-        this.scaleY = 1 / pixelRatio;
+        this._scaleX = 1;
+        this._scaleY = 1;
         // this.ratioXY = this.size.width / this.size.height;
-        this.ratioXY = 1;
+        this._ratioXY = 1;
         // Offsets are normalized to canvas space
-        this.offsetX = -1.0;
-        this.offsetY = -0.5;
+        this._offsetX = -0.5;
+        this._offsetY = 0;
 
         gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT || gl.DEPTH_BUFFER_BIT);
@@ -46,60 +52,48 @@ class WebGLPlot {
         this.gl = gl;
 
         this.lines = [];
-        
+
+        this.axes = {
+            enabled: true,
+            x: {
+                line: new BufferLine(new BufferColorRGBA(0.8, 0.8, 0.8, 1), 2)
+            },
+            y:  {
+                line: new BufferLine(new BufferColorRGBA(0.8, 0.8, 0.8, 1.0), 2)
+            }
+        }
+
+        this.axes.x.line.xy = new Float32Array([0, 0, 1, 0]);
+        this.axes.y.line.xy = new Float32Array([0.0005, -1, 0.0005, 1])
+        this.axes.x.line = this.generateLine(this.axes.x.line);
+        this.axes.y.line = this.generateLine(this.axes.y.line);
     }
+
+    // Axes getters / setters
+    set scaleX(x) {
+        this.axes.x.line.scaleX = 1 / x;
+        this._scaleX = x * 2;
+    }
+
+    set scaleY(y) {
+        this.axes.y.line.scaleY = 1 / y;
+        this._scaleY = y;
+    }
+
     /**
-     * @description Updates plot contents
+     * @description Update plot contents
      */
     update() {
         const gl = this.gl;
         this.lines.map(line => {
-            if (line.visible) {
-                gl.useProgram(line._prog);
-
-                const uscale = gl.getUniformLocation(line._prog, "uscale");
-                gl.uniformMatrix2fv(
-                    uscale,
-                    false,
-                    new Float32Array([
-                        line.scaleX * this.scaleX,
-                        0,
-                        0,
-                        line.scaleY * this.scaleY * this.ratioXY
-                    ])
-                );
-
-                const uoffset = gl.getUniformLocation(line._prog, "uoffset");
-                gl.uniform2fv(
-                    uoffset,
-                    new Float32Array([
-                        line.offsetX + this.offsetX,
-                        line.offsetY + this.offsetY
-                    ])
-                );
-
-                const uColor = gl.getUniformLocation(line._prog, "uColor");
-                gl.uniform4fv(uColor, [
-                    line.color.r,
-                    line.color.g,
-                    line.color.b,
-                    line.color.a
-                ]);
-
-                gl.bufferData(
-                    gl.ARRAY_BUFFER,
-                    line.xy,
-                    gl.STREAM_DRAW
-                );
-
-                gl.drawArrays(
-                    gl.LINE_STRIP,
-                    0,
-                    line.length
-                )
-            }
+            if (line.visible) this.updateLine(line, gl);
         })
+        if (this.axes.enabled) {
+            if (this.axes.x.line.visible) this.updateLine(this.axes.x.line, gl);
+            if (this.axes.y.line.visible) this.updateLine(this.axes.y.line, gl);
+        }
     }
+
 
     /**
      * @description Clears the current context
@@ -110,12 +104,13 @@ class WebGLPlot {
         )
     }
 
-    
+
     /**
-     * @param  {BufferLine} line - A BufferLine object
-     * @description Instantiates a new webgl instance from a BufferLine object and draws to a webgl context.
+     * @description Generates a single line with fragment and vertex shaders, renders to the WebGL context
+     * @param {BufferLine} line 
      */
-    addLine(line) {
+    generateLine(line) {
+        // Takes a line argument and generates the webgl shader, draws to active context
         line._vbuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, line._vbuffer);
         this.gl.bufferData(
@@ -124,14 +119,14 @@ class WebGLPlot {
             this.gl.STREAM_DRAW
         )
 
-        // Attach vertext shader
+        // Attach vertex shader
         const vertexShaderCode = `
             attribute vec2 coordinates;
             uniform mat2 uscale;
             uniform vec2 uoffset;
 
             void main(void) {
-                gl_Position = vec4(uscale*coordinates + uoffset, 0.0, 1.0);
+                gl_Position = vec4(uscale * (coordinates + uoffset), 0.0, 1.0);
             }`;
 
         const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
@@ -162,7 +157,7 @@ class WebGLPlot {
         line._coord = this.gl.getAttribLocation(line._prog, "coordinates");
         this.gl.vertexAttribPointer(
             line._coord,
-            2, 
+            2,
             this.gl.FLOAT,
             false,
             0,
@@ -170,8 +165,67 @@ class WebGLPlot {
         );
         this.gl.enableVertexAttribArray(line._coord);
 
-        this.lines.push(line);
+        return line;
+    }
 
+
+    /**
+     * 
+     * @param {BufferLine} line 
+     * @param {*} gl
+     */
+    updateLine(line, gl) {
+        gl.useProgram(line._prog);
+        const uscale = gl.getUniformLocation(line._prog, "uscale");
+        gl.uniformMatrix2fv(
+            uscale,
+            false,
+            new Float32Array([
+                line.scaleX * this._scaleX,
+                0,
+                0,
+                line.scaleY * this._scaleY * this._ratioXY
+            ])
+        );
+
+        const uoffset = gl.getUniformLocation(line._prog, "uoffset");
+        gl.uniform2fv(
+            uoffset,
+            new Float32Array([
+                line.offsetX + this._offsetX,
+                line.offsetY + this._offsetY
+            ])
+        );
+
+        const uColor = gl.getUniformLocation(line._prog, "uColor");
+        gl.uniform4fv(uColor, [
+            line.color.r,
+            line.color.g,
+            line.color.b,
+            line.color.a
+        ]);
+
+        gl.bufferData(
+            gl.ARRAY_BUFFER,
+            line.xy,
+            gl.STREAM_DRAW
+        );
+
+        gl.drawArrays(
+            gl.LINE_STRIP,
+            0,
+            line.length
+        )
+    }
+    
+
+    /**
+     * @param  {BufferLine} line - A BufferLine object
+     * @description Instantiates a new webgl shader from a BufferLine object and draws to a webgl context.
+     */
+    addLine(line) {
+        let newLine = this.generateLine(line);
+        this.lines.push(newLine);
     }
 }
 

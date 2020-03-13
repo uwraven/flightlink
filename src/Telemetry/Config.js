@@ -25,11 +25,11 @@ const TelemetryConfiguration = {
                 RenderModes.STREAM
             ],
             signalMode: SignalModes.POSITION,
-            streamConfiguration: {
+            plot: {
                 scale: {
                     x: 1,
                     y: 10,
-                }
+                },
             }
         },
         {
@@ -42,10 +42,10 @@ const TelemetryConfiguration = {
                 RenderModes.STREAM
             ],
             signalMode: SignalModes.ATTITUDE.QUATERNION,
-            streamConfiguration: {
+            plot: {
                 scale: {
                     x: 1,
-                    y: 1.1,
+                    y: 1,
                 }
             }
         },
@@ -58,7 +58,7 @@ const TelemetryConfiguration = {
                 RenderModes.STREAM
             ],
             signalMode: SignalModes.ANGULAR,
-            streamConfiguration: {
+            plot: {
                 scale: {
                     x: 1,
                     y: 1,
@@ -74,7 +74,7 @@ const TelemetryConfiguration = {
                 RenderModes.STREAM
             ],
             signalMode: SignalModes.VECTOR,
-            streamConfiguration: {
+            plot: {
                 scale: {
                     x: 1,
                     y: 1,

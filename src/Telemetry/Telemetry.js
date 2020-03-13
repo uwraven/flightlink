@@ -28,12 +28,12 @@ class Telemetry extends Component {
                 w: {x: 0, y: 0, z: 0}
             },
             streams: [],
-            plotLength: 100,
+            buffer: []
         }
         this.onData = this.onData.bind(this);
         this.t = 0;
         this.streamContexts = [];
-        this.buffer = [];
+        this.plotLength = 100;
         this.onResize = this.onResize.bind(this);
     }
 
@@ -61,24 +61,28 @@ class Telemetry extends Component {
                         antialias: true,
                         transparent: false,
                     });
-                    if (stream.streamConfiguration) {
-                        glPlot.scaleX /= stream.streamConfiguration.scale.x;
-                        glPlot.scaleY /= stream.streamConfiguration.scale.y;
+
+                    if (stream.plot) {
+                        glPlot.scaleX = 1 / stream.plot.scale.x;
+                        glPlot.scaleY = 1 / stream.plot.scale.y;
                     }
 
-                    let numPoints = this.state.plotLength;
+                    let numPoints = this.plotLength;
                     for (let j = 0; j < stream.dataLength; j++) {
                         let line = new BufferLine(
                             COLORS[j],
                             numPoints,
                         );
-                        line.fill(0, 2 / numPoints, 0);
+                        line.fill(0, 1 / numPoints, 0);
                         glPlot.addLine(line);
                     }
+
+                    // glPlot.axes.x.line.visible = false;
+
                     const animateFrame = () => {
                         glPlot.lines.map((line, j) => {
-                            if (this.buffer.length > stream.dataIndexStart + j) {
-                                line.shiftAdd(new Float32Array([this.buffer[stream.dataIndexStart + j]]));
+                            if (this.state.buffer.length > stream.dataIndexStart + j) {
+                                line.shiftAdd(new Float32Array([this.state.buffer[stream.dataIndexStart + j]]));
                             }
                         })
                         glPlot.update();
@@ -89,12 +93,14 @@ class Telemetry extends Component {
                     console.warn("Invalid stream context, check React lifecycle");
                 }
             })
+            this.onResize();
         })
         
         
         this.setState({
             shouldUpdateRender: SignalConfiguration.signals.filter(signal => signal.renderMode.includes(SignalConfiguration.RenderModes.VISUAL))
         })
+
     }
 
     onData(newData) {
@@ -122,16 +128,17 @@ class Telemetry extends Component {
     }
 
     updateStreamPlots(X) {
-        this.buffer = X;
+        this.setState({buffer: X});
         // Stream plots read this data on their animation loop
     }
 
     onResize() {
         let w = this.chartContainer.clientWidth;
         this.streamContexts.map(canvas => {
-            console.log(canvas);
-            canvas.width = w / 3 * (window.devicePixelRatio || 1);
-            canvas.height = canvas.width;
+            // console.log(canvas);
+            // canvas.width = w / 3 * (window.devicePixelRatio || 1);
+            // canvas.width = canvas.clientWidth
+            // canvas.height = canvas.clientWidth;
         })
     }
 
@@ -155,8 +162,8 @@ class Telemetry extends Component {
                             </div>
                             <canvas
                                 className={styles.glPlot} 
-                                width={600} 
-                                height={600} 
+                                width={300} 
+                                height={300} 
                                 ref={ref => this.streamContexts[i] = ref} 
                             />
                         </div>)}

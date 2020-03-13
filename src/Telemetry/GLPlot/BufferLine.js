@@ -89,7 +89,6 @@ class BufferLine {
     }
 
     setY(index, y) {
-        if (Math.abs(y) > this.max) this.max = y;
         this.xy[index * 2 + 1] = y;
     }
 
