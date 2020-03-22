@@ -1,21 +1,23 @@
 .container {
-    height: 30px;
+    height: 28px;
     display: flex;
     flex-direction: row;
     background-color: var(--fill);
     // width: 164px;
-    border-radius: calc(2 * var(--root-border-radius));
+    border-radius: var(--root-border-radius);
+    // border-radius: 15px;
     cursor: pointer;
 }
 
 .option {
-    width: 92px;
+    min-width: 82px;
     font-size: 14px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    border-radius: calc(2 * var(--root-border-radius));
+    border-radius: var(--root-border-radius);
+    // border-radius: 4px;
     cursor: pointer;
     color: var(--label-light);
 }

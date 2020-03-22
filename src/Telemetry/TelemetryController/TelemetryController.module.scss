@@ -31,22 +31,31 @@
     margin-bottom: var(--b-m);
 }
 
-.dataStreams {
-    
+.streamElementContainer {
+    margin-bottom: 16px;
 }
 
 .streamName {
-
+    font-size: 14px;
 }
 
 .streamUnitLabel {
+    font-size: 14px;
     color: gray;
 }
 
-.streamElementContainer {
-    
-}
+.streamDataTable {
+    font-family: monospace;
+    border-radius: var(--root-border-radius);
+    overflow: hidden;
+    margin: var(--b) 0;
+    border: 1px solid var(--border-light);
 
-.numValue {
-    background-color: red;
+    .row {
+        padding: var(--b-s);
+    }
+
+    .row:nth-child(odd) {
+        background: var(--fill-light);
+    }
 }

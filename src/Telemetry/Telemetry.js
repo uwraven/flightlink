@@ -40,13 +40,14 @@ class Telemetry extends Component {
             renderSignals: 0,
             streamSignals: [],
             buffer: [],
-            t: 0,
             plotLength: 50,
             interface: {
                 renderer: false,
                 streams: true,
             }
         }
+        this.t = 0;
+        this.newData = true;
         this.onData = this.onData.bind(this);
         this.onResize = this.onResize.bind(this);
         this.streamContexts = [];
@@ -80,7 +81,8 @@ class Telemetry extends Component {
                 initialBuffer.fill(0.5);
                 this.setState({buffer: initialBuffer});
 
-                this.streamContexts.map((context, i) => {
+                this.t = 0;
+                let plots = this.streamContexts.map((context, i) => {
                     let stream = this.state.streamSignals[i];
                     if (context && stream) {
 
@@ -103,21 +105,33 @@ class Telemetry extends Component {
                             line.fill(0, 1 / numPoints, 0);
                             glPlot.addLine(line);
                         }
-    
-                        const animateFrame = () => {
-                            glPlot.lines.map((line, j) => {
-                                if (this.state.buffer.length > stream.dataIndexStart + j) {
-                                    line.shiftAdd(new Float32Array([this.state.buffer[stream.dataIndexStart + j]]));
-                                }
-                            })
-                            glPlot.update();
-                            window.requestAnimationFrame(animateFrame);
-                        }
-                        window.requestAnimationFrame(animateFrame);
+
+                        return {
+                            glPlot: glPlot,
+                            stream: stream
+                        };
+
                     } else {
                         console.warn("Invalid stream context, check React lifecycle");
                     }
                 })
+
+                const animateFrame = (t) => {
+                    if (this.newData) {
+                        const dt = t - this.t;
+                        plots.map(plot => {
+                            plot.glPlot.lines.map((line, j) => {
+                                line.shiftAdd(new Float32Array([this.state.buffer[plot.stream.dataIndexStart + j]]));
+                            })
+                            plot.glPlot.update();
+                        })
+                    }
+                    this.newData = false;
+                    window.requestAnimationFrame(animateFrame);
+                }
+
+                animateFrame(0);
+
                 this.onResize();
             });
         }});
@@ -130,6 +144,7 @@ class Telemetry extends Component {
     onData(newData) {
         // X is the full length data vector
         const X = newData.payload;
+        this.newData = true;
         this.setState({buffer: X});
         this.updateRenderedState(X);
     }

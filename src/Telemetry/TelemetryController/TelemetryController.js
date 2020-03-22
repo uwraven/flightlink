@@ -40,15 +40,17 @@ class TelemetryController extends Component {
 }
 
 const StreamElement = props => {
+    // TODO:: temp label fix
+    const components = ["w", "x", "y", "z"].reverse();
     return(
         <div className={styles.streamElementContainer}>
             <div className={styles.row}>
                 <span className={styles.streamName}>{props.stream.name}</span>
                 <span className={styles.streamUnitLabel}>{props.stream.units}</span>
             </div>
-            <div className={styles.column}>
+            <div className={styles.streamDataTable}>
                 {props.data.map((num, i) => <div className={styles.row}>
-                    <span>{i}</span>
+                    <span>{components[props.stream.dataLength - i - 1]}</span>
                     <span>{num.toFixed(4)}</span>
                 </div>)}
             </div>
