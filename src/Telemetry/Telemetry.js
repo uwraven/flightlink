@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './Telemetry.module.scss';
 import ThreeRenderer from './ThreeRenderer/ThreeRenderer';
-import SignalConfiguration from './Config.js';
+import SignalConfiguration, {RenderModes, SignalModes} from './Config.js';
 import WebGLPlot from './GLPlot/WebGLPlot';
 import BufferLine from './GLPlot/BufferLine';
 import BufferColorRGBA from './GLPlot/BufferColorRGBA';
@@ -14,122 +14,142 @@ const COLORS = [
     new BufferColorRGBA(0.933, 0.466, 0.2, 1.0),
 ];
 
+const initialVisualState = {
+    r: {
+        x: 0, y: 0, z: 0,
+    },
+    v: {
+        x: 0, y: 0, z: 0,
+    },
+    q: {
+        w: 1, x: 0, y: 0, z: 0,
+    },
+    w: {
+        x: 0, y: 0, z: 0, 
+    }
+};
+
 class Telemetry extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
-            renderScene: true,
-            shouldUpdateRender: false,
-            renderedState: {
-                r: {x: 0, y: 0, z: 0},
-                v: {x: 0, y: 0, z: 0},
-                q: {w: 1, x: 0, y: 0, z: 0},
-                w: {x: 0, y: 0, z: 0}
-            },
-            streams: [],
-            buffer: []
+            renderScene: false,
+            visualState: initialVisualState,
+            configurationIndex: 0,
+            configuration: null,
+            renderSignals: 0,
+            streamSignals: [],
+            buffer: [],
+            t: 0,
+            plotLength: 50,
+            interface: {
+                renderer: false,
+                streams: true,
+            }
         }
         this.onData = this.onData.bind(this);
-        this.t = 0;
-        this.streamContexts = [];
-        this.plotLength = 100;
         this.onResize = this.onResize.bind(this);
+        this.streamContexts = [];
     }
 
     componentDidMount() {
         window.arcc.api.attachListener("data", "telemetryListener", this.onData)
-        
         window.addEventListener('resize', this.onResize);
 
-        this.signals = {
-            attitudeConfiguration: SignalConfiguration.signals.find(signal => signal.signalMode === SignalConfiguration.SignalModes.ATTITUDE.QUATERNION),
-            positionConfiguration: SignalConfiguration.signals.find(signal => signal.signalMode === SignalConfiguration.SignalModes.POSITION),
-        }
+        // TODO:: Get last used configuration
+        const lastConfig = "0";
 
-        let streamSignals = SignalConfiguration.signals.filter(signal => signal.renderMode.includes(SignalConfiguration.RenderModes.STREAM));
+        // TODO:: Get signal configurations from memory asynchronously
+        const configs = SignalConfiguration;
 
-        console.log(streamSignals);
-
-        this.setState({
-            streams: streamSignals
-        }, () => {
-            this.streamContexts.map((context, i) => {
-                let stream = this.state.streams[i];
-                if (context && stream) {
-                    let glPlot = new WebGLPlot(context, {
-                        antialias: true,
-                        transparent: false,
-                    });
-
-                    if (stream.plot) {
-                        glPlot.scaleX = 1 / stream.plot.scale.x;
-                        glPlot.scaleY = 1 / stream.plot.scale.y;
-                    }
-
-                    let numPoints = this.plotLength;
-                    for (let j = 0; j < stream.dataLength; j++) {
-                        let line = new BufferLine(
-                            COLORS[j],
-                            numPoints,
-                        );
-                        line.fill(0, 1 / numPoints, 0);
-                        glPlot.addLine(line);
-                    }
-
-                    // glPlot.axes.x.line.visible = false;
-
-                    const animateFrame = () => {
-                        glPlot.lines.map((line, j) => {
-                            if (this.state.buffer.length > stream.dataIndexStart + j) {
-                                line.shiftAdd(new Float32Array([this.state.buffer[stream.dataIndexStart + j]]));
-                            }
-                        })
-                        glPlot.update();
-                        window.requestAnimationFrame(animateFrame);
-                    }
-                    window.requestAnimationFrame(animateFrame);
-                } else {
-                    console.warn("Invalid stream context, check React lifecycle");
+        // Then, set state from selected signal configuration
+        this.setState({configuration: configs.configurations[lastConfig]}, (e) => {
+            if (this.state.configuration) {
+            let renderSignals = this.state.configuration.signals.filter(signal => signal.renderMode.includes(RenderModes.VISUAL));
+            this.setState({
+                streamSignals: this.state.configuration.signals.filter(signal => signal.renderMode.includes(RenderModes.STREAM)),
+                renderSignals: {
+                    r: renderSignals.find(signal => signal.signalMode === SignalModes.POSITION) || 0,
+                    q: renderSignals.find(signal => signal.signalMode === SignalModes.ATTITUDE.QUATERNION) || 0,
+                    e: renderSignals.find(signal => signal.signalMode === SignalModes.ATTITUDE.EULER) || 0
                 }
-            })
-            this.onResize();
-        })
-        
-        
-        this.setState({
-            shouldUpdateRender: SignalConfiguration.signals.filter(signal => signal.renderMode.includes(SignalConfiguration.RenderModes.VISUAL))
-        })
+            }, () => {
 
+                const numSignals = this.state.streamSignals.reduce((num, stream) => num += stream.dataLength, 0);
+                const initialBuffer = new Float32Array(numSignals);
+                initialBuffer.fill(0.5);
+                this.setState({buffer: initialBuffer});
+
+                this.streamContexts.map((context, i) => {
+                    let stream = this.state.streamSignals[i];
+                    if (context && stream) {
+
+                        let glPlot = new WebGLPlot(context, {
+                            antialias: true,
+                            transparent: false,
+                        });
+    
+                        if (stream.plot) {
+                            glPlot.scaleX = 1 / stream.plot.scale.x;
+                            glPlot.scaleY = 1 / stream.plot.scale.y;
+                        }
+    
+                        let numPoints = this.state.plotLength;
+                        for (let j = 0; j < stream.dataLength; j++) {
+                            let line = new BufferLine(
+                                COLORS[j],
+                                numPoints,
+                            );
+                            line.fill(0, 1 / numPoints, 0);
+                            glPlot.addLine(line);
+                        }
+    
+                        const animateFrame = () => {
+                            glPlot.lines.map((line, j) => {
+                                if (this.state.buffer.length > stream.dataIndexStart + j) {
+                                    line.shiftAdd(new Float32Array([this.state.buffer[stream.dataIndexStart + j]]));
+                                }
+                            })
+                            glPlot.update();
+                            window.requestAnimationFrame(animateFrame);
+                        }
+                        window.requestAnimationFrame(animateFrame);
+                    } else {
+                        console.warn("Invalid stream context, check React lifecycle");
+                    }
+                })
+                this.onResize();
+            });
+        }});
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onResize);
     }
 
     onData(newData) {
         // X is the full length data vector
         const X = newData.payload;
+        this.setState({buffer: X});
         this.updateRenderedState(X);
-        this.updateStreamPlots(X);
     }
 
     updateRenderedState(X) {
-        let renderedState = this.state.renderedState;
-        if (this.signals.attitudeConfiguration && this.signals.attitudeConfiguration.renderMode.includes(SignalConfiguration.RenderModes.VISUAL)) {
-            let i = this.signals.attitudeConfiguration.dataIndexStart;
-            renderedState.q = {w: X[i], x: X[i+1], y: X[i+2], z: X[i+3]};
-        }
-        if (this.signals.positionConfiguration && this.signals.positionConfiguration.renderMode.includes(SignalConfiguration.RenderModes.VISUAL)) {
-            let i = this.signals.positionConfiguration.dataIndexStart;
-            renderedState.r = {x: X[i], y: X[i+1], z: X[i+2]}
-        }
-        if (this.state.shouldUpdateRender) {
-            this.setState({
-                renderedState: renderedState
-            })
-        }
-    }
+        let visualState = this.state.visualState;
 
-    updateStreamPlots(X) {
-        this.setState({buffer: X});
-        // Stream plots read this data on their animation loop
+        if (this.state.renderSignals.r) {
+            let i = this.state.renderSignals.r.dataIndexStart;
+            visualState.r = {x: X[i], y: X[i+1], z: X[i+2]};
+        }
+
+        if (this.state.renderSignals.q) {
+            let i = this.state.renderSignals.q.dataIndexStart;
+            visualState.q = {w: X[i], x: X[i+1], y: X[i+2], z: X[i+3]};
+        }
+        
+        this.setState({
+            renderedState: visualState
+        })
     }
 
     onResize() {
@@ -146,7 +166,7 @@ class Telemetry extends Component {
         return (
             <div className={styles.container}>
                 <div className={styles.content}>
-                    { (this.state.renderScene) &&
+                    { (this.state.interface.renderer) &&
                         <div className={styles.threeContainerFullWidth}>
                             <ThreeRenderer 
                                 className={styles.threeRenderer}
@@ -155,7 +175,7 @@ class Telemetry extends Component {
                         </div>
                     }
                     <div className={styles.chartContainer} ref={ref => this.chartContainer = ref}>
-                        { this.state.streams.map((stream, i) => <div className={styles.chartWrapper}>
+                        { this.state.streamSignals.map((stream, i) => <div className={styles.chartWrapper} key={i}>
                             <div className={styles.chartTitleBar}>
                                 <span>{stream.name}</span>
                                 <span>{stream.units || ""}</span>
@@ -170,7 +190,13 @@ class Telemetry extends Component {
                     </div>
                 </div>
                 <TelemetryController
-                    toggleRenderState={(state) => this.setState({renderScene: !this.state.renderScene})}
+                    streams={this.state.streamSignals}
+                    buffer={this.state.buffer}
+                    interface={this.state.interface}
+                    toggleRender={() => this.setState({interface: {
+                        ...this.state.interface,
+                        renderer: !this.state.interface.renderer
+                    }})}
                 />
             </div>
         );

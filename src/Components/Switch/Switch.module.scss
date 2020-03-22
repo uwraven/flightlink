@@ -1,10 +1,11 @@
 .container {
-    height: 32px;
+    height: 30px;
     display: flex;
     flex-direction: row;
     background-color: var(--fill);
-    width: 184px;
-    border-radius: var(--root-border-radius);
+    // width: 164px;
+    border-radius: calc(2 * var(--root-border-radius));
+    cursor: pointer;
 }
 
 .option {
@@ -14,7 +15,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    border-radius: var(--root-border-radius);
+    border-radius: calc(2 * var(--root-border-radius));
     cursor: pointer;
     color: var(--label-light);
 }
@@ -22,5 +23,5 @@
 .selected {
     background-color: var(--positive);
     color: white;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }

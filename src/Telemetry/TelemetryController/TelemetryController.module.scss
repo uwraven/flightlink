@@ -1,3 +1,52 @@
 .container {
     border-left: 1px solid var(--border-medium);
+    flex-grow: 0;
+    flex-basis: 20vw;
+    min-width: 15vw;
+    max-width: 25vw;
+}
+
+.configurationContainer {
+    border-bottom: 1px solid var(--border-medium);
+    padding: var(--b);
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.dataContainer {
+    padding: var(--b);
+}
+
+.dataControls {
+    margin-bottom: var(--b-m);
+}
+
+.dataStreams {
+    
+}
+
+.streamName {
+
+}
+
+.streamUnitLabel {
+    color: gray;
+}
+
+.streamElementContainer {
+    
+}
+
+.numValue {
+    background-color: red;
 }

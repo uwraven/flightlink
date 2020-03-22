@@ -7,6 +7,7 @@
 .content {
     overflow-y: scroll;
     flex-basis: 70%;
+    flex-grow: 1;
 }
 
 .content::-webkit-scrollbar {
