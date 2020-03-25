@@ -3,17 +3,20 @@ import PropTypes from 'prop-types';
 import styles from './Main.module.scss';
 import Telemetry from '../Telemetry/Telemetry';
 import MainController from './MainController/MainController';
+import Plot from '../Telemetry/GLPlot/Plot';
 
 const pages = {
     'telemetry': Telemetry,
-    'command': () => <div>Test</div>
+    'command': () => <div>
+        <Plot/>
+    </div>
 }
 
 class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 'telemetry',
+            page: 'command',
         }
         this.setPage = this.setPage.bind(this);
     }

@@ -10,7 +10,7 @@ const Switch = props => {
             return (
                 <div 
                     className={[(i === props.selected) ? styles.selected : '', styles.option].join(' ')}
-                    onClick={() => props.onClick(i)}>
+                    onClick={() => props.onClick(i)} key={i}>
                     { option }
                 </div>)
             })}

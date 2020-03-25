@@ -86,6 +86,30 @@ const TelemetryConfiguration = {
                     }
                 },
             ],
+        },
+        "1": {
+            id: "1",
+            name: "3D Position",
+            signals: [
+                {
+                    name: "Position",
+                    units: "m",
+                    dataIndexStart: 0,
+                    dataLength: 3,
+                    renderMode: [
+                        RenderModes.STREAM,
+                        RenderModes.VISUAL
+                    ],
+                    signalMode: SignalModes.POSITION,
+                    plot: {
+                        scale: {
+                            x: 1,
+                            y: 1,
+                        }
+                    }
+
+                }
+            ]
         }
     },
 }

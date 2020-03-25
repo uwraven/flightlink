@@ -2,18 +2,42 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './TelemetryController.module.scss';
 import Toggle from '../../Components/Toggle/Toggle';
+import DropdownSelect from '../../Components/DropdownSelect/DropdownSelect';
 
 class TelemetryController extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            selectedConfigurationIndex: -1,
+        }
+        this.onConfigurationSelect = this.onConfigurationSelect.bind(this);
+    }
+
+    componentDidMount() {
+        const selectedIndex = Object.values(this.props.configurations).findIndex(configuration => {
+            return(configuration.id === this.props.selectedConfiguration)
+        });
+        this.setState({selectedConfigurationIndex: selectedIndex});
+    }
+
+    onConfigurationSelect(index) {
+        const selectedId = Object.values(this.props.configurations)[index].id;
+        this.setState({selectedConfigurationIndex: index});
+        this.props.setConfiguration(selectedId)
     }
 
     render() {
         return (
             <div className={styles.container}>
                 <div className={styles.configurationContainer}>
-                    Configuration Selector
+                    <DropdownSelect
+                        options={Object.values(this.props.configurations).map(config => config.name)}
+                        selected={this.state.selectedConfigurationIndex}
+                        callback={this.onConfigurationSelect}
+                        innerLabel={"Signal Configuration"}
+                        placeholder={"Select signal configuration"}
+                    />
                 </div>
                 <div className={styles.dataContainer}>
                     <div className={styles.dataControls}>
@@ -49,7 +73,7 @@ const StreamElement = props => {
                 <span className={styles.streamUnitLabel}>{props.stream.units}</span>
             </div>
             <div className={styles.streamDataTable}>
-                {props.data.map((num, i) => <div className={styles.row}>
+                {props.data.map((num, i) => <div className={styles.row} key={i}>
                     <span>{components[props.stream.dataLength - i - 1]}</span>
                     <span>{num.toFixed(4)}</span>
                 </div>)}

@@ -35,8 +35,8 @@ class Telemetry extends Component {
         this.state = {
             renderScene: false,
             visualState: initialVisualState,
-            configurationIndex: 0,
-            configuration: null,
+            configurationId: "0",
+            configurations: null,
             renderSignals: 0,
             streamSignals: [],
             buffer: [],
@@ -50,6 +50,7 @@ class Telemetry extends Component {
         this.newData = true;
         this.onData = this.onData.bind(this);
         this.onResize = this.onResize.bind(this);
+        this.setConfiguration = this.setConfiguration.bind(this);
         this.streamContexts = [];
     }
 
@@ -58,17 +59,38 @@ class Telemetry extends Component {
         window.addEventListener('resize', this.onResize);
 
         // TODO:: Get last used configuration
-        const lastConfig = "0";
+        const previousConfigurationId = this.state.configurationId;
 
         // TODO:: Get signal configurations from memory asynchronously
         const configs = SignalConfiguration;
 
         // Then, set state from selected signal configuration
-        this.setState({configuration: configs.configurations[lastConfig]}, (e) => {
-            if (this.state.configuration) {
-            let renderSignals = this.state.configuration.signals.filter(signal => signal.renderMode.includes(RenderModes.VISUAL));
+        this.setState({
+            configurations: configs.configurations,
+            configurationId: previousConfigurationId
+        }, () => {
+            this.updateConfiguration();
+        });
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onResize);
+    }
+
+    setConfiguration(id) {
+        this.setState({
+            configurationId: id
+        }, () => this.updateConfiguration());
+    }
+
+    updateConfiguration() {
+        const configuration = this.state.configurations[this.state.configurationId];
+
+        if (configuration) {
+            let renderSignals = configuration.signals.filter(signal => signal.renderMode.includes(RenderModes.VISUAL));
+
             this.setState({
-                streamSignals: this.state.configuration.signals.filter(signal => signal.renderMode.includes(RenderModes.STREAM)),
+                streamSignals: configuration.signals.filter(signal => signal.renderMode.includes(RenderModes.STREAM)),
                 renderSignals: {
                     r: renderSignals.find(signal => signal.signalMode === SignalModes.POSITION) || 0,
                     q: renderSignals.find(signal => signal.signalMode === SignalModes.ATTITUDE.QUATERNION) || 0,
@@ -82,20 +104,22 @@ class Telemetry extends Component {
                 this.setState({buffer: initialBuffer});
 
                 this.t = 0;
-                let plots = this.streamContexts.map((context, i) => {
+                
+                let plots = this.streamContexts.slice(0, this.state.streamSignals.length).map((context, i) => {
                     let stream = this.state.streamSignals[i];
+
                     if (context && stream) {
 
                         let glPlot = new WebGLPlot(context, {
                             antialias: true,
                             transparent: false,
                         });
-    
+
                         if (stream.plot) {
                             glPlot.scaleX = 1 / stream.plot.scale.x;
                             glPlot.scaleY = 1 / stream.plot.scale.y;
                         }
-    
+
                         let numPoints = this.state.plotLength;
                         for (let j = 0; j < stream.dataLength; j++) {
                             let line = new BufferLine(
@@ -113,6 +137,7 @@ class Telemetry extends Component {
 
                     } else {
                         console.warn("Invalid stream context, check React lifecycle");
+                        return undefined;
                     }
                 })
 
@@ -133,12 +158,8 @@ class Telemetry extends Component {
                 animateFrame(0);
 
                 this.onResize();
-            });
-        }});
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.onResize);
+            }
+        )};
     }
 
     onData(newData) {
@@ -204,7 +225,11 @@ class Telemetry extends Component {
                         </div>)}
                     </div>
                 </div>
+                {this.state.configurations &&
                 <TelemetryController
+                    configurations={this.state.configurations}
+                    selectedConfiguration={this.state.configurationId}
+                    setConfiguration={this.setConfiguration}
                     streams={this.state.streamSignals}
                     buffer={this.state.buffer}
                     interface={this.state.interface}
@@ -212,7 +237,7 @@ class Telemetry extends Component {
                         ...this.state.interface,
                         renderer: !this.state.interface.renderer
                     }})}
-                />
+                /> }
             </div>
         );
     }
