@@ -76,12 +76,14 @@ function attachListener(type, name, callback) {
 }
 
 function removeListener(type, name) {
-    window.arcc.api.listeners[type].filter((listener) => !(listener.name === name))
+    const index = window.arcc.api.listeners[type]?.findIndex(listener => listener.name === name);
+    window.arcc.api.listeners[type].splice(index, 1);
 }
 
 export default {
     openSocket: openSocket,
     sendRequest: sendRequest,
     closeSocket: closeSocket,
-    attachListener: attachListener
+    attachListener: attachListener,
+    removeListener: removeListener
 }

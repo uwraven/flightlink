@@ -75,6 +75,7 @@ class Telemetry extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.onResize);
+        window.arcc.api.removeListener("data", "telemetryListener");
     }
 
     setConfiguration(id) {

@@ -7,6 +7,7 @@ window.arcc = {
         openSocket: socket.openSocket,
         sendRequest: socket.sendRequest,
         attachListener: socket.attachListener,
+        removeListener: socket.removeListener,
         messageQueue: [],
         keys: globalStruct,
         listeners: {

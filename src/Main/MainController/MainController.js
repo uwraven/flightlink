@@ -7,7 +7,7 @@ class MainController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            index: 0,
+            index: this.props.initial,
         }
         this.onPageChange = this.onPageChange.bind(this);
     }

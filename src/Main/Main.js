@@ -3,12 +3,19 @@ import PropTypes from 'prop-types';
 import styles from './Main.module.scss';
 import Telemetry from '../Telemetry/Telemetry';
 import MainController from './MainController/MainController';
-import Plot from '../Telemetry/GLPlot/Plot';
+import Plot from '../Telemetry/GLPlot/GLPlot';
+import BufferColorRGBA from '../Telemetry/GLPlot/BufferColorRGBA';
 
 const pages = {
     'telemetry': Telemetry,
     'command': () => <div>
-        <Plot/>
+        <Plot
+            streams={6}
+            length={50}
+            width={300}
+            height={300}
+            initialBuffer={new Float32Array([0, 0, 1])}
+        />
     </div>
 }
 
@@ -34,7 +41,7 @@ class Main extends Component {
         const renderControlBar = this.state.page === 'telemetry' || this.state.page === 'command';
         return (
             <div className={styles.container}>
-                { renderControlBar && <MainController setPage={this.setPage} pages={Object.keys(pages)}/> }
+                { renderControlBar && <MainController setPage={this.setPage} pages={Object.keys(pages)} initial={1}/> }
                 <Page/>
             </div>
         );
