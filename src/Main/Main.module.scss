@@ -3,3 +3,13 @@
     overflow: hidden;
     flex-grow: 1;
 }
+
+
+.plot {
+    background-color: grey;
+    border: 1px solid red;
+
+    canvas {
+        background-color: blue;
+    }
+}

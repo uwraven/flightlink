@@ -64,3 +64,11 @@
         outline: none;
     }
 }
+
+.testPlot {
+    border: 1px solid red;
+    
+    canvas {
+        border: 1px solid blue;
+    }
+}

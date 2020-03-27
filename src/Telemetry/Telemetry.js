@@ -6,6 +6,7 @@ import WebGLPlot from './GLPlot/WebGLPlot';
 import BufferLine from './GLPlot/BufferLine';
 import BufferColorRGBA from './GLPlot/BufferColorRGBA';
 import TelemetryController from './TelemetryController/TelemetryController';
+import GLPlot from './GLPlot/GLPlot';
 
 const COLORS = [
     new BufferColorRGBA(0, 0.466, 0.733, 1.0),
@@ -69,7 +70,7 @@ class Telemetry extends Component {
             configurations: configs.configurations,
             configurationId: previousConfigurationId
         }, () => {
-            this.updateConfiguration();
+            // this.updateConfiguration();
         });
     }
 
@@ -81,7 +82,9 @@ class Telemetry extends Component {
     setConfiguration(id) {
         this.setState({
             configurationId: id
-        }, () => this.updateConfiguration());
+        }, () =>  {
+            // this.updateConfiguration()
+        });
     }
 
     updateConfiguration() {
@@ -202,6 +205,20 @@ class Telemetry extends Component {
     render() {
         return (
             <div className={styles.container}>
+
+                <GLPlot
+                    params={{
+                        antialias: true,
+                        transparent: false,
+                    }}
+                    streams={this.state.streamSignals.length}
+                    length={100}
+                    width={300}
+                    height={300}
+                    buffer={this.state.buffer}
+                    className={styles.testPlot}
+                ></GLPlot>
+
                 <div className={styles.content}>
                     { (this.state.interface.renderer) &&
                         <div className={styles.threeContainerFullWidth}>

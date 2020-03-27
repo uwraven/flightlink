@@ -8,22 +8,14 @@ import BufferColorRGBA from '../Telemetry/GLPlot/BufferColorRGBA';
 
 const pages = {
     'telemetry': Telemetry,
-    'command': () => <div>
-        <Plot
-            streams={6}
-            length={50}
-            width={300}
-            height={300}
-            initialBuffer={new Float32Array([0, 0, 1])}
-        />
-    </div>
+    'command': () => <h1>HI</h1>
 }
 
 class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 'command',
+            page: 'telemetry',
         }
         this.setPage = this.setPage.bind(this);
     }
@@ -41,7 +33,7 @@ class Main extends Component {
         const renderControlBar = this.state.page === 'telemetry' || this.state.page === 'command';
         return (
             <div className={styles.container}>
-                { renderControlBar && <MainController setPage={this.setPage} pages={Object.keys(pages)} initial={1}/> }
+                { renderControlBar && <MainController setPage={this.setPage} pages={Object.keys(pages)} initial={0}/> }
                 <Page/>
             </div>
         );

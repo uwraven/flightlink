@@ -25,8 +25,6 @@ class WebGLPlot {
         this.renderTarget = canvas;
         this.pixelRatio = window.devicePixelRatio || 1;
 
-        console.log(this.pixelRatio);
-
         this.size = {
             width: canvas.width,
             height: canvas.height
@@ -164,7 +162,7 @@ class WebGLPlot {
             0,
         );
         this.gl.enableVertexAttribArray(line._coord);
-
+             
         return line;
     }
 
