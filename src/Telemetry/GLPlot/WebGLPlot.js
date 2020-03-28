@@ -21,8 +21,7 @@ class WebGLPlot {
      * @param  {HTMLCanvasElement} context
      * @param  {} params - Standard webgl context parameters (e.g. antialias, transparency)
      */
-    constructor(canvas, params) {
-        this.renderTarget = canvas;
+    constructor(canvas, params, context) {
         this.pixelRatio = window.devicePixelRatio || 1;
 
         this.size = {
@@ -33,7 +32,12 @@ class WebGLPlot {
         //     width: canvas.width,
         //     height: canvas.height
         // }
-        let gl = canvas.getContext("webgl", params);
+
+        console.log(context);
+
+        let gl;
+        if (context !== undefined) gl = context;
+        else gl = canvas.getContext("webgl", params);
 
         this._scaleX = 1;
         this._scaleY = 1;
@@ -65,6 +69,15 @@ class WebGLPlot {
         this.axes.y.line.xy = new Float32Array([0.0005, -1, 0.0005, 1])
         this.axes.x.line = this.generateLine(this.axes.x.line);
         this.axes.y.line = this.generateLine(this.axes.y.line);
+    }
+
+    destructor() {
+        const ext = this.gl.getExtension('WebGL_lose_context');
+        if (ext) ext.loseContext();
+        else {
+            console.warn("WebGL_lose_context extension not available, cannot dispose of current WebGL context");
+            console.log("https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_lose_context/loseContext");
+        }
     }
 
     // Axes getters / setters

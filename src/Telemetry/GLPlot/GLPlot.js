@@ -13,9 +13,11 @@ const defaultColors = [
 
 const GLPlot = (props) => {
 
-    const canvas = useRef();
+    let canvas = useRef();
+    let context = useRef();
     let prevTime = useRef(Date.now());
     let glPlot = useRef(null);
+
 
     // useEffect(() => {
     //     glPlot.current = new WebGLPlot(canvas.current, {
@@ -34,7 +36,7 @@ const GLPlot = (props) => {
         plot = new WebGLPlot(canvas.current, {
             antialias: true,
             transparent: true,
-        })
+        }, context.current);
         console.log(plot);
         plot.lines = [];
         for (let i = 0; i < props.streams; i++) {
@@ -47,8 +49,7 @@ const GLPlot = (props) => {
         plot.update();
         glPlot.current = plot;
         return () => {
-            glPlot.current = null;
-            canvas.current = null;
+            glPlot.current.destructor();
         }
     }, [props.streams, props.length])
 

@@ -203,21 +203,27 @@ class Telemetry extends Component {
     }
 
     render() {
+        const plots = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         return (
             <div className={styles.container}>
 
-                <GLPlot
-                    params={{
-                        antialias: true,
-                        transparent: false,
-                    }}
-                    streams={this.state.streamSignals.length}
-                    length={100}
-                    width={300}
-                    height={300}
-                    buffer={this.state.buffer}
-                    className={styles.testPlot}
-                ></GLPlot>
+                {plots.map((plot, i) => {
+                    return(
+                        <GLPlot
+                        key={i}
+                        params={{
+                            antialias: true,
+                            transparent: false,
+                        }}
+                        streams={this.state.streamSignals.length}
+                        length={50}
+                        width={50}
+                        height={50}
+                        buffer={this.state.buffer}
+                        className={styles.testPlot}
+                    ></GLPlot>
+                    )
+                })}
 
                 <div className={styles.content}>
                     { (this.state.interface.renderer) &&
