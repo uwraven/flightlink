@@ -32,6 +32,22 @@ class BufferColorRGBA {
         this.b = b;
         this.a = a;
     }
+
+    /**
+     * @description Returns a BufferColor from hex string and alpha value
+     * @param {String} hex - 3 or 6 value hex code
+     * @param {Number} alpha - alpha value from 0 to 1
+     */
+    static fromHex(hex, alpha) {
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? new BufferColorRGBA(
+            parseInt(result[1], 16) / 256,
+            parseInt(result[2], 16) / 256,
+            parseInt(result[3], 16) / 256,
+            alpha ? alpha : 1.0,
+        ) : false;
+      }
 }
 
 export default BufferColorRGBA;

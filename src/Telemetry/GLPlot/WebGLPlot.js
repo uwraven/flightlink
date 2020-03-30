@@ -1,4 +1,5 @@
 import BufferLine from "./BufferLine";
+import BufferAxes from "./BufferAxes";
 import BufferColorRGBA from "./BufferColorRGBA";
 
 // This is a Javascript ES6 implementation of danchitnis' awesome typescript webgl stream plotting library
@@ -11,67 +12,68 @@ class WebGLPlot {
     _ratioXY;
     _offsetX;
     _offsetY;
+    _axes;
+    _size;
+    _origin;
+
     gl;
-    size;
     lines;
     grid;
-    axes;
     
     /**
-     * @param  {HTMLCanvasElement} context
-     * @param  {} params - Standard webgl context parameters (e.g. antialias, transparency)
+     * @param  {HTMLCanvasElement} canvas
+     * @param {WebGL2RenderingContext} context
+     * @param  {Object} params - Standard webgl context parameters (e.g. antialias, transparency)
      */
-    constructor(canvas, params, context) {
+    constructor(canvas, params) {
         this.pixelRatio = window.devicePixelRatio || 1;
 
-        this.size = {
+        canvas.width = canvas.width * this.pixelRatio;
+        canvas.height = canvas.height * this.pixelRatio;
+
+        this._size = {
             width: canvas.width,
             height: canvas.height
         }
-        // this.size = {
-        //     width: canvas.width,
-        //     height: canvas.height
-        // }
 
-        console.log(context);
+        let gl = canvas.getContext("webgl2", params);
 
-        let gl;
-        if (context !== undefined) gl = context;
-        else gl = canvas.getContext("webgl", params);
+        this.scale = 1.0;
 
-        this._scaleX = 1;
-        this._scaleY = 1;
-        // this.ratioXY = this.size.width / this.size.height;
-        this._ratioXY = 1;
+        // this._ratioXY = this._size.width / this._size.height;
+        // this._ratioXY = 1;
         // Offsets are normalized to canvas space
-        this._offsetX = -0.5;
-        this._offsetY = 0;
+        this._origin = {
+            x: 0,
+            y: 0
+        }
 
         gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT || gl.DEPTH_BUFFER_BIT);
-        gl.viewport(0, 0, this.size.width, this.size.height);
+        gl.viewport(0, 0, this._size.width, this._size.height);
 
         this.gl = gl;
 
         this.lines = [];
 
-        this.axes = {
-            enabled: true,
-            x: {
-                line: new BufferLine(new BufferColorRGBA(0.8, 0.8, 0.8, 1), 2)
-            },
-            y:  {
-                line: new BufferLine(new BufferColorRGBA(0.8, 0.8, 0.8, 1.0), 2)
-            }
+        this._axes = new BufferAxes(new BufferColorRGBA(0.5, 0.5, 0.5, 1.0), false);
+        this._axes._x.line.scaleX = 1 / this._scaleX;
+        this._axes._y.line.scaleY = 1 / this._scaleY;
+        this._axes._x.line = this.generateLine(this._axes._x.line);
+        this._axes._y.line = this.generateLine(this._axes._y.line);
+    }
+    
+    
+    resize() {
+        let canvas = this.gl.canvas;
+        this.size = {
+            width: canvas.width,
+            height: canvas.height
         }
-
-        this.axes.x.line.xy = new Float32Array([0, 0, 1, 0]);
-        this.axes.y.line.xy = new Float32Array([0.0005, -1, 0.0005, 1])
-        this.axes.x.line = this.generateLine(this.axes.x.line);
-        this.axes.y.line = this.generateLine(this.axes.y.line);
     }
 
-    destructor() {
+
+    destroy() {
         const ext = this.gl.getExtension('WebGL_lose_context');
         if (ext) ext.loseContext();
         else {
@@ -82,13 +84,26 @@ class WebGLPlot {
 
     // Axes getters / setters
     set scaleX(x) {
-        this.axes.x.line.scaleX = 1 / x;
-        this._scaleX = x * 2;
+        this._axes._x.line.scaleX = 1 / x;
+        this._scaleX = x;
     }
 
     set scaleY(y) {
-        this.axes.y.line.scaleY = 1 / y;
+        this._axes._y.line.scaleY = 1 / y;
         this._scaleY = y;
+    }
+
+    set size(s) {
+        this._size = {
+            width: s.width,
+            height: s.height
+        }
+        this._ratioXY = this._size.width / this._size.height;
+    }
+
+    set scale(s) {
+        this._scaleX = s;
+        this._scaleY = s;
     }
 
     /**
@@ -99,9 +114,9 @@ class WebGLPlot {
         this.lines.map(line => {
             if (line.visible) this.updateLine(line, gl);
         })
-        if (this.axes.enabled) {
-            if (this.axes.x.line.visible) this.updateLine(this.axes.x.line, gl);
-            if (this.axes.y.line.visible) this.updateLine(this.axes.y.line, gl);
+        if (this._axes.enabled) {
+            this.updateLine(this._axes._x.line, gl);
+            this.updateLine(this._axes._y.line, gl);
         }
     }
 
@@ -195,7 +210,7 @@ class WebGLPlot {
                 line.scaleX * this._scaleX,
                 0,
                 0,
-                line.scaleY * this._scaleY * this._ratioXY
+                line.scaleY * this._scaleY
             ])
         );
 
@@ -203,8 +218,8 @@ class WebGLPlot {
         gl.uniform2fv(
             uoffset,
             new Float32Array([
-                line.offsetX + this._offsetX,
-                line.offsetY + this._offsetY
+                line.offsetX + this._origin.x,
+                line.offsetY + this._origin.y
             ])
         );
 

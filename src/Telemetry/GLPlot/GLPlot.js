@@ -18,38 +18,44 @@ const GLPlot = (props) => {
     let prevTime = useRef(Date.now());
     let glPlot = useRef(null);
 
-
-    // useEffect(() => {
-    //     glPlot.current = new WebGLPlot(canvas.current, {
-    //         antialias: props.params.antialias || false,
-    //         transparent: props.params.transparent || false
-    //     })
-    //     // Clear context before unmounting
-    //     return () => {
-    //         glPlot.current = null;
-    //     }
-    // }, [props.params.antialias, props.params.transparent])
-
-
     useEffect(() => {
+        
+        const resizeListener = () => {
+            if (glPlot.current && canvas.current) {
+                canvas.current.width = canvas.current.clientWidth;
+                canvas.current.height = canvas.current.clientHeight;
+                glPlot.current.resize();
+            }
+        }
+
+        // window.addEventListener('resize', resizeListener);
+
         let plot;
         plot = new WebGLPlot(canvas.current, {
             antialias: true,
             transparent: true,
-        }, context.current);
-        console.log(plot);
-        plot.lines = [];
-        for (let i = 0; i < props.streams; i++) {
-            let line = new BufferLine(
-                new BufferColorRGBA(defaultColors[i % (defaultColors.length - 1)]), props.length
-            );
-            line.fill(0, 1 / props.length, 0);
-            plot.addLine(line);
-        }
-        plot.update();
+        });
         glPlot.current = plot;
+
         return () => {
-            glPlot.current.destructor();
+            window.removeEventListener('resize', resizeListener);
+            glPlot.current.destroy();
+        }
+    }, [])
+
+    useEffect(() => {
+        if (glPlot.current) {
+            let plot = glPlot.current;
+            plot.lines = [];
+            for (let i = 0; i < props.streams; i++) {
+                let line = new BufferLine(
+                    new BufferColorRGBA(defaultColors[i % (defaultColors.length - 1)]), props.length
+                );
+                line.fill(0, 1 / props.length, 0);
+                plot.addLine(line);
+            }
+            plot.update();
+            glPlot.current = plot;
         }
     }, [props.streams, props.length])
 
