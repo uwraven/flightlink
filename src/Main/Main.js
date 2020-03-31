@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import styles from './Main.module.scss';
 import Telemetry from '../Telemetry/Telemetry';
 import MainController from './MainController/MainController';
-import Plot from '../Telemetry/GLPlot/GLPlot';
-import BufferColorRGBA from '../Telemetry/GLPlot/BufferColorRGBA';
 
 const pages = {
     'telemetry': Telemetry,

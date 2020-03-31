@@ -9,6 +9,7 @@
     "bindings": "^1.5.0",
     "electron-is-dev": "^1.1.0",
     "electron-rebuild": "^1.8.8",
+    "gl-rtplot": "file:../../../Dev/NPM/gl-rtplot",
     "node-sass": "^4.13.0",
     "nodemon": "^2.0.2",
     "react": "^16.13.1",

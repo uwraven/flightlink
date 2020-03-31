@@ -1,15 +1,7 @@
 import React, { Component, createRef, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import WebGLPlot from './WebGLPlot';
-import BufferLine from './BufferLine';
-import BufferColorRGBA from './BufferColorRGBA';
-
-const defaultColors = [
-    new BufferColorRGBA(0.0, 1.0, 0.0, 1.0),
-    new BufferColorRGBA(0.0, 0.0, 1.0, 1.0),
-    new BufferColorRGBA(1.0, 0.0, 0.0, 1.0),
-    new BufferColorRGBA(0.0, 0.0, 0.0, 1.0),
-];
+import Plot, {Color, Line, Themes, Axes} from './gl-rtplot';
+import styles from './GLPlot.module.scss';
 
 const GLPlot = (props) => {
 
@@ -28,10 +20,10 @@ const GLPlot = (props) => {
             }
         }
 
-        // window.addEventListener('resize', resizeListener);
+        // window.addEventListenerp('resize', resizeListener);
 
         let plot;
-        plot = new WebGLPlot(canvas.current, {
+        plot = new Plot(canvas.current, {
             antialias: true,
             transparent: true,
         });
@@ -45,17 +37,20 @@ const GLPlot = (props) => {
 
     useEffect(() => {
         if (glPlot.current) {
+            console.log("plot");
             let plot = glPlot.current;
             plot.lines = [];
             for (let i = 0; i < props.streams; i++) {
-                let line = new BufferLine(
-                    new BufferColorRGBA(defaultColors[i % (defaultColors.length - 1)]), props.length
+                let colors = Themes.palette.umber;
+                let line = new Line(
+                    Color.fromHex(colors[i % (colors.length - 1)], 1.0), props.length
                 );
-                line.fill(0, 1 / props.length, 0);
+                line.fillSin(0.1 * i, 1 / props.length, 0.05);
                 plot.addLine(line);
             }
             plot.update();
             glPlot.current = plot;
+            console.log(props.streams, props.length);
         }
     }, [props.streams, props.length])
 
@@ -89,17 +84,24 @@ const GLPlot = (props) => {
         // Add new elements to stream
         if (glPlot.current) {
             glPlot.current.lines.map((line, i) => {
-                line.shiftAdd(new Float32Array([props.buffer]))
+                line.shiftAdd(new Float32Array([props.buffer[i]]))
             })
             glPlot.current.update();
         }
     }, [props.buffer])
 
 
+    useEffect(() => {
+        if (glPlot.current && props.scale) {
+            glPlot.current.scale = 1 / props.scale;
+        }
+    }, [props.scale])
+
     const animateFrame = (time) => {
         const dt = time - prevTime;
     }
 
+    const aspect = (props.aspect) ? styles.aspectTrue : styles.aspectFalse;
     
     return(
         <div className={props.className}>
@@ -107,6 +109,7 @@ const GLPlot = (props) => {
                 ref={canvas}
                 width={props.width || 300}
                 height={props.height || 300}
+                className={[styles.canvas, aspect].join(" ")}
             />
         </div>
     )

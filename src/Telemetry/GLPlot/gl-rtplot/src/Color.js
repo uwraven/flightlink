@@ -1,4 +1,4 @@
-class BufferColorRGBA {
+class Color {
     /**
      * @property {Number} r - Red component (0 - 1)
      */
@@ -40,8 +40,8 @@ class BufferColorRGBA {
      */
     static fromHex(hex, alpha) {
         // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? new BufferColorRGBA(
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? new Color(
             parseInt(result[1], 16) / 256,
             parseInt(result[2], 16) / 256,
             parseInt(result[3], 16) / 256,
@@ -50,4 +50,4 @@ class BufferColorRGBA {
       }
 }
 
-export default BufferColorRGBA;
+export default Color;

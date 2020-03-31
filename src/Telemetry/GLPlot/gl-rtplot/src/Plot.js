@@ -1,11 +1,11 @@
-import BufferLine from "./BufferLine";
-import BufferAxes from "./BufferAxes";
-import BufferColorRGBA from "./BufferColorRGBA";
+import Line from "./Line";
+import Axes from "./Axes";
+import Color from "./Color";
 
 // This is a Javascript ES6 implementation of danchitnis' awesome typescript webgl stream plotting library
 // https://github.com/danchitnis/webgl-plot/tree/master/src
 
-class WebGLPlot {
+class Plot {
 
     _scaleX;
     _scaleY;
@@ -28,8 +28,8 @@ class WebGLPlot {
     constructor(canvas, params) {
         this.pixelRatio = window.devicePixelRatio || 1;
 
-        canvas.width = canvas.width * this.pixelRatio;
-        canvas.height = canvas.height * this.pixelRatio;
+        // canvas.width = canvas.width * this.pixelRatio;
+        // canvas.height = canvas.height * this.pixelRatio;
 
         this._size = {
             width: canvas.width,
@@ -56,11 +56,11 @@ class WebGLPlot {
 
         this.lines = [];
 
-        this._axes = new BufferAxes(new BufferColorRGBA(0.5, 0.5, 0.5, 1.0), false);
-        this._axes._x.line.scaleX = 1 / this._scaleX;
-        this._axes._y.line.scaleY = 1 / this._scaleY;
-        this._axes._x.line = this.generateLine(this._axes._x.line);
-        this._axes._y.line = this.generateLine(this._axes._y.line);
+        this._axes = new Axes(new Color(0.5, 0.5, 0.5, 1.0), false);
+        this._axes.x.line.scaleX = 1 / this._scaleX;
+        this._axes.y.line.scaleY = 1 / this._scaleY;
+        this._axes.x.line = this.generateLine(this._axes.x.line);
+        this._axes.y.line = this.generateLine(this._axes.y.line);
     }
     
     
@@ -84,12 +84,12 @@ class WebGLPlot {
 
     // Axes getters / setters
     set scaleX(x) {
-        this._axes._x.line.scaleX = 1 / x;
+        this._axes.x.line.scaleX = 1 / x;
         this._scaleX = x;
     }
 
     set scaleY(y) {
-        this._axes._y.line.scaleY = 1 / y;
+        this._axes.y.line.scaleY = 1 / y;
         this._scaleY = y;
     }
 
@@ -114,9 +114,10 @@ class WebGLPlot {
         this.lines.map(line => {
             if (line.visible) this.updateLine(line, gl);
         })
+        console.log(this.lines);
         if (this._axes.enabled) {
-            this.updateLine(this._axes._x.line, gl);
-            this.updateLine(this._axes._y.line, gl);
+            this.updateLine(this._axes.x.line, gl);
+            this.updateLine(this._axes.y.line, gl);
         }
     }
 
@@ -197,7 +198,7 @@ class WebGLPlot {
 
     /**
      * 
-     * @param {BufferLine} line 
+     * @param {Line} line 
      * @param {*} gl
      */
     updateLine(line, gl) {
@@ -246,7 +247,7 @@ class WebGLPlot {
     
 
     /**
-     * @param  {BufferLine} line - A BufferLine object
+     * @param  {Line} line - A BufferLine object
      * @description Instantiates a new webgl shader from a BufferLine object and draws to a webgl context.
      */
     addLine(line) {
@@ -255,4 +256,4 @@ class WebGLPlot {
     }
 }
 
-export default WebGLPlot
+export default Plot

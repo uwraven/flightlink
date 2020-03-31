@@ -2,18 +2,8 @@ import React, { Component } from 'react';
 import styles from './Telemetry.module.scss';
 import ThreeRenderer from './ThreeRenderer/ThreeRenderer';
 import SignalConfiguration, {RenderModes, SignalModes} from './Config.js';
-import WebGLPlot from './GLPlot/WebGLPlot';
-import BufferLine from './GLPlot/BufferLine';
-import BufferColorRGBA from './GLPlot/BufferColorRGBA';
 import TelemetryController from './TelemetryController/TelemetryController';
 import GLPlot from './GLPlot/GLPlot';
-
-const COLORS = [
-    new BufferColorRGBA(0, 0.466, 0.733, 1.0),
-    new BufferColorRGBA(0.2, 0.73, 0.933, 1.0),
-    new BufferColorRGBA(0, 0.6, 0.533, 1.0),
-    new BufferColorRGBA(0.933, 0.466, 0.2, 1.0),
-];
 
 const initialVisualState = {
     r: {
@@ -70,7 +60,7 @@ class Telemetry extends Component {
             configurations: configs.configurations,
             configurationId: previousConfigurationId
         }, () => {
-            // this.updateConfiguration();
+            this.updateConfiguration();
         });
     }
 
@@ -99,67 +89,69 @@ class Telemetry extends Component {
                     r: renderSignals.find(signal => signal.signalMode === SignalModes.POSITION) || 0,
                     q: renderSignals.find(signal => signal.signalMode === SignalModes.ATTITUDE.QUATERNION) || 0,
                     e: renderSignals.find(signal => signal.signalMode === SignalModes.ATTITUDE.EULER) || 0
-                }
+                },
+                plotLength: 500,
             }, () => {
-
+                console.log("rerender")
                 const numSignals = this.state.streamSignals.reduce((num, stream) => num += stream.dataLength, 0);
                 const initialBuffer = new Float32Array(numSignals);
                 initialBuffer.fill(0.5);
-                this.setState({buffer: initialBuffer});
+                this.setState({
+                    buffer: initialBuffer,
+                });
 
                 this.t = 0;
                 
-                let plots = this.streamContexts.slice(0, this.state.streamSignals.length).map((context, i) => {
-                    let stream = this.state.streamSignals[i];
+                // let plots = this.streamContexts.slice(0, this.state.streamSignals.length).map((context, i) => {
+                //     let stream = this.state.streamSignals[i];
 
-                    if (context && stream) {
+                //     if (context && stream) {
 
-                        let glPlot = new WebGLPlot(context, {
-                            antialias: true,
-                            transparent: false,
-                        });
+                //         let glPlot = new WebGLPlot(context, {
+                //             antialias: true,
+                //             transparent: false,
+                //         });
 
-                        if (stream.plot) {
-                            glPlot.scaleX = 1 / stream.plot.scale.x;
-                            glPlot.scaleY = 1 / stream.plot.scale.y;
-                        }
+                //         if (stream.plot) {
+                //             glPlot.scaleX = 1 / stream.plot.scale.x;
+                //             glPlot.scaleY = 1 / stream.plot.scale.y;
+                //         }
 
-                        let numPoints = this.state.plotLength;
-                        for (let j = 0; j < stream.dataLength; j++) {
-                            let line = new BufferLine(
-                                COLORS[j],
-                                numPoints,
-                            );
-                            line.fill(0, 1 / numPoints, 0);
-                            glPlot.addLine(line);
-                        }
+                //         let numPoints = this.state.plotLength;
+                //         for (let j = 0; j < stream.dataLength; j++) {
+                //             let line = new BufferLine(
+                //                 COLORS[j],
+                //                 numPoints,
+                //             );
+                //             line.fill(0, 1 / numPoints, 0);
+                //             glPlot.addLine(line);
+                //         }
 
-                        return {
-                            glPlot: glPlot,
-                            stream: stream
-                        };
+                //         return {
+                //             glPlot: glPlot,
+                //             stream: stream
+                //         };
 
-                    } else {
-                        console.warn("Invalid stream context, check React lifecycle");
-                        return undefined;
-                    }
-                })
+                //     } else {
+                //         console.warn("Invalid stream context, check React lifecycle");
+                //         return undefined;
+                //     }
+                // })
 
-                const animateFrame = (t) => {
-                    if (this.newData) {
-                        const dt = t - this.t;
-                        plots.map(plot => {
-                            plot.glPlot.lines.map((line, j) => {
-                                line.shiftAdd(new Float32Array([this.state.buffer[plot.stream.dataIndexStart + j]]));
-                            })
-                            plot.glPlot.update();
-                        })
-                    }
-                    this.newData = false;
-                    window.requestAnimationFrame(animateFrame);
-                }
-
-                animateFrame(0);
+                // const animateFrame = (t) => {
+                //     if (this.newData) {
+                //         const dt = t - this.t;
+                //         plots.map(plot => {
+                //             plot.glPlot.lines.map((line, j) => {
+                //                 line.shiftAdd(new Float32Array([this.state.buffer[plot.stream.dataIndexStart + j]]));
+                //             })
+                //             plot.glPlot.update();
+                //         })
+                //     }
+                //     this.newData = false;
+                //     window.requestAnimationFrame(animateFrame);
+                // }
+                // animateFrame(0);
 
                 this.onResize();
             }
@@ -168,9 +160,12 @@ class Telemetry extends Component {
 
     onData(newData) {
         // X is the full length data vector
-        const X = newData.payload;
+        let X = newData.payload;
+        X = [X[0], X[7], X[8], ...X];
         this.newData = true;
-        this.setState({buffer: X});
+        this.setState({
+            buffer: X
+        });
         this.updateRenderedState(X);
     }
 
@@ -211,11 +206,12 @@ class Telemetry extends Component {
                         transparent: false,
                     }}
                     streams={this.state.streamSignals.length}
-                    length={50}
+                    length={this.state.plotLength}
                     width={600}
                     height={300}
                     buffer={this.state.buffer}
                     className={styles.testPlot}
+                    aspect={true}
                 ></GLPlot>
 
                 <div className={styles.content}>

@@ -1,4 +1,4 @@
-class BufferLine {
+class Line {
 
     /**
      * @property {BufferColor} color - line color (RGBA)
@@ -55,7 +55,7 @@ class BufferLine {
 
 
     /**
-     * @param {BufferColor} color - the color of the line
+     * @param {Color} color - the color of the line
      * @param {Number} length - the number of points to be rendered
      */
     constructor(color, length) {
@@ -115,6 +115,13 @@ class BufferLine {
         }
     }
 
+    fillSin(x0, dx, period) {
+        for (let i = 0; i < this.length; i++) {
+            this.setX(i, x0 + dx * i);
+            this.setY(i, Math.sin(x0 + (dx * i) / period));
+        }
+    }
+
     /**
      * 
      * @param {Float32Array} data - new data
@@ -132,4 +139,4 @@ class BufferLine {
     
 }
 
-export default BufferLine;
+export default Line;

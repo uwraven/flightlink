@@ -1,4 +1,4 @@
-class BufferGrid {
+class Grid {
 
 
     /**
@@ -19,4 +19,4 @@ class BufferGrid {
     }
 }
 
-export default BufferGrid
+export default Grid
