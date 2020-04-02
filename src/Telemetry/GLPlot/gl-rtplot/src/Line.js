@@ -16,11 +16,6 @@ class Line {
     visible;
 
     /**
-     * @property {Number} intensity - rendered intensity of the line
-     */
-    intensity;
-
-    /**
      * @property {Boolean} closed - If the line should be closed
      */
     closed;
@@ -68,7 +63,6 @@ class Line {
         this.offsetY = 0;
 
         this.visible = true;
-        this.intensity = 1;
 
         this.closed = false;
 
@@ -100,7 +94,7 @@ class Line {
         return this.xy[index * 2 + 1];
     }
 
-    setLinearSpace(x0, dx) {
+    setLinspace(x0, dx) {
         for (let i = 0; i < this.length; i++) this.setX(i, x0 + i * dx);
     }
 
@@ -112,13 +106,6 @@ class Line {
         for (let i = 0; i < this.length; i++) {
             this.setX(i, x0 + dx * i);
             this.setY(i, y);
-        }
-    }
-
-    fillSin(x0, dx, period) {
-        for (let i = 0; i < this.length; i++) {
-            this.setX(i, x0 + dx * i);
-            this.setY(i, Math.sin(x0 + (dx * i) / period));
         }
     }
 

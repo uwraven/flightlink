@@ -35,6 +35,7 @@ class Telemetry extends Component {
             interface: {
                 renderer: false,
                 streams: true,
+                live: false,
             }
         }
         this.t = 0;
@@ -91,8 +92,8 @@ class Telemetry extends Component {
                     e: renderSignals.find(signal => signal.signalMode === SignalModes.ATTITUDE.EULER) || 0
                 },
                 plotLength: 500,
+                interface: {...this.state.interface, live: true}
             }, () => {
-                console.log("rerender")
                 const numSignals = this.state.streamSignals.reduce((num, stream) => num += stream.dataLength, 0);
                 const initialBuffer = new Float32Array(numSignals);
                 initialBuffer.fill(0.5);
@@ -206,12 +207,13 @@ class Telemetry extends Component {
                         transparent: false,
                     }}
                     streams={this.state.streamSignals.length}
-                    length={this.state.plotLength}
+                    duration={10000}
+                    points={500}
                     width={600}
                     height={300}
                     buffer={this.state.buffer}
                     className={styles.testPlot}
-                    aspect={true}
+                    on={this.state.interface.live}
                 ></GLPlot>
 
                 <div className={styles.content}>

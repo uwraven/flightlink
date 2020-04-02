@@ -6,53 +6,53 @@ import styles from './GLPlot.module.scss';
 const GLPlot = (props) => {
 
     let canvas = useRef();
-    let context = useRef();
-    let prevTime = useRef(Date.now());
     let glPlot = useRef(null);
 
+    // Called during animate frame
+    let buffer = useRef(null);
+    let _t = useRef(0);
+    let _dt = useRef(16);
+    let on = useRef(true);
+
     useEffect(() => {
-        
-        const resizeListener = () => {
-            if (glPlot.current && canvas.current) {
-                canvas.current.width = canvas.current.clientWidth;
-                canvas.current.height = canvas.current.clientHeight;
-                glPlot.current.resize();
-            }
-        }
-
-        // window.addEventListenerp('resize', resizeListener);
-
         let plot;
-        plot = new Plot(canvas.current, {
-            antialias: true,
-            transparent: true,
+         plot = new Plot(canvas.current, {
+            antialias: props.antialias,
+            transparent: props.transparent
         });
         glPlot.current = plot;
 
         return () => {
-            window.removeEventListener('resize', resizeListener);
             glPlot.current.destroy();
         }
-    }, [])
+    }, [props.antialias, props.transparent])
+
 
     useEffect(() => {
+        buffer.current = props.buffer;
+    }, [props.buffer])
+
+
+    useEffect(() => {
+        let dx = 1 / props.points;
         if (glPlot.current) {
-            console.log("plot");
             let plot = glPlot.current;
             plot.lines = [];
             for (let i = 0; i < props.streams; i++) {
-                let colors = Themes.palette.umber;
-                let line = new Line(
-                    Color.fromHex(colors[i % (colors.length - 1)], 1.0), props.length
-                );
-                line.fillSin(0.1 * i, 1 / props.length, 0.05);
+                let colors = Themes.palette.midnight;
+                let line = new Line(Color.fromHex(colors[i % (colors.length - 1)], 1.0), props.points);
+                line.fill(0, dx, buffer[i] || 0);
                 plot.addLine(line);
             }
             plot.update();
             glPlot.current = plot;
-            console.log(props.streams, props.length);
         }
-    }, [props.streams, props.length])
+    }, [props.streams, props.points])
+
+
+    useEffect(() => {
+        _dt.current = props.duration / props.points;
+    }, [props.points, props.duration])
 
 
     useEffect(() => {
@@ -63,6 +63,10 @@ const GLPlot = (props) => {
                 height: props.height
             }
         }
+        if (canvas.current) {
+            canvas.current.width = props.width;
+            canvas.current.height = props.height;
+        }
     }, [props.width, props.height])
 
 
@@ -72,44 +76,54 @@ const GLPlot = (props) => {
 
 
     useEffect(() => {
-        // Update plot length
-        if (glPlot.current) {
-            let plot = glPlot.current;
-            plot.lines.map((line) => line.length = props.length); 
-        }
-    }, [props.length])
-
-
-    useEffect(() => {
-        // Add new elements to stream
-        if (glPlot.current) {
-            glPlot.current.lines.map((line, i) => {
-                line.shiftAdd(new Float32Array([props.buffer[i]]))
-            })
-            glPlot.current.update();
-        }
-    }, [props.buffer])
-
-
-    useEffect(() => {
         if (glPlot.current && props.scale) {
             glPlot.current.scale = 1 / props.scale;
         }
     }, [props.scale])
 
-    const animateFrame = (time) => {
-        const dt = time - prevTime;
-    }
+
+    useEffect(() => {
+        console.log("on change");
+        console.log(props.on);
+        on.current = props.on;
+
+        const animateFrame = (t) => {
+            // animateframe is called much faster than buffer is updated,
+            // animateframe is called slower than buffer is updated, or called 
+            // about the same rate.
+
+            let dt = t - _t.current;
+
+            let intervals = Math.floor(dt, _dt.current);
+            let remainder = dt % _dt.current;
+
+            if (glPlot.current && dt >= _dt.current) {
+                glPlot.current.lines.map((line, i) => {
+                    line.shiftAdd(buffer.current.slice(i, i+1));
+                })
+                glPlot.current.update();
+                _t.current = t;
+            }
+
+            // animate frame code
+            if (on.current) requestAnimationFrame(animateFrame)
+        }
+
+        if (props.on) animateFrame(0);
+
+    }, [props.on])
+
 
     const aspect = (props.aspect) ? styles.aspectTrue : styles.aspectFalse;
     
+
     return(
         <div className={props.className}>
             <canvas
                 ref={canvas}
                 width={props.width || 300}
                 height={props.height || 300}
-                className={[styles.canvas, aspect].join(" ")}
+                className={[styles.canvas].join(" ")}
             />
         </div>
     )
@@ -124,7 +138,8 @@ GLPlot.propTypes = {
         })
     }),
     streams: PropTypes.number.isRequired,
-    length: PropTypes.number.isRequired,
+    points: PropTypes.number.isRequired,
+    duration: PropTypes.number.isRequired,
     colors: PropTypes.array,
     width: PropTypes.number,
     height: PropTypes.number

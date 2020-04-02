@@ -15,7 +15,7 @@ class Plot {
     _axes;
     _size;
     _origin;
-
+    
     gl;
     lines;
     grid;
@@ -111,14 +111,16 @@ class Plot {
      */
     update() {
         const gl = this.gl;
-        this.lines.map(line => {
-            if (line.visible) this.updateLine(line, gl);
-        })
-        console.log(this.lines);
         if (this._axes.enabled) {
             this.updateLine(this._axes.x.line, gl);
             this.updateLine(this._axes.y.line, gl);
+            if (this._axes.grid.enabled) {
+
+            }
         }
+        this.lines.map(line => {
+            if (line.visible) this.updateLine(line, gl);
+        })
     }
 
 
@@ -130,6 +132,7 @@ class Plot {
             this.gl.COLOR_BUFFER_BIT || this.gl.DEPTH_BUFFER_BIT
         )
     }
+
 
 
     /**
