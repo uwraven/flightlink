@@ -93,7 +93,6 @@ export default class Renderer {
                 let fragmentShader = _gl.createShader(_gl.FRAGMENT_SHADER);
                 _gl.shaderSource(fragmentShader, LineShader.FRAGMENT);
                 _gl.compileShader(fragmentShader);
-                _gl.attachShader(object.program, fragmentShader);
 
                 object.program = _gl.createProgram();
 
