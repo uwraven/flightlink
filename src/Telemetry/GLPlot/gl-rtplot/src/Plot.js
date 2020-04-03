@@ -1,8 +1,7 @@
 import Line from "./Line";
 import Axes from "./Axes";
-import Color from "./Color";
+import Color from "./Core/Color";
 
-// This is a Javascript ES6 implementation of danchitnis' awesome typescript webgl stream plotting library
 // https://github.com/danchitnis/webgl-plot/tree/master/src
 
 class Plot {
@@ -18,14 +17,13 @@ class Plot {
     
     gl;
     lines;
-    grid;
     
     /**
      * @param  {HTMLCanvasElement} canvas
      * @param {WebGL2RenderingContext} context
      * @param  {Object} params - Standard webgl context parameters (e.g. antialias, transparency)
      */
-    constructor(canvas, params) {
+    constructor(canvas, properties) {
         this.pixelRatio = window.devicePixelRatio || 1;
 
         // canvas.width = canvas.width * this.pixelRatio;
@@ -36,7 +34,7 @@ class Plot {
             height: canvas.height
         }
 
-        let gl = canvas.getContext("webgl2", params);
+        let gl = canvas.getContext("webgl2", properties);
 
         this.scale = 1.0;
 
@@ -49,6 +47,7 @@ class Plot {
         }
 
         gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.ALWAYS)
         gl.clear(gl.COLOR_BUFFER_BIT || gl.DEPTH_BUFFER_BIT);
         gl.viewport(0, 0, this._size.width, this._size.height);
 
@@ -56,11 +55,26 @@ class Plot {
 
         this.lines = [];
 
-        this._axes = new Axes(new Color(0.5, 0.5, 0.5, 1.0), false);
+        if (properties.grid) {
+            this._axes = Axes.Grid(
+                new Color(0.6, 0.6, 0.6, 1.0),
+                new Color(0.95, 0.95, 0.95, 1.0),
+                12,
+                6
+            );
+            this._axes.grid.lines.x.map(line => this.generateLine(line));
+            this._axes.grid.lines.y.map(line => this.generateLine(line));
+        } else {
+            this._axes = new Axes(new Color(0.6, 0.6, 0.6, 1.0));
+        }
         this._axes.x.line.scaleX = 1 / this._scaleX;
         this._axes.y.line.scaleY = 1 / this._scaleY;
         this._axes.x.line = this.generateLine(this._axes.x.line);
         this._axes.y.line = this.generateLine(this._axes.y.line);
+    }
+
+
+    layout() {
     }
     
     
@@ -73,7 +87,7 @@ class Plot {
     }
 
 
-    destroy() {
+    dispose() {
         const ext = this.gl.getExtension('WebGL_lose_context');
         if (ext) ext.loseContext();
         else {
@@ -112,11 +126,16 @@ class Plot {
     update() {
         const gl = this.gl;
         if (this._axes.enabled) {
+            if (this._axes.grid.enabled) {
+                this._axes.grid.lines.x.map(line => {
+                    this.updateLine(line, gl)
+                });
+                this._axes.grid.lines.y.map(line => {
+                    this.updateLine(line, gl)
+                });
+            }
             this.updateLine(this._axes.x.line, gl);
             this.updateLine(this._axes.y.line, gl);
-            if (this._axes.grid.enabled) {
-
-            }
         }
         this.lines.map(line => {
             if (line.visible) this.updateLine(line, gl);
@@ -151,12 +170,12 @@ class Plot {
 
         // Attach vertex shader
         const vertexShaderCode = `
-            attribute vec2 coordinates;
-            uniform mat2 uscale;
-            uniform vec2 uoffset;
+            attribute vec2 uv;
+            uniform mat2 u_scale;
+            uniform vec2 u_offset;
 
             void main(void) {
-                gl_Position = vec4(uscale * (coordinates + uoffset), 0.0, 1.0);
+                gl_Position = vec4(u_scale * (uv + u_offset), 0.0, 1.0);
             }`;
 
         const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
@@ -184,7 +203,7 @@ class Plot {
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, line._vbuffer);
 
-        line._coord = this.gl.getAttribLocation(line._prog, "coordinates");
+        line._coord = this.gl.getAttribLocation(line._prog, "uv");
         this.gl.vertexAttribPointer(
             line._coord,
             2,
@@ -206,9 +225,9 @@ class Plot {
      */
     updateLine(line, gl) {
         gl.useProgram(line._prog);
-        const uscale = gl.getUniformLocation(line._prog, "uscale");
+        const u_scale = gl.getUniformLocation(line._prog, "u_scale");
         gl.uniformMatrix2fv(
-            uscale,
+            u_scale,
             false,
             new Float32Array([
                 line.scaleX * this._scaleX,
@@ -218,9 +237,9 @@ class Plot {
             ])
         );
 
-        const uoffset = gl.getUniformLocation(line._prog, "uoffset");
+        const u_offset = gl.getUniformLocation(line._prog, "u_offset");
         gl.uniform2fv(
-            uoffset,
+            u_offset,
             new Float32Array([
                 line.offsetX + this._origin.x,
                 line.offsetY + this._origin.y
@@ -244,7 +263,7 @@ class Plot {
         gl.drawArrays(
             gl.LINE_STRIP,
             0,
-            line.length
+            line.points
         )
     }
     

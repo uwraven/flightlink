@@ -17,7 +17,8 @@
     "react-scripts": "^3.4.0",
     "serialport": "^8.0.6",
     "three": "^0.112.1",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "webpack-glsl-loader": "^1.0.1"
   },
   "main": "public/electron.js",
   "scripts": {

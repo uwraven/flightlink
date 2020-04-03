@@ -1,4 +1,6 @@
-class Line {
+import CoreObject from './Core/CoreObject';
+
+class Line2 {
 
     /**
      * @property {BufferColor} color - line color (RGBA)
@@ -6,9 +8,9 @@ class Line {
     color;
 
     /**
-     * @property {Number} length - number of points to be rendered
+     * @property {Number} points - number of points to be rendered
      */
-    length;
+    points;
 
     /**
      * @property {Boolean} visible - flag to render the line
@@ -48,14 +50,13 @@ class Line {
      */
     _coord;
 
-
     /**
      * @param {Color} color - the color of the line
-     * @param {Number} length - the number of points to be rendered
+     * @param {Number} points - the number of points to be rendered
      */
-    constructor(color, length) {
+    constructor(color, points) {
         this.color = color;
-        this.length = length;
+        this.points = points;
 
         this.scaleX = 1;
         this.scaleY = 1;
@@ -66,12 +67,11 @@ class Line {
 
         this.closed = false;
 
-        this.xy = new Float32Array(2 * length);
+        this.xy = new Float32Array(2 * points);
         this._vbuffer = 0;
         this._prog = 0;
         this._coord = 0;
 
-        this.max = 0;
     }
 
     setColor(color) {
@@ -95,15 +95,15 @@ class Line {
     }
 
     setLinspace(x0, dx) {
-        for (let i = 0; i < this.length; i++) this.setX(i, x0 + i * dx);
+        for (let i = 0; i < this.points; i++) this.setX(i, x0 + i * dx);
     }
 
     fillY(y) {
-        for (let i = 0; i < this.length; i++) this.setY(i, y);
+        for (let i = 0; i < this.points; i++) this.setY(i, y);
     }
 
     fill(x0, dx, y) {
-        for (let i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.points; i++) {
             this.setX(i, x0 + dx * i);
             this.setY(i, y);
         }
@@ -115,15 +115,70 @@ class Line {
      */
     shiftAdd(data) {
         const shiftLen = data.length;
-        for (let i = 0; i < this.length - shiftLen; i++) {
+        for (let i = 0; i < this.points - shiftLen; i++) {
             this.setY(i, this.getY(i + shiftLen));
         }
         for (let i = 0; i < shiftLen; i++) {
-            this.setY(i + this.length - shiftLen, data[i]);
+            this.setY(i + this.points - shiftLen, data[i]);
         }
     }
 
     
+}
+
+// export default Line;
+
+class Line extends CoreObject {
+
+    color;
+    isLine = true;
+
+    constructor(color, points) {
+        super();
+        this.color = color;
+        this.buffer = new Float32Array(2 * points);
+        this.scale = {x: 1, y: 1};
+        this.origin = {x: 0, y: 0};
+    }
+
+    setX = (i, x) => { this.buffer[i * 2] = x }
+
+    setY = (i, x) => { this.buffer[i * 2 + 1] = x }
+
+    getX = (i) => this.buffer[i * 2];
+
+    getY = (i) => this.buffer[i * 2 + 1];
+
+    linspace(x0, dx) {
+        for (let i = 0; i < this.points; i++) this.setX(i, x0 + i * dx);
+    }
+
+    fillY(y) {
+        for (let i = 0; i < this.points; i++) this.setY(i, y);
+    }
+
+    fill(x0, dx, y) {
+        for (let i = 0; i < this.points; i++) {
+            this.setX(i, x0 + dx * i);
+            this.setY(i, y);
+        }
+    }
+
+    /**
+     * 
+     * @param {Float32Array} data a fresh buffer of data
+     */
+    push(data) {
+        const len = data.length;
+        for (let i = 0; i < this.bufferSize - len; i++) {
+            this.setY(i, this.getY(i + len));
+        }
+        for (let i = 0; i < len; i++) {
+            this.setY(i + this.bufferSize - len, data[i]);
+        }
+    }
+
+
 }
 
 export default Line;

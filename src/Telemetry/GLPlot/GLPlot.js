@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import Plot, {Color, Line, Themes, Axes} from './gl-rtplot';
 import styles from './GLPlot.module.scss';
 
-const GLPlot = (props) => {
+const GLPlot = ({layout, buffer, ...props}) => {
 
     let canvas = useRef();
     let glPlot = useRef(null);
 
     // Called during animate frame
-    let buffer = useRef(null);
+    let _buffer = useRef(null);
     let _t = useRef(0);
     let _dt = useRef(16);
     let on = useRef(true);
@@ -17,42 +17,42 @@ const GLPlot = (props) => {
     useEffect(() => {
         let plot;
          plot = new Plot(canvas.current, {
-            antialias: props.antialias,
-            transparent: props.transparent
+            antialias: layout.render.antialias,
+            transparent: layout.render.transparent
         });
         glPlot.current = plot;
 
         return () => {
-            glPlot.current.destroy();
+            glPlot.current.dispose();
         }
-    }, [props.antialias, props.transparent])
+    }, [layout.render.antialias, layout.render.transparent])
 
 
     useEffect(() => {
-        buffer.current = props.buffer;
-    }, [props.buffer])
+        _buffer.current = buffer;
+    }, [buffer])
 
 
     useEffect(() => {
-        let dx = 1 / props.points;
+        let dx = 1 / layout.points;
         if (glPlot.current) {
             let plot = glPlot.current;
             plot.lines = [];
-            for (let i = 0; i < props.streams; i++) {
+            for (let i = 0; i < layout.streams; i++) {
                 let colors = Themes.palette.midnight;
-                let line = new Line(Color.fromHex(colors[i % (colors.length - 1)], 1.0), props.points);
-                line.fill(0, dx, buffer[i] || 0);
+                let line = new Line(Color.fromHex(colors[i % (colors.length - 1)], 1.0), layout.points + 1);
+                line.fill(0, dx, _buffer[i] || 0);
                 plot.addLine(line);
             }
             plot.update();
             glPlot.current = plot;
         }
-    }, [props.streams, props.points])
+    }, [layout.streams, layout.points])
 
 
     useEffect(() => {
-        _dt.current = props.duration / props.points;
-    }, [props.points, props.duration])
+        _dt.current = layout.duration / layout.points;
+    }, [layout.points, layout.duration])
 
 
     useEffect(() => {
@@ -71,6 +71,17 @@ const GLPlot = (props) => {
 
 
     useEffect(() => {
+        if (glPlot.current) glPlot.current._origin.x = layout.origin.x || 0;
+    }, [layout.origin.x]);
+
+
+    useEffect(() => {
+        if (glPlot.current) glPlot.current._origin.y = layout.origin.y || 0;
+    }, [layout.origin.y]);
+
+
+
+    useEffect(() => {
         // Update plot color values
     }, [props.colors])
 
@@ -80,29 +91,26 @@ const GLPlot = (props) => {
             glPlot.current.scale = 1 / props.scale;
         }
     }, [props.scale])
-
+ 
 
     useEffect(() => {
-        console.log("on change");
-        console.log(props.on);
         on.current = props.on;
 
         const animateFrame = (t) => {
-            // animateframe is called much faster than buffer is updated,
-            // animateframe is called slower than buffer is updated, or called 
-            // about the same rate.
 
             let dt = t - _t.current;
 
-            let intervals = Math.floor(dt, _dt.current);
+            let intervals = Math.floor(dt / _dt.current);
             let remainder = dt % _dt.current;
 
             if (glPlot.current && dt >= _dt.current) {
                 glPlot.current.lines.map((line, i) => {
-                    line.shiftAdd(buffer.current.slice(i, i+1));
+                    for (let j = 0; j < intervals; j++) {
+                        line.push(_buffer.current.slice(i, i+1));
+                    }
                 })
                 glPlot.current.update();
-                _t.current = t;
+                _t.current = t - remainder;
             }
 
             // animate frame code
@@ -131,18 +139,18 @@ const GLPlot = (props) => {
 }
 
 GLPlot.propTypes = {
-    plot: PropTypes.objectOf({
-        scale: PropTypes.objectOf({
-            x: PropTypes.number,
-            y: PropTypes.number
-        })
-    }),
-    streams: PropTypes.number.isRequired,
-    points: PropTypes.number.isRequired,
-    duration: PropTypes.number.isRequired,
-    colors: PropTypes.array,
-    width: PropTypes.number,
-    height: PropTypes.number
+    // layout: PropTypes.objectOf({
+    //     scale: PropTypes.objectOf({
+    //         x: PropTypes.number,
+    //         y: PropTypes.number
+    //     })
+    // }),
+    // streams: PropTypes.number.isRequired,
+    // points: PropTypes.number.isRequired,
+    // duration: PropTypes.number.isRequired,
+    // colors: PropTypes.array,
+    // width: PropTypes.number,
+    // height: PropTypes.number
 }
 
 export default GLPlot;

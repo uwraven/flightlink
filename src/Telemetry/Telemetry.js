@@ -202,19 +202,31 @@ class Telemetry extends Component {
         return (
             <div className={styles.container}>
                 <GLPlot
-                    params={{
-                        antialias: true,
-                        transparent: false,
+                    layout={{
+                        duration: 10000,
+                        points: 1000,
+                        streams: this.state.streamSignals.length,
+                        render: {
+                            antialias: true,
+                            transparent: false,
+                        },
+                        origin: {
+                            x: 0,
+                            y: 0,
+                        },
+                        axes: {
+
+                        },
+                        grid: {
+
+                        }
                     }}
-                    streams={this.state.streamSignals.length}
-                    duration={10000}
-                    points={500}
                     width={600}
                     height={300}
                     buffer={this.state.buffer}
                     className={styles.testPlot}
                     on={this.state.interface.live}
-                ></GLPlot>
+                />
 
                 <div className={styles.content}>
                     { (this.state.interface.renderer) &&
