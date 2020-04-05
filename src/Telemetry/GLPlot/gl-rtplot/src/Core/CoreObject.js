@@ -4,6 +4,7 @@ class CoreObject {
     _vbuffer;
     buffer;
     bufferSize;
+    renderable = true;
     
     constructor() {
 
