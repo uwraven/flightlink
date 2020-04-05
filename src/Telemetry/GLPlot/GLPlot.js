@@ -20,12 +20,13 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 				alpha: layout.render.alpha
 			});
 
-			let majorColor = new Color(0.85, 1.0);
-			let minorColor = new Color(0.95, 1.0);
+			console.log(plot);
+
+			let majorColor = new Color(0.85, 0.85, 0.85, 1.0);
 
 			let axes = new Axes(majorColor);
-			let grid = new Grid(majorColor, minorColor, 10, 5);
-			axes.grid = grid;
+			// let grid = new Grid(majorColor, minorColor, 10, 5);
+			// axes.grid = grid;
 
 			plot.attachAxes(axes);
 
@@ -54,9 +55,11 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 				for (let i = 0; i < layout.streams; i++) {
 					let colors = Themes.palette.midnight;
 					let line = new Line(Color.fromHex(colors[i % (colors.length - 1)], 1.0), layout.points + 1);
-					line.fill(0, dx, _buffer[i] || 0);
+					line.fill(0, dx, 0.5 || 0);
 					plot.addStream(line);
 				}
+				console.log(plot.lines);
+
 				plot.render();
 				glplot.current = plot;
 			}
@@ -75,10 +78,7 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 		() => {
 			// Update plot size
 			if (glplot.current) {
-				glplot.current.renderer.setSize({
-					width: props.width,
-					height: props.height
-				});
+				glplot.current.renderer.setSize(props.width, props.height);
 			}
 		},
 		[ props.width, props.height ]
@@ -87,10 +87,7 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 	useEffect(
 		() => {
 			if (glplot.current) {
-				glplot.current.setOrigin({
-					x: layout.origin.x,
-					y: layout.origin.y
-				});
+				glplot.current.setOrigin(layout.origin.x, layout.origin.y);
 			}
 		},
 		[ layout.origin.x, layout.origin.y ]
@@ -105,11 +102,14 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 
 	useEffect(
 		() => {
-			if (glplot.current && props.scale) {
-				glplot.current.setScale(1 / props.scale);
+			if (glplot.current && layout.scale) {
+				glplot.current.setScale({
+					x: layout.scale,
+					y: layout.scale
+				});
 			}
 		},
-		[ props.scale ]
+		[ layout.scale ]
 	);
 
 	useEffect(

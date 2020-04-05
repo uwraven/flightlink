@@ -1,7 +1,7 @@
 import Line from './Line';
 import Color from './Core/Color';
 
-export default class Axes {
+class Axes {
 	x;
 	y;
 	grid;
@@ -11,7 +11,6 @@ export default class Axes {
 	/**
      *
      * @param {Color} color - axes color
-     * @param {Boolean} enableGrid - enable background grid
      */
 
 	constructor(color) {
@@ -22,16 +21,9 @@ export default class Axes {
 		this.y = {
 			line: new Line(color, 2)
 		};
-		this.x.line.xy = new Float32Array([ -1, 0, 1, 0 ]);
-		this.y.line.xy = new Float32Array([ 0, -1, 0, 1 ]);
-
-		this.grid = {
-			static: false,
-			enabled: false,
-			lines: {
-				x: [],
-				y: []
-			}
-		};
+		this.x.line.buffer = new Float32Array([ -1, 0, 1, 0 ]);
+		this.y.line.buffer = new Float32Array([ 0, -1, 0, 1 ]);
 	}
 }
+
+export default Axes;

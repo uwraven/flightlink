@@ -1,8 +1,9 @@
 class CoreObject {
-	_program;
-	_vbuffer;
-	buffer;
-	bufferSize;
+	_program = 0;
+	_vbuffer = 0;
+	_coord = 0;
+	buffer = [];
+	bufferSize = 0;
 	renderable = true;
 	name = null;
 
@@ -13,8 +14,8 @@ class CoreObject {
 		};
 
 		let _scale = {
-			x: 0,
-			y: 0
+			x: 1,
+			y: 1
 		};
 
 		this.setScale = (scale) => {
@@ -26,16 +27,12 @@ class CoreObject {
 			_origin = origin;
 		};
 		this.origin = () => _origin;
-
-		this._program = 0;
-		this._vbuffer = 0;
-		this.buffer = 0;
-		this.bufferSize = 0;
 	}
 
 	dispose() {
 		this._program = null;
 		this._vbuffer = null;
+		this._coord = null;
 		this.buffer = null;
 		return;
 	}

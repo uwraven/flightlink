@@ -236,6 +236,7 @@ class Telemetry extends Component {
 							x: 0,
 							y: 0
 						},
+						scale: 1,
 						axes: {},
 						grid: {}
 					}}

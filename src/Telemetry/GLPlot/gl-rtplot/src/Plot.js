@@ -12,7 +12,11 @@ import Renderer from './Renderer';
 function Plot(canvas, properties) {
 	var _scale, _origin, _axes;
 
-	_scale = 1;
+	_scale = {
+		x: 1,
+		y: 1
+	};
+
 	_origin = {
 		x: 0,
 		y: 0
@@ -31,11 +35,6 @@ function Plot(canvas, properties) {
 
 	this.renderer = renderer;
 
-	this.dispose = () => {
-		this.lines = [];
-		this.renderer.disposeContext();
-	};
-
 	this.addStream = (line) => {
 		line = this.renderer.instantiateObject(line);
 		this.lines.push(line);
@@ -48,10 +47,10 @@ function Plot(canvas, properties) {
 		};
 	};
 
-	this.setOrigin = (origin) => {
+	this.setOrigin = (x, y) => {
 		_origin = {
-			x: origin.x || _origin.x || 0,
-			y: origin.y || _origin.y || 0
+			x: x || _origin.x || 0,
+			y: y || _origin.y || 0
 		};
 	};
 
@@ -62,15 +61,19 @@ function Plot(canvas, properties) {
 		_axes.y.line = this.renderer.instantiateObject(_axes.y.line);
 	};
 
-	/**
-     * @description Update plot contents
-     */
 	this.render = () => {
-		this.renderer.renderObject(_axes.x.line);
-		this.renderer.renderObject(_axes.y.line);
+		if (_axes) {
+			this.renderer.renderObject(_axes.x.line);
+			this.renderer.renderObject(_axes.y.line);
+		}
 		this.lines.map((line) => {
 			if (line.visible) this.renderer.renderObject(line);
 		});
+	};
+
+	this.dispose = () => {
+		this.lines = [];
+		this.renderer.disposeContext();
 	};
 }
 

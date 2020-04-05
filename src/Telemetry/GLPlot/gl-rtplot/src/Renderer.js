@@ -2,6 +2,8 @@ import Line from './Line';
 import Color from './Core/Color';
 import { LineShader } from './Shaders';
 
+console.log(LineShader.FRAGMENT);
+
 export default function Renderer(parameters) {
 	let _canvas = parameters.canvas ? parameters.canvas : document.createElement('canvas');
 	let _context = parameters.context ? parameters.context : null;
@@ -29,7 +31,7 @@ export default function Renderer(parameters) {
 
 	this.properties = {
 		canvas: _canvas,
-		context: _context,
+		context: _gl,
 		attributes: _attributes
 	};
 
@@ -40,8 +42,10 @@ export default function Renderer(parameters) {
 	this.setSize = (width, height) => {
 		_width = width;
 		_height = height;
+
 		this.properties.canvas.width = Math.floor(_width * _pixelRatio);
 		this.properties.canvas.height = Math.floor(_height * _pixelRatio);
+
 		_gl.viewport(0, 0, _width, _height);
 	};
 
@@ -86,18 +90,37 @@ export default function Renderer(parameters) {
 		object._vbuffer = _gl.createBuffer();
 
 		if (object.isLine) {
-			console.log(LineShader.VERTEX_SHADER);
-
 			_gl.bindBuffer(_gl.ARRAY_BUFFER, object._vbuffer);
 
 			_gl.bufferData(_gl.ARRAY_BUFFER, object.buffer, _gl.STREAM_DRAW);
 
 			let vertexShader = _gl.createShader(_gl.VERTEX_SHADER);
-			_gl.shaderSource(vertexShader, LineShader.VERTEX);
+			_gl.shaderSource(
+				vertexShader,
+				`
+				attribute vec2 uv;
+				uniform mat2 u_scale;
+				uniform vec2 u_origin;
+
+				void main(void) {
+					gl_Position = vec4(u_scale * (uv + u_origin), 0.0, 1.0);
+				}
+			`
+			);
 			_gl.compileShader(vertexShader);
 
 			let fragmentShader = _gl.createShader(_gl.FRAGMENT_SHADER);
-			_gl.shaderSource(fragmentShader, LineShader.FRAGMENT);
+			_gl.shaderSource(
+				fragmentShader,
+				`
+				precision mediump float;
+				uniform highp vec4 u_color;
+				
+				void main(void) {
+					gl_FragColor = u_color;
+				}
+				`
+			);
 			_gl.compileShader(fragmentShader);
 
 			object.program = _gl.createProgram();
@@ -111,6 +134,8 @@ export default function Renderer(parameters) {
 			object._coord = _gl.getAttribLocation(object.program, 'uv');
 			_gl.vertexAttribPointer(object._coord, 2, _gl.FLOAT, false, 0, 0);
 			_gl.enableVertexAttribArray(object._coord);
+
+			object.instantiated = true;
 
 			return object;
 		}
@@ -131,7 +156,7 @@ export default function Renderer(parameters) {
 		);
 
 		if (object.isLine) {
-			_gl.uniform4fv(
+			_gl.uniform4f(
 				_gl.getUniformLocation(object.program, 'u_color'),
 				object.color.r,
 				object.color.g,
