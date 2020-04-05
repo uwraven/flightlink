@@ -33,6 +33,8 @@ export default function Renderer(parameters) {
 		attributes: _attributes
 	};
 
+	this.objects = [];
+
 	var _width, _height, _pixelRatio;
 
 	this.setSize = (width, height) => {
@@ -84,6 +86,8 @@ export default function Renderer(parameters) {
 		object._vbuffer = _gl.createBuffer();
 
 		if (object.isLine) {
+			console.log(LineShader.VERTEX_SHADER);
+
 			_gl.bindBuffer(_gl.ARRAY_BUFFER, object._vbuffer);
 
 			_gl.bufferData(_gl.ARRAY_BUFFER, object.buffer, _gl.STREAM_DRAW);

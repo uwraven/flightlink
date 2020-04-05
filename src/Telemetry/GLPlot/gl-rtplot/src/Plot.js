@@ -12,6 +12,12 @@ import Renderer from './Renderer';
 function Plot(canvas, properties) {
 	var _scale, _origin, _axes;
 
+	_scale = 1;
+	_origin = {
+		x: 0,
+		y: 0
+	};
+
 	let renderer = new Renderer({
 		canvas: canvas,
 		...properties
@@ -21,6 +27,7 @@ function Plot(canvas, properties) {
 	renderer.setSize(canvas.width, canvas.height);
 
 	this.lines = [];
+	this.axes = null;
 
 	this.renderer = renderer;
 
@@ -48,10 +55,19 @@ function Plot(canvas, properties) {
 		};
 	};
 
+	this.attachAxes = (axes) => {
+		_axes = axes;
+		// TODO:: Add to children array
+		_axes.x.line = this.renderer.instantiateObject(_axes.x.line);
+		_axes.y.line = this.renderer.instantiateObject(_axes.y.line);
+	};
+
 	/**
      * @description Update plot contents
      */
 	this.render = () => {
+		this.renderer.renderObject(_axes.x.line);
+		this.renderer.renderObject(_axes.y.line);
 		this.lines.map((line) => {
 			if (line.visible) this.renderer.renderObject(line);
 		});

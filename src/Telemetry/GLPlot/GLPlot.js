@@ -1,11 +1,11 @@
 import React, { Component, createRef, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import Plot, { Color, Line, Themes } from './gl-rtplot';
+import Plot, { Color, Line, Themes, Axes, Grid } from './gl-rtplot';
 import styles from './GLPlot.module.scss';
 
 const GLPlot = ({ layout, buffer, ...props }) => {
 	let canvas = useRef();
-	let plot = useRef(null);
+	let glplot = useRef(null);
 
 	// Utilized during animate frame
 	let _buffer = useRef(null);
@@ -19,10 +19,20 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 				antialias: layout.render.antialias,
 				alpha: layout.render.alpha
 			});
-			plot.current = plot;
+
+			let majorColor = new Color(0.85, 1.0);
+			let minorColor = new Color(0.95, 1.0);
+
+			let axes = new Axes(majorColor);
+			let grid = new Grid(majorColor, minorColor, 10, 5);
+			axes.grid = grid;
+
+			plot.attachAxes(axes);
+
+			glplot.current = plot;
 
 			return () => {
-				plot.current.dispose();
+				glplot.current.dispose();
 			};
 		},
 		[ layout.render.antialias, layout.render.alpha ]
@@ -38,16 +48,17 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 	useEffect(
 		() => {
 			let dx = 1 / layout.points;
-			if (plot.current) {
-				plot.current.lines = [];
+			if (glplot.current) {
+				let plot = glplot.current;
+				plot.lines = [];
 				for (let i = 0; i < layout.streams; i++) {
 					let colors = Themes.palette.midnight;
 					let line = new Line(Color.fromHex(colors[i % (colors.length - 1)], 1.0), layout.points + 1);
 					line.fill(0, dx, _buffer[i] || 0);
 					plot.addStream(line);
 				}
-				plot.current.render();
-				plot.current = plot;
+				plot.render();
+				glplot.current = plot;
 			}
 		},
 		[ layout.streams, layout.points ]
@@ -63,8 +74,8 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 	useEffect(
 		() => {
 			// Update plot size
-			if (plot.current) {
-				plot.current.setSize({
+			if (glplot.current) {
+				glplot.current.renderer.setSize({
 					width: props.width,
 					height: props.height
 				});
@@ -75,18 +86,14 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 
 	useEffect(
 		() => {
-			if (plot.current) {
-				plot.current.setOrigin();
+			if (glplot.current) {
+				glplot.current.setOrigin({
+					x: layout.origin.x,
+					y: layout.origin.y
+				});
 			}
 		},
 		[ layout.origin.x, layout.origin.y ]
-	);
-
-	useEffect(
-		() => {
-			if (plot.current) plot.current._origin.y = layout.origin.y || 0;
-		},
-		[ layout.origin.y ]
 	);
 
 	useEffect(
@@ -98,8 +105,8 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 
 	useEffect(
 		() => {
-			if (plot.current && props.scale) {
-				plot.current.scale = 1 / props.scale;
+			if (glplot.current && props.scale) {
+				glplot.current.setScale(1 / props.scale);
 			}
 		},
 		[ props.scale ]
@@ -115,13 +122,13 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 				let intervals = Math.floor(dt / _dt.current);
 				let remainder = dt % _dt.current;
 
-				if (plot.current && dt >= _dt.current) {
-					plot.current.lines.map((line, i) => {
+				if (glplot.current && dt >= _dt.current) {
+					glplot.current.lines.map((line, i) => {
 						for (let j = 0; j < intervals; j++) {
 							line.push(_buffer.current.slice(i, i + 1));
 						}
 					});
-					plot.current.render();
+					glplot.current.render();
 					_t.current = t - remainder;
 				}
 
