@@ -20,13 +20,12 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 				alpha: layout.render.alpha
 			});
 
-			console.log(plot);
-
 			let majorColor = new Color(0.8, 0.8, 0.8, 1.0);
+			let minorColor = new Color(0.9, 0.9, 0.9, 1.0);
 
 			let axes = new Axes(majorColor);
-			// let grid = new Grid(majorColor, minorColor, 10, 5);
-			// axes.grid = grid;
+			let grid = new Grid(majorColor, minorColor, 10, 5, 2, 2);
+			axes.grid = grid;
 
 			plot.attachAxes(axes);
 

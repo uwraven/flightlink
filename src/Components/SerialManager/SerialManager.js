@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './SerialManager.module.scss';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import DropdownSelect from '../DropdownSelect/DropdownSelect';
 import Button from '../Button/Button';
 import { style } from '../../utility';

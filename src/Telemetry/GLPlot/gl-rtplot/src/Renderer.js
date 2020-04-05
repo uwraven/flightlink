@@ -1,5 +1,3 @@
-import Line from './Line';
-import Color from './Core/Color';
 import { LineShader } from './Shaders';
 
 console.log(LineShader.FRAGMENT);
@@ -176,7 +174,7 @@ export default function Renderer(parameters) {
 		root.children.map((child) => {
 			if (child.renderable) this.renderObject(child);
 			// FIXME : no transforms are passed down on render
-			child.children.map((child) => this.render(child));
+			if (child.children) child.children.map((child) => this.render(child));
 		});
 	};
 

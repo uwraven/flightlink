@@ -1,7 +1,7 @@
 import Line from './Line';
 import Color from './Core/Color';
 
-export default function Axes(color) {
+export default function Axes(color = new Color(0.8, 0.8, 0.8, 1.0)) {
 	this.grid = null;
 
 	this.x = {
