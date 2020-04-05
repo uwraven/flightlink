@@ -3,6 +3,7 @@ import CoreObject from './Core/CoreObject';
 class Line extends CoreObject {
 	color;
 	isLine = true;
+	close = false;
 
 	constructor(color, points) {
 		super();

@@ -1,29 +1,17 @@
 import Line from './Line';
 import Color from './Core/Color';
 
-class Axes {
-	x;
-	y;
-	grid;
+export default function Axes(color) {
+	this.grid = null;
 
-	enabled;
+	this.x = {
+		line: new Line(color, 2)
+	};
 
-	/**
-     *
-     * @param {Color} color - axes color
-     */
+	this.y = {
+		line: new Line(color, 2)
+	};
 
-	constructor(color) {
-		this.enabled = true;
-		this.x = {
-			line: new Line(color, 2)
-		};
-		this.y = {
-			line: new Line(color, 2)
-		};
-		this.x.line.buffer = new Float32Array([ -1, 0, 1, 0 ]);
-		this.y.line.buffer = new Float32Array([ 0, -1, 0, 1 ]);
-	}
+	this.x.line.buffer = new Float32Array([ -1, 0, 1, 0 ]);
+	this.y.line.buffer = new Float32Array([ 0, -1, 0, 1 ]);
 }
-
-export default Axes;

@@ -33,6 +33,18 @@ function Plot(canvas, properties) {
 	this.lines = [];
 	this.axes = null;
 
+	let nline = new Line(new Color(1.0, 0.0, 0.0, 1.0), 4);
+	nline.buffer = new Float32Array([ -1, -1, 1, -1, 1, 1, -1, 1 ]);
+	nline = renderer.instantiateObject(nline);
+	nline.close = true;
+	this.lines.push(nline);
+
+	let bline = new Line(new Color(0.0, 0.0, 1.0, 1.0), 4);
+	bline.buffer = new Float32Array([ -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5 ]);
+	bline = renderer.instantiateObject(bline);
+	bline.close = true;
+	this.lines.push(bline);
+
 	this.renderer = renderer;
 
 	this.addStream = (line) => {
@@ -54,6 +66,8 @@ function Plot(canvas, properties) {
 		};
 	};
 
+	this.resize = () => {};
+
 	this.attachAxes = (axes) => {
 		_axes = axes;
 		// TODO:: Add to children array
@@ -67,7 +81,7 @@ function Plot(canvas, properties) {
 			this.renderer.renderObject(_axes.y.line);
 		}
 		this.lines.map((line) => {
-			if (line.visible) this.renderer.renderObject(line);
+			this.renderer.renderObject(line);
 		});
 	};
 

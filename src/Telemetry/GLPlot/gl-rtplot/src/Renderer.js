@@ -46,7 +46,7 @@ export default function Renderer(parameters) {
 		this.properties.canvas.width = Math.floor(_width * _pixelRatio);
 		this.properties.canvas.height = Math.floor(_height * _pixelRatio);
 
-		_gl.viewport(0, 0, _width, _height);
+		_gl.viewport(0, 0, _width * _pixelRatio, _height * _pixelRatio);
 	};
 
 	this.getSize = () => {
@@ -166,7 +166,7 @@ export default function Renderer(parameters) {
 
 			_gl.bufferData(_gl.ARRAY_BUFFER, object.buffer, _gl.STREAM_DRAW);
 
-			_gl.drawArrays(_gl.LINE_STRIP, 0, object.bufferSize);
+			_gl.drawArrays(!object.close ? _gl.LINE_STRIP : _gl.LINE_LOOP, 0, object.bufferSize);
 
 			return;
 		}

@@ -22,7 +22,7 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 
 			console.log(plot);
 
-			let majorColor = new Color(0.85, 0.85, 0.85, 1.0);
+			let majorColor = new Color(0.8, 0.8, 0.8, 1.0);
 
 			let axes = new Axes(majorColor);
 			// let grid = new Grid(majorColor, minorColor, 10, 5);
@@ -51,15 +51,13 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 			let dx = 1 / layout.points;
 			if (glplot.current) {
 				let plot = glplot.current;
-				plot.lines = [];
+				// plot.lines = [];
 				for (let i = 0; i < layout.streams; i++) {
 					let colors = Themes.palette.midnight;
 					let line = new Line(Color.fromHex(colors[i % (colors.length - 1)], 1.0), layout.points + 1);
 					line.fill(0, dx, 0.5 || 0);
 					plot.addStream(line);
 				}
-				console.log(plot.lines);
-
 				plot.render();
 				glplot.current = plot;
 			}
@@ -124,8 +122,10 @@ const GLPlot = ({ layout, buffer, ...props }) => {
 
 				if (glplot.current && dt >= _dt.current) {
 					glplot.current.lines.map((line, i) => {
-						for (let j = 0; j < intervals; j++) {
-							line.push(_buffer.current.slice(i, i + 1));
+						if (i > 1) {
+							for (let j = 0; j < intervals; j++) {
+								line.push(_buffer.current.slice(i, i + 1));
+							}
 						}
 					});
 					glplot.current.render();
