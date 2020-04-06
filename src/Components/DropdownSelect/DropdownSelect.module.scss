@@ -12,14 +12,14 @@
     cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap
+    white-space: nowrap;
 }
 
 .selectedWrapper:hover:not(.disabled) {
     background-color: var(--fill-light);
 }
 
-.selectedPlaceholderText {
+.placeholder {
     color: var(--text-placeholder);
 }
 

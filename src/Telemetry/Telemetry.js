@@ -117,7 +117,7 @@ class Telemetry extends Component {
                 () => {
                     const numSignals = this.state.streamSignals.reduce((num, stream) => (num += stream.dataLength), 0);
                     const initialBuffer = new Float32Array(numSignals);
-                    initialBuffer.fill(0.5);
+                    initialBuffer.fill(0.0);
                     this.setState({
                         buffer: initialBuffer
                     });

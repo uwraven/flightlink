@@ -61,7 +61,7 @@ const GLPlot = ({ config, contextAttributes, layout, buffer, ...props }) => {
                 for (let i = 0; i < config.streams; i++) {
                     let colors = Themes.palette.midnight;
                     let line = new Line(Color.fromHex(colors[i % (colors.length - 1)], 1.0), config.points + 1);
-                    line.fill(0, dx, 0.5 || 0);
+                    line.fill(0, dx, _buffer.current || 0);
                     plot.addStream(line);
                 }
                 plot.render();
