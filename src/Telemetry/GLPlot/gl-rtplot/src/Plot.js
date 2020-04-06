@@ -7,82 +7,61 @@ import Renderer from './Renderer';
  */
 
 function Plot(canvas, properties) {
-	var _scale, _origin, _axes;
+    let _axes;
 
-	_scale = {
-		x: 1,
-		y: 1
-	};
+    let renderer = new Renderer({
+        canvas: canvas,
+        ...properties
+    });
 
-	_origin = {
-		x: 0,
-		y: 0
-	};
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setSize(canvas.width, canvas.height);
 
-	let renderer = new Renderer({
-		canvas: canvas,
-		...properties
-	});
+    this.lines = [];
+    this.axes = null;
+    this.autoScale = false;
 
-	renderer.setPixelRatio(window.devicePixelRatio || 1);
-	renderer.setSize(canvas.width, canvas.height);
+    this.renderer = renderer;
 
-	this.lines = [];
-	this.axes = null;
-	this.autoScale = false;
+    this.addStream = (line) => {
+        line = this.renderer.instantiateObject(line);
+        this.lines.push(line);
+    };
 
-	this.renderer = renderer;
+    this.setScale = (x, y) => {
+        this.renderer.setScale(x, y);
+    };
 
-	this.addStream = (line) => {
-		line = this.renderer.instantiateObject(line);
-		this.lines.push(line);
-	};
+    this.resize = () => {};
 
-	this.setScale = (scale) => {
-		_scale = {
-			x: scale.x || _scale.x || 1,
-			y: scale.y || _scale.y || 1
-		};
-	};
+    this.attachAxes = (axes) => {
+        _axes = axes;
+        _axes.x.line = this.renderer.instantiateObject(_axes.x.line);
+        _axes.y.line = this.renderer.instantiateObject(_axes.y.line);
+        if (_axes.grid) {
+            _axes.grid.x.children.map((child) => this.renderer.instantiateObject(child));
+            _axes.grid.y.children.map((child) => this.renderer.instantiateObject(child));
+        }
+    };
 
-	this.setOrigin = (x, y) => {
-		_origin = {
-			x: x || _origin.x || 0,
-			y: y || _origin.y || 0
-		};
-	};
+    this.render = () => {
+        if (_axes) {
+            if (_axes.grid) {
+                this.renderer.render(_axes.grid.x);
+                this.renderer.render(_axes.grid.y);
+            }
+            this.renderer.renderObject(_axes.x.line);
+            this.renderer.renderObject(_axes.y.line);
+        }
+        this.lines.map((line) => {
+            this.renderer.renderObject(line);
+        });
+    };
 
-	this.resize = () => {};
-
-	this.attachAxes = (axes) => {
-		_axes = axes;
-		// TODO:: Add to children array
-		_axes.x.line = this.renderer.instantiateObject(_axes.x.line);
-		_axes.y.line = this.renderer.instantiateObject(_axes.y.line);
-		if (_axes.grid) {
-			_axes.grid.x.children.map((child) => this.renderer.instantiateObject(child));
-			_axes.grid.y.children.map((child) => this.renderer.instantiateObject(child));
-		}
-	};
-
-	this.render = () => {
-		if (_axes) {
-			if (_axes.grid) {
-				this.renderer.render(_axes.grid.x);
-				this.renderer.render(_axes.grid.y);
-			}
-			this.renderer.renderObject(_axes.x.line);
-			this.renderer.renderObject(_axes.y.line);
-		}
-		this.lines.map((line) => {
-			this.renderer.renderObject(line);
-		});
-	};
-
-	this.dispose = () => {
-		this.lines = [];
-		this.renderer.disposeContext();
-	};
+    this.dispose = () => {
+        this.lines = [];
+        this.renderer.disposeContext();
+    };
 }
 
 export default Plot;

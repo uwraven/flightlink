@@ -30,13 +30,15 @@ function receiveMessage(message) {
             const packet = JSON.parse(message.data);
             if (packet.id) {
                 // Expecting a response
-                const responseObj = api.messageQueue[api.messageQueue.findIndex(obj => obj.id === packet.id)];
+                const mIndex = api.messageQueue.findIndex(obj => obj.id === packet.id);
+                const responseObj = api.messageQueue[mIndex];
                 if (responseObj.callback) try {
                     responseObj.callback(packet);
                 } catch(err) {
                     // TODO Handle response callback errors
                     console.log("error: ", err);
                 }
+                api.messageQueue.splice(mIndex, 1);
             } else {
                 // TODO Handle
                 if (packet.type === api.keys.requests.DATA) {

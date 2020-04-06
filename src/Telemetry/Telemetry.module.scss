@@ -1,77 +1,57 @@
 .container {
-	display: flex;
-	flex-direction: row;
-	height: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
 }
 
 .content {
-	overflow-y: scroll;
-	flex-basis: 70%;
-	flex-grow: 1;
+    overflow-y: scroll;
+    flex-basis: 70%;
+    flex-grow: 1;
 }
 
 .content::-webkit-scrollbar {
-	display: none;
+    display: none;
 }
 
 .threeContainerFullWidth {
-	height: 40vh;
-}
-
-.chartContainer {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-}
-
-.chartWrapper {
-	width: 33%;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	box-sizing: border-box;
-	padding: var(--b-m);
-}
-
-.chartTitleBar {
-	width: 100%;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-}
-
-.glPlot {
-	width: 100%;
-	height: 100%;
-	// height: 100px;
-	// border: 1px solid red;
+    height: 40vh;
 }
 
 .threeRenderer {
-	// ThreeJS div container
-	height: 100%;
-	width: 100%;
-	display: flex;
-	justify-content: flex-start;
-	background-color: var(--scene-bg-light);
-	overflow: hidden;
-	position: relative;
-	border-bottom: 1px solid var(--border-medium);
+    // ThreeJS div container
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    background-color: var(--scene-bg-light);
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid var(--border-medium);
 
-	// ThreeJS rendering canvas
-	canvas {
-		flex-grow: 1;
-		outline: none;
-	}
+    // ThreeJS rendering canvas
+    canvas {
+        flex-grow: 1;
+        outline: none;
+    }
 }
 
-.testPlot {
-	// border: 1px solid red;
-	width: 400px;
-	height: 200px;
+.plotsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
 
-	canvas {
-		width: 400px;
-		height: 200px;
-	}
+.plotContainer {
+    flex-basis: 50%;
+    margin: var(--b-m) 0;
+}
+
+.plot {
+    canvas {
+        border: 1px solid var(--border-medium);
+        width: 300px;
+        height: 150px;
+    }
 }
