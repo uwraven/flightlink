@@ -161,6 +161,7 @@ class Telemetry extends Component {
 
     onResize() {
         let w = this.chartContainer.clientWidth;
+        console.log(window.innerWidth, this.chartContainer.clientWidth);
         this.streamContexts.map((canvas) => {
             // console.log(canvas);
             // canvas.width = w / 3 * (window.devicePixelRatio || 1);

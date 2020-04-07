@@ -34,8 +34,9 @@ export default function Renderer(parameters) {
     };
 
     this.objects = [];
+    this.maintainAspect = false;
 
-    var _width, _height, _pixelRatio;
+    let _width, _height, _pixelRatio, _aspect;
 
     let _scale = {
         x: 1,
@@ -46,8 +47,12 @@ export default function Renderer(parameters) {
         _width = width;
         _height = height;
 
+        _aspect = _width / _height;
+
         this.properties.canvas.width = Math.floor(_width * _pixelRatio);
         this.properties.canvas.height = Math.floor(_height * _pixelRatio);
+
+        console.log(this.maintainAspect);
 
         _gl.viewport(0, 0, _width * _pixelRatio, _height * _pixelRatio);
     };

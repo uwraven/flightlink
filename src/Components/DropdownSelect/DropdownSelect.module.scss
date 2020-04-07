@@ -33,6 +33,7 @@
     box-shadow: var(--box-shadow-light);
     padding: var(--padding-small);
     min-width: 200px;
+    z-index: 1;
 }
 
 .dropdownHidden {

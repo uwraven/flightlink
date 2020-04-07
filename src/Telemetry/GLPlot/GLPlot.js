@@ -90,6 +90,15 @@ const GLPlot = ({ config, contextAttributes, layout, buffer, ...props }) => {
 
     useEffect(
         () => {
+            if (glplot.current) {
+                glplot.current.renderer.maintainAspect = layout.maintainAspect;
+            }
+        },
+        [ layout.maintainAspect ]
+    );
+
+    useEffect(
+        () => {
             // Update plot color values
         },
         [ props.colors ]
@@ -181,7 +190,8 @@ GLPlot.defaultProps = {
     },
     layout: {
         scale: 1,
-        pixelRatio: window.devicePixelRatio || 1
+        pixelRatio: window.devicePixelRatio || 1,
+        maintainAspect: false
     }
 };
 
