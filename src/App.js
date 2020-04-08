@@ -37,12 +37,6 @@ export default class App extends Component {
     render() {
         return (
             <div className={styles.app}>
-                {/* <Resizable className={styles.resizableTest}>
-                    <h1>Test Title</h1>
-                    <p>Hello</p>
-                </Resizable>
-                <Resizable className={styles.resizableTest3}>NOM</Resizable>
-                <Resizable className={styles.resizableTest2}>Other div</Resizable> */}
                 {this.state.websocketConnected ? (
                     <div className={styles.main}>
                         <SerialManager

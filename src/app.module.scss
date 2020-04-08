@@ -33,14 +33,8 @@
     overflow-y: scroll;
 }
 
-// .resizableTest {
-//     background-color: red;
-// }
-
-// .resizableTest2 {
-//     background-color: blue;
-// }
-
-// .resizableTest3 {
-//     background-color: green;
-// }
+.resizableTest,
+.resizableTest2,
+.resizableTest3 {
+    border-right: 1px solid gray;
+}
