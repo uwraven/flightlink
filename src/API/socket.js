@@ -64,7 +64,7 @@ function sendRequest(packet, callback) {
 }
 
 function closeSocket() {
-
+    console.log("The socket doesn't close yet");
 }
 
 function attachListener(type, name, callback) {

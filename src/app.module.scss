@@ -7,34 +7,7 @@
     width: 100vw;
 }
 
-.main {
-    display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-    align-items: stretch;
-    flex-basis: 100vh;
+.tabbar {
+    border-bottom: 1px solid var(--border-medium);
     width: 100vw;
-    overflow-x: hidden;
-    flex-grow: 1;
-}
-
-.mainEmpty {
-    flex-basis: 100vh;
-}
-
-.monitor {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: flex-start;
-    flex-grow: 1;
-    flex-basis: 100vw;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-
-.resizableTest,
-.resizableTest2,
-.resizableTest3 {
-    border-right: 1px solid gray;
 }

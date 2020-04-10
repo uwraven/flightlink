@@ -1,60 +1,48 @@
-import React, { Component } from 'react';
-import SerialManager from './Components/SerialManager/SerialManager';
-import Footer from './Components/Footer/Footer';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { connect } from 'react-redux';
+import Footer from './Views/Footer/Footer';
 import styles from './app.module.scss';
 import './constants.css';
 import './API/main';
-import Telemetry from './Telemetry/Telemetry';
-import ApplicationHeader from './Components/ApplicationHeader/ApplicationHeader';
-import Main from './Main/Main';
-import Resizable from './Components/Core/Resizable/Resizable';
+import Record from './Views/Record/Record';
+import Configure from './Views/Configure/Configure';
+import TabBar from './Components/TabBar/TabBar';
+import CommandPalette from './Views/CommandPalette/CommandPalette';
 
-export default class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            websocketConnected: false,
-            showCommunicationPanel: true,
-            deviceConnected: false
-        };
-        this.openConsole = this.openConsole.bind(this);
-        this.toggleCommPanel = this.toggleCommPanel.bind(this);
-    }
+const App = ({ commandPaletteVisibility, ...props }) => {
+    const pages = [ Record, Configure ];
 
-    componentDidMount() {
-        window.arcc.api.openSocket('8080').then(() => {
-            this.setState({ websocketConnected: true });
-        });
-        document.title = 'RAVEN';
-    }
+    const [ page, setPage ] = useState(0);
+    const [ connected, setConnection ] = useState(false);
+    const SelectedPage = pages[page] || Record;
 
-    toggleCommPanel() {
-        this.setState({ showCommunicationPanel: !this.state.showCommunicationPanel });
-    }
+    console.log(props);
 
-    openConsole() {}
+    return (
+        <div className={styles.app}>
+            <TabBar
+                options={[ 'Record', 'Configure' ]}
+                selected={page}
+                onClick={(index) => {
+                    if (index !== page) setPage(index);
+                }}
+                className={styles.tabbar}
+            />
+            <SelectedPage />
+            {commandPaletteVisibility && <CommandPalette />}
+            <Footer websocketConnected={connected} />
+        </div>
+    );
+};
 
-    render() {
-        return (
-            <div className={styles.app}>
-                {this.state.websocketConnected ? (
-                    <div className={styles.main}>
-                        <SerialManager
-                            visible={this.state.showCommunicationPanel}
-                            setStatus={(status) => this.setState({ deviceConnected: status })}
-                        />
-                        <Main deviceConnected={this.state.deviceConnected} />
-                    </div>
-                ) : (
-                    <div className={styles.mainEmpty}>{this.state.websocketConnected}</div>
-                )}
-                <Footer
-                    toggleCommPanel={this.toggleCommPanel}
-                    openConsole={this.openConsole}
-                    deviceConnected={this.state.deviceConnected}
-                    websocketConnected={this.state.websocketConnected}
-                />
-            </div>
-        );
-    }
-}
+const mapStateToProps = (state) => {
+    return {
+        commandPaletteVisibility: state.Interface.commandPaletteVisibility
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

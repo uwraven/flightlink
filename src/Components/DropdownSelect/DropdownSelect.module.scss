@@ -1,10 +1,8 @@
 .dropdownWrapper {
-    // background-color: red;
     overflow: hidden;
 }
 
 .selectedWrapper {
-    // background-color: blue;
     padding: var(--b);
     border: 1px solid var(--border-medium);
     border-radius: var(--root-border-radius);
@@ -24,7 +22,6 @@
 }
 
 .dropdownContainer {
-    // opacity: 0;
     position: fixed;
     margin-top: var(--b);
     background-color: var(--fill-light);
@@ -37,7 +34,6 @@
 }
 
 .dropdownHidden {
-    // opacity: 0;
     display: none;
 }
 
@@ -61,5 +57,4 @@
 .disabled {
     cursor: default;
     color: var(--text-disabled);
-    // background-color: lightblue;
 }

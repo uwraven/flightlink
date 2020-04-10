@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import styles from './SerialManager.module.scss';
 // import PropTypes from 'prop-types';
-import DropdownSelect from '../DropdownSelect/DropdownSelect';
-import Button from '../Button/Button';
-import { style } from '../../utility';
-import KeyValue from '../KeyValue/KeyValue';
+import DropdownSelect from '../../../Components/DropdownSelect/DropdownSelect';
+import Button from '../../../Components/Button/Button';
+import { style } from '../../../utility';
+import KeyValue from '../../../Components/KeyValue/KeyValue';
 
 const PS = {
     CLOSED: 0,
@@ -41,22 +41,24 @@ class SerialManager extends Component {
         this.actions = window.arcc.api.keys.actions;
     }
 
-    componentDidMount() {
-        window.arcc.api.sendRequest({
-            type: this.requests.ACTION,
-            action: this.actions.LISTSERIAL,
-        }, (response) => {
-            if (response.status === 200) {
-                console.log(response.payload);
-                this.setState({ports: response.payload}, () => {
-                    this.state.ports.map((port, i) => {
-                        if (port.manufacturer === "Teensyduino") {
-                            this.setState({selectedPortIndex: i})
-                        }
-                    })
-                });
-            }
-        })
+    componentWillMount() {
+        console.log("serial manager mounted");
+        // TODO:: Needs redux bru
+        // window.arcc.api.sendRequest({
+        //     type: this.requests.ACTION,
+        //     action: this.actions.LISTSERIAL,
+        // }, (response) => {
+        //     if (response.status === 200) {
+        //         console.log(response.payload);
+        //         this.setState({ports: response.payload}, () => {
+        //             this.state.ports.map((port, i) => {
+        //                 if (port.manufacturer === "Teensyduino") {
+        //                     this.setState({selectedPortIndex: i})
+        //                 }
+        //             })
+        //         });
+        //     }
+        // })
     }
 
     onConnectionSelect(index) {

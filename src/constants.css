@@ -1,9 +1,9 @@
 :root {
     --blue: #0000ff;
-    --green: #36C346;
-    --red: #EB0202;
+    --green: #36c346;
+    --red: #eb0202;
 
-    --positive: #2972E6;
+    --positive: #2972e6;
 
     --text-placeholder: #8d8d8d;
 
@@ -15,7 +15,7 @@
     --border-medium: #e5e5e5;
     --border-light: #e8e8e8;
 
-    --fill: #E4E4E4;
+    --fill: #e4e4e4;
     --fill-light: #f4f4f4;
     --fill-ultralight: #fafafa;
     --fill-light-hover: #e8e8e8;
@@ -35,6 +35,7 @@
     --b-xl: 32px;
 
     --f-xs: 8px;
+    --f-ss: 10px;
     --f-s: 12px;
     --f: 14px;
     --f-m: 18px;
