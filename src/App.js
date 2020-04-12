@@ -8,6 +8,7 @@ import Record from './Views/Record/Record';
 import Configure from './Views/Configure/Configure';
 import TabBar from './Components/TabBar/TabBar';
 import CommandPalette from './Views/CommandPalette/CommandPalette';
+import ActivePanel from './Components/Core/ActivePanel/ActivePanel';
 
 const App = ({ commandPaletteVisibility, ...props }) => {
     const pages = [ Record, Configure ];
@@ -15,8 +16,6 @@ const App = ({ commandPaletteVisibility, ...props }) => {
     const [ page, setPage ] = useState(0);
     const [ connected, setConnection ] = useState(false);
     const SelectedPage = pages[page] || Record;
-
-    console.log(props);
 
     return (
         <div className={styles.app}>
@@ -28,7 +27,7 @@ const App = ({ commandPaletteVisibility, ...props }) => {
                 }}
                 className={styles.tabbar}
             />
-            <SelectedPage />
+            <div className={styles.main}>{/* <SelectedPage /> */}</div>
             {commandPaletteVisibility && <CommandPalette />}
             <Footer websocketConnected={connected} />
         </div>

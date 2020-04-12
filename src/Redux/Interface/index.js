@@ -1,7 +1,7 @@
 import types from './types';
 
 const initialState = {
-    commandPaletteVisibility: true
+    commandPaletteVisibility: false
 };
 
 const Interface = (state = initialState, action) => {

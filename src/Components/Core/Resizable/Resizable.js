@@ -14,6 +14,7 @@ const Resizable = ({
     left = false,
     handle = 4,
     collapseThreshold = 4,
+    onCollapse,
     ...props
 }) => {
     const div = useRef();
@@ -73,6 +74,15 @@ const Resizable = ({
             let dy = _target.current.y - e.pageY;
             let height = Math.min(Math.max(size.height + dy, ymin), ymax);
             div.current.style.height = `${height}px`;
+
+            if (height < collapseThreshold && ((top && dy < 0) || (bottom && dy > 0))) {
+                try {
+                    onCollapse(size);
+                } catch (err) {
+                    console.log('error');
+                }
+                _resizing.current.y = false;
+            }
         }
     };
 
