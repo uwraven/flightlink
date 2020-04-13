@@ -1,0 +1,26 @@
+.target {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sectionTarget {
+    @extend .target;
+    justify-content: space-between;
+    background-color: var(--fill-l);
+    border-bottom: 1px solid var(--border-l);
+    padding: var(--b);
+    font-weight: 500;
+}
+
+.subsectionTarget {
+    @extend .target;
+    justify-content: flex-start;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-l);
+    padding: var(--b);
+
+    .arrow {
+        margin-right: var(--b);
+    }
+}

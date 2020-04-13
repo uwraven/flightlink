@@ -9,6 +9,8 @@ import Configure from './Views/Configure/Configure';
 import TabBar from './Components/TabBar/TabBar';
 import CommandPalette from './Views/CommandPalette/CommandPalette';
 import ActivePanel from './Components/Core/ActivePanel/ActivePanel';
+import Collapsible, { CollapsibleSection, CollapsibleSubsection } from 'Components/Collapsible/Collapsible';
+import DropdownSelect from 'Components/DropdownSelect/DropdownSelect';
 
 const App = ({ commandPaletteVisibility, ...props }) => {
     const pages = [ Record, Configure ];
@@ -16,6 +18,7 @@ const App = ({ commandPaletteVisibility, ...props }) => {
     const [ page, setPage ] = useState(0);
     const [ connected, setConnection ] = useState(false);
     const SelectedPage = pages[page] || Record;
+    const [ selected, setSelected ] = useState(-1);
 
     return (
         <div className={styles.app}>
@@ -27,7 +30,19 @@ const App = ({ commandPaletteVisibility, ...props }) => {
                 }}
                 className={styles.tabbar}
             />
-            <div className={styles.main}>{/* <SelectedPage /> */}</div>
+            <div className={styles.main}>
+                <SelectedPage />
+                <div style={{ width: 250 }}>
+                    <CollapsibleSection title={'Section'}>:-)</CollapsibleSection>
+                    <CollapsibleSubsection title={'Subsection'}>DFHASDFH</CollapsibleSubsection>
+                    <DropdownSelect
+                        placeholder={'0'}
+                        options={[ '0', '1', '2' ]}
+                        selected={selected}
+                        select={(i) => setSelected(i)}
+                    />
+                </div>
+            </div>
             {commandPaletteVisibility && <CommandPalette />}
             <Footer websocketConnected={connected} />
         </div>

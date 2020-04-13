@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-const Dropdown = (props) => {
+const Dropdown = ({ className, children, ...props }) => {
     let container = useRef();
 
     const [ open, setOpen ] = useState(false);
@@ -8,18 +8,17 @@ const Dropdown = (props) => {
     useEffect(
         () => {
             let closeFunc = (e) => {
-                if (!container.current.contains(e.target) && open) setOpen(false);
+                if (!container.current.contains(e.target)) setOpen(false);
             };
             window.addEventListener('mousedown', closeFunc);
             return () => window.removeEventListener('mousedown', closeFunc);
         },
-        [ open, container ]
+        [ container ]
     );
 
     return (
-        <div className={props.className} ref={container}>
-            {props.currentRender(open, setOpen)}
-            {props.dropdownRender(open, setOpen)}
+        <div className={className} ref={container}>
+            {children(open, setOpen)}
         </div>
     );
 };

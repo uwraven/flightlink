@@ -1,49 +1,49 @@
 import React, { useState } from 'react';
 import styles from './DropdownSelect.module.scss';
 import PropTypes from 'prop-types';
-import { style, allStyles } from '../../utility';
-import Dropdown from '../Dropdown/Dropdown';
+import Dropdown from 'Components/Core/Dropdown/Dropdown';
+import { ReactComponent as ArrowIcon } from 'Assets/Icons/arrow-down.svg';
 
-const DropdownSelect = ({ options, selected = -1, disabled, placeholder, callback }) => {
+const DropdownSelect = ({ options, selected = -1, disabled, placeholder, select, label, ...props }) => {
     return (
-        <Dropdown
-            className={styles.dropDownWrapper}
-            currentRender={(open, setOpen) => {
+        <Dropdown className={styles.dropDownWrapper}>
+            {(open, setOpen) => {
                 return (
                     <div
-                        className={[ styles.selectedWrapper, disabled ? styles.disabled : '' ].join(' ')}
+                        className={[ styles.container, open ? styles.open : '' ].join(' ')}
                         onClick={() =>
                             setOpen((prevOpen) => {
                                 if (!disabled) return !prevOpen;
                             })}>
-                        {selected > -1 ? (
-                            <span className={styles.selection}>{options[selected]}</span>
-                        ) : (
-                            <span className={styles.placeholder}>{placeholder}</span>
+                        <div className={styles.selected}>
+                            {selected > -1 ? (
+                                <span className={styles.selection}>{options[selected]}</span>
+                            ) : (
+                                <span className={styles.placeholder}>{placeholder}</span>
+                            )}
+                            <ArrowIcon />
+                        </div>
+                        {open && (
+                            <div className={styles.dropdown}>
+                                {label && <span>{label}</span>}
+                                {options.map((option, i) => {
+                                    return (
+                                        <div
+                                            className={styles.dropdownItem}
+                                            key={i}
+                                            onClick={() => {
+                                                select(i);
+                                            }}>
+                                            {option}
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         )}
                     </div>
                 );
             }}
-            dropdownRender={(open, setOpen) => {
-                return (
-                    <div className={[ styles.dropdownContainer, !open ? styles.dropdownHidden : '' ].join(' ')}>
-                        {options.map((option, i) => {
-                            return (
-                                <div
-                                    className={styles.dropdownItem}
-                                    key={i}
-                                    onClick={() => {
-                                        setOpen(false);
-                                        callback(i);
-                                    }}>
-                                    {option}
-                                </div>
-                            );
-                        })}
-                    </div>
-                );
-            }}
-        />
+        </Dropdown>
     );
 };
 
