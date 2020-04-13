@@ -2,7 +2,6 @@ import React from 'react';
 import Resizable from './../../Components/Core/Resizable/Resizable';
 import styles from './CommandPalette.module.scss';
 import { connect } from 'react-redux';
-import { setCommandPaletteHeight, setCommandPaletteVisibility } from './../../Redux/Interface/actions';
 
 const CommandPalette = ({ setHeight, ...props }) => {
     return (
@@ -11,18 +10,4 @@ const CommandPalette = ({ setHeight, ...props }) => {
         </Resizable>
     );
 };
-
-const mapStateToProps = (state) => {
-    return {};
-};
-
-const mapDispatchToProps = (dispatch) => {
-    const closePalette = () => {
-        dispatch(setCommandPaletteVisibility(false));
-    };
-    return {
-        closePalette
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CommandPalette);
+export default CommandPalette;

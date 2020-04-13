@@ -1,6 +1,8 @@
-import { combineReducers } from 'redux';
-import Interface from './Interface';
+import { combineReducers } from '@reduxjs/toolkit';
+import InterfaceSlice from './Interface/InterfaceSlice';
+import DeviceSlice from './Record/Device/DeviceSlice';
 
 export default combineReducers({
-    Interface: Interface
+    interface: InterfaceSlice,
+    device: DeviceSlice
 });

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Collapsible.module.scss';
 import { ReactComponent as ArrowIcon } from 'Assets/Icons/arrow-down.svg';
 
-const Collapsible = ({ target, disabled, children, className = '', ...props }) => {
-    const [ open, setOpen ] = useState(false);
+const Collapsible = ({ target, disabled, children, initialState, className = '', ...props }) => {
+    const [ open, setOpen ] = useState(initialState);
     return (
         <div className={className}>
             {target(open, setOpen)}
@@ -12,10 +12,11 @@ const Collapsible = ({ target, disabled, children, className = '', ...props }) =
     );
 };
 
-const CollapsibleSection = ({ title, onClick, disabled, children, ...props }) => {
+const CollapsibleSection = ({ title, onClick, disabled, initialState, children, ...props }) => {
     return (
         <Collapsible
             className={styles.sectionContainer}
+            initialState={initialState}
             target={(open, setOpen) => (
                 <div className={styles.sectionTarget} onClick={() => setOpen((prev) => !prev)}>
                     <span>{title}</span>

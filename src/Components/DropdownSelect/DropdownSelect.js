@@ -4,7 +4,15 @@ import PropTypes from 'prop-types';
 import Dropdown from 'Components/Core/Dropdown/Dropdown';
 import { ReactComponent as ArrowIcon } from 'Assets/Icons/arrow-down.svg';
 
-const DropdownSelect = ({ options, selected = -1, disabled, placeholder, select, label, ...props }) => {
+const DropdownSelect = ({
+    options = [],
+    selected = -1,
+    disabled = false,
+    placeholder = 'Select',
+    onSelect = () => {},
+    label,
+    ...props
+}) => {
     return (
         <Dropdown className={styles.dropDownWrapper}>
             {(open, setOpen) => {
@@ -32,7 +40,7 @@ const DropdownSelect = ({ options, selected = -1, disabled, placeholder, select,
                                             className={styles.dropdownItem}
                                             key={i}
                                             onClick={() => {
-                                                select(i);
+                                                onSelect(i);
                                             }}>
                                             {option}
                                         </div>
