@@ -7,17 +7,21 @@ const Button = ({ className, children, onClick, disabled, loading, width, ...pro
     return (
         <div
             onClick={() => {
-                if (!disabled && onClick) onClick();
+                console.log('click');
+                if (!disabled) onClick();
             }}
-            className={[ styles.container, className, disabled && styles.disabled ].join(' ')}
-            style={{ width: width ? `${width}px` : 'inherit' }}>
+            className={[ styles.container, className, disabled && styles.disabled ].join(' ')}>
             {children}
         </div>
     );
 };
 
-const PrimaryButton = ({ width, ...props }) => {
-    return <Button width={width} className={styles.primary} {...props} />;
+const PrimaryButton = ({ width, children, loading, loadingMessage, ...props }) => {
+    return (
+        <Button width={width} className={styles.primary} {...props}>
+            <p>{loading ? loadingMessage ? loadingMessage : 'loading...' : children}</p>
+        </Button>
+    );
 };
 
 export { Button as default, PrimaryButton };

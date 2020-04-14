@@ -10,10 +10,11 @@ const DropdownSelect = ({
     placeholder = 'Select',
     onSelect = () => {},
     label,
+    className,
     ...props
 }) => {
     return (
-        <Dropdown className={styles.container}>
+        <Dropdown className={[ styles.container, className ].join(' ')}>
             {(open, setOpen) => {
                 return (
                     <div

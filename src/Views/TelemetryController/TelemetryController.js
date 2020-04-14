@@ -4,8 +4,9 @@ import { CollapsibleSubsection, CollapsibleSection } from 'Components/Collapsibl
 import InputRow from 'Components/Presentation/InputRow/InputRow';
 import DropdownSelect from 'Components/DropdownSelect/DropdownSelect';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectConnection, selectProtocol, selectPort } from 'Redux/Record/Device/DeviceSlice';
+import { selectConnection, selectProtocol, selectPort, openPort } from 'Redux/Record/Device/DeviceSlice';
 import { PrimaryButton } from 'Components/Button/Button';
+import Resizable from 'Components/Core/Resizable/Resizable';
 
 const TelemetryController = (...props) => {
     const dispatch = useDispatch();
@@ -15,11 +16,14 @@ const TelemetryController = (...props) => {
         portOptions,
         selectedConnection,
         selectedProtocol,
-        selectedPort
+        selectedPort,
+        portOpen,
+        openingPort,
+        portError
     } = useSelector((state) => state.device);
 
     return (
-        <div className={styles.container}>
+        <Resizable right={true} handle={4} xmin={192} xmax={512} className={styles.container}>
             <CollapsibleSection title={'Connect Device'} initialState={true}>
                 <InputRow>
                     <span>Connection</span>
@@ -28,6 +32,7 @@ const TelemetryController = (...props) => {
                         selected={selectedConnection}
                         onSelect={(i) => dispatch(selectConnection(i))}
                         disabled={false}
+                        className={styles.dropdown}
                     />
                 </InputRow>
                 <InputRow>
@@ -37,6 +42,7 @@ const TelemetryController = (...props) => {
                         selected={selectedProtocol}
                         onSelect={(i) => dispatch(selectProtocol(i))}
                         disabled={selectedConnection < 0}
+                        className={styles.dropdown}
                     />
                 </InputRow>
                 <InputRow>
@@ -46,16 +52,24 @@ const TelemetryController = (...props) => {
                         selected={selectedPort}
                         onSelect={(i) => dispatch(selectPort(i))}
                         disabled={selectedConnection < 0}
+                        className={styles.dropdown}
                     />
                 </InputRow>
                 <InputRow>
-                    <PrimaryButton disabled={selectedPort < 0}>Open {portOptions[selectedPort]}</PrimaryButton>
+                    <PrimaryButton
+                        disabled={selectedPort < 0}
+                        loading={openingPort}
+                        onClick={() => dispatch(openPort(portOptions[selectedPort]))}>
+                        {`Open ${portOptions[selectedPort] || ''}`}
+                    </PrimaryButton>
                 </InputRow>
             </CollapsibleSection>
             <CollapsibleSection title={'Data'} initialState={true}>
-                THis is a section fsdf
+                {portOpen && 'open'}
+                {openingPort && 'opening'}
+                {portError}
             </CollapsibleSection>
-        </div>
+        </Resizable>
     );
 };
 

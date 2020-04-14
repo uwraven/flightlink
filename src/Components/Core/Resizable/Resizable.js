@@ -47,15 +47,6 @@ const Resizable = ({
         let bottom = frame.top + frame.height - p.y < margin;
         let left = p.x - frame.left < margin;
 
-        // if (top && left) directions.push('nw');
-        // if (top) directions.push('n');
-        // if (top && right) directions.push('ne');
-        // if (right) directions.push('e');
-        // if (right && bottom) directions.push('se');
-        // if (bottom) directions.push('s');
-        // if (bottom && left) directions.push('sw');
-        // if (left) directions.push('w');
-
         return {
             top: top,
             right: right,
@@ -68,7 +59,7 @@ const Resizable = ({
         if (_resizing.current.x && (left || right || x)) {
             let dx = e.pageX - _target.current.x;
             let width = Math.min(Math.max(size.width + dx, xmin), xmax);
-            if (width < collapseThreshold) div.current.style.width = `${width}px`;
+            div.current.style.width = `${width}px`;
         }
         if (_resizing.current.y && (top || bottom || y)) {
             let dy = _target.current.y - e.pageY;

@@ -11,6 +11,7 @@ import TelemetryController from 'Views/TelemetryController/TelemetryController';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCommandPaletteVisibility } from './Redux/Interface/InterfaceSlice';
 import { setWebsocketConnection } from 'Redux/Record/RecordSlice';
+import { getPortOptions } from 'Redux/Record/Device/DeviceSlice';
 import API from './API/constants';
 
 const App = ({ ...props }) => {
@@ -23,25 +24,18 @@ const App = ({ ...props }) => {
     const [ page, setPage ] = useState(0);
     const SelectedPage = pages[page] || Record;
 
-    useEffect(() => {
-        window.arcc.api.openSocket(8080).then(() => {
-            dispatch(setWebsocketConnection(true));
-            window.arcc.api.sendRequest(
-                {
-                    type: API.requests.ACTION,
-                    action: API.actions.LISTSERIAL
-                },
-                (response) => {
-                    if (response.status === 200) {
-                        console.log(response.payload);
-                    }
-                }
-            );
-        });
-        return () => {
-            window.arcc.api.removeSocket(8080).then(() => {});
-        };
-    }, []);
+    useEffect(
+        () => {
+            window.arcc.api.openSocket(8080).then(() => {
+                dispatch(setWebsocketConnection(true));
+                dispatch(getPortOptions());
+            });
+            return () => {
+                window.arcc.api.closeSocket();
+            };
+        },
+        [ dispatch ]
+    );
 
     return (
         <div className={styles.app}>

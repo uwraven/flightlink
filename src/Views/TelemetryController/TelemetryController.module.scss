@@ -1,5 +1,10 @@
 .container {
-    width: 192px;
+    width: 216px;
     border-right: 1px solid var(--border-m);
     height: 100%;
+}
+
+.dropdown {
+    width: 60%;
+    flex-grow: 0;
 }

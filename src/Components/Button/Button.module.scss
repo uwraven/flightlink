@@ -3,9 +3,7 @@
     min-height: var(--height);
     border-radius: var(--radius);
     display: flex;
-    justify-content: center;
     align-items: center;
-    white-space: nowrap;
 }
 
 .primary {
@@ -13,6 +11,15 @@
     color: white;
     border: 1px solid var(--border-m);
     flex-grow: 1;
+    justify-content: center;
+
+    p {
+        box-sizing: border-box;
+        padding: 0 var(--b);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 }
 
 .destructive {
@@ -27,11 +34,6 @@
 
 .small {
     padding: var(--b-s);
-}
-
-.wrapper:hover:not(.disabled) {
-    // background-color: var(--fill-light);
-    filter: brightness(96%);
 }
 
 .disabled {
