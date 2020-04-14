@@ -3,36 +3,21 @@ import PropTypes from 'prop-types';
 import styles from './Button.module.scss';
 import { style } from '../../utility';
 
-class Button extends Component {
-    render() {
-        var buttonType;
-        switch(this.props.type) {
-            case "primary": buttonType = styles.primary; break;
-            case "positive": buttonType = styles.positive; break;
-            case "destructive": buttonType = styles.destructive; break;
-            case "small": buttonType = styles.small; break;
-            default: buttonType = ""; break;
-        }
-        const buttonStyle = style([
-            { className: styles.wrapper },
-            { className: buttonType },
-            {
-                className: styles.disabled,
-                disabled: !this.props.disabled
-            }])
-        return (
-            <div className={buttonStyle} onClick={
-                (!this.props.disabled) ? this.props.onClick : () => {}}>
-                {this.props.children}
-            </div>
-        );
-    }
-}
-
-Button.propTypes = {
-    disabled: PropTypes.bool,
-    children: PropTypes.node,
-    onClick: PropTypes.func.isRequired
+const Button = ({ className, children, onClick, disabled, loading, width, ...props }) => {
+    return (
+        <div
+            onClick={() => {
+                if (!disabled && onClick) onClick();
+            }}
+            className={[ styles.container, className ].join(' ')}
+            style={{ width: width ? `${width}px` : 'inherit' }}>
+            {children}
+        </div>
+    );
 };
 
-export default Button;
+const PrimaryButton = ({ width, ...props }) => {
+    return <Button width={width} className={styles.primary} {...props} />;
+};
+
+export { Button as default, PrimaryButton };

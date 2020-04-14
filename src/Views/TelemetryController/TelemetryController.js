@@ -5,6 +5,7 @@ import InputRow from 'Components/Presentation/InputRow/InputRow';
 import DropdownSelect from 'Components/DropdownSelect/DropdownSelect';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectConnection, selectProtocol, selectPort } from 'Redux/Record/Device/DeviceSlice';
+import { PrimaryButton } from 'Components/Button/Button';
 
 const TelemetryController = (...props) => {
     const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const TelemetryController = (...props) => {
                         options={connectionOptions}
                         selected={selectedConnection}
                         onSelect={selectConnection}
-                        disabled={props.enabled}
+                        disabled={false}
                     />
                 </InputRow>
                 <InputRow>
@@ -47,7 +48,11 @@ const TelemetryController = (...props) => {
                         disabled={false}
                     />
                 </InputRow>
+                <InputRow>
+                    <PrimaryButton disabled={false}>Open {portOptions[selectedPort]}</PrimaryButton>
+                </InputRow>
             </CollapsibleSection>
+            <CollapsibleSection title={'Data'} initialState={true} />
         </div>
     );
 };

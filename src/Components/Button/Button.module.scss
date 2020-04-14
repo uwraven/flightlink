@@ -1,21 +1,18 @@
-.wrapper {
-    cursor: pointer;
-    padding: var(--b);
-    border: var(--border);
-    border-radius: var(--root-border-radius);
+.container {
+    min-width: var(--height);
+    min-height: var(--height);
+    border-radius: var(--radius);
     display: flex;
     justify-content: center;
     align-items: center;
-    border: var(--border-medium) 1px solid;
-    color: black;
     white-space: nowrap;
-    // overflow: hidden;
-    font-size: var(--f);
 }
 
 .primary {
-    color: var(--positive);
-    background-color: white;
+    background-color: var(--positive);
+    color: white;
+    border: 1px solid var(--border-m);
+    flex-grow: 1;
 }
 
 .destructive {

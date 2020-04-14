@@ -14,16 +14,16 @@ const DropdownSelect = ({
     ...props
 }) => {
     return (
-        <Dropdown className={styles.dropDownWrapper}>
+        <Dropdown className={styles.container}>
             {(open, setOpen) => {
                 return (
                     <div
-                        className={[ styles.container, open ? styles.open : '' ].join(' ')}
+                        className={styles.wrapper}
                         onClick={() =>
                             setOpen((prevOpen) => {
                                 if (!disabled) return !prevOpen;
                             })}>
-                        <div className={styles.selected}>
+                        <div className={[ styles.selected, open && styles.selectedOpen ].join(' ')}>
                             {selected > -1 ? (
                                 <span className={styles.selection}>{options[selected]}</span>
                             ) : (
@@ -31,7 +31,8 @@ const DropdownSelect = ({
                             )}
                             <ArrowIcon />
                         </div>
-                        {open && (
+                        {open &&
+                        options.length > 0 && (
                             <div className={styles.dropdown}>
                                 {label && <span>{label}</span>}
                                 {options.map((option, i) => {

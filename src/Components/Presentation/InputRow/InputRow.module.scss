@@ -3,6 +3,6 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    height: 44px;
+    height: var(--height-input-row);
     padding: 0 var(--b);
 }

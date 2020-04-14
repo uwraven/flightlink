@@ -3,7 +3,7 @@
     --green: #36c346;
     --red: #eb0202;
 
-    --positive: #2972e6;
+    --positive: #4185f0;
 
     --text-placeholder: #8d8d8d;
 
@@ -30,22 +30,27 @@
 
     --scene-bg-light: #f4f4f4;
 
-    --root-border-radius: 4px;
+    --radius: 4px;
 
-    --box-shadow: rgba(0, 0, 0, 0.08);
-    --box-shadow-light: 0 0 8px var(--box-shadow);
+    --box-shadow-color: rgba(0, 0, 0, 0.08);
+    --box-shadow: 0 3px 5px var(--box-shadow-color);
+    --box-shadow-light: 0 0 8px var(--box-shadow-color);
 
-    --b-xs: 2px;
-    --b-s: 4px;
-    --b: 8px;
-    --b-m: 12px;
-    --b-l: 8px;
-    --b-xl: 32px;
+    --b-xs: 0.3rem;
+    --b-s: 0.5rem;
+    --b: 0.6rem;
+    --b-m: 0.8rem;
+    --b-l: 1.0rem;
+    --b-xl: 1.4rem;
 
-    --f-xs: 8px;
-    --f-ss: 10px;
-    --f-s: 12px;
-    --f: 14px;
-    --f-m: 18px;
-    --f-l: 24px;
+    --f-xs: 0.4rem;
+    --f-ss: 0.6rem;
+    --f-s: 0.8rem;
+    --f: 1.0rem;
+    --f-m: 1.2rem;
+    --f-l: 1.4rem;
+    --f-xl: 1.6rem;
+
+    --height: 1.8rem;
+    --height-input-row: calc(var(--height) * 1.5);
 }

@@ -3,10 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const DeviceSlice = createSlice({
     name: 'device',
     initialState: {
-        connectionOptions: [],
-        selectedConnection: -1,
-        protocolOptions: [],
-        selectedProtocol: -1,
+        connectionOptions: [ 'Serial' ],
+        selectedConnection: 0,
+        protocolOptions: [ 'Flightlink', 'MAVLink', 'UAVGlobal' ],
+        selectedProtocol: 0,
         portOptions: [],
         selectedPort: -1
     },
