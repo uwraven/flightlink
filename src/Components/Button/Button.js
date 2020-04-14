@@ -9,7 +9,7 @@ const Button = ({ className, children, onClick, disabled, loading, width, ...pro
             onClick={() => {
                 if (!disabled && onClick) onClick();
             }}
-            className={[ styles.container, className ].join(' ')}
+            className={[ styles.container, className, disabled && styles.disabled ].join(' ')}
             style={{ width: width ? `${width}px` : 'inherit' }}>
             {children}
         </div>

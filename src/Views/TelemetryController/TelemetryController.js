@@ -20,13 +20,13 @@ const TelemetryController = (...props) => {
 
     return (
         <div className={styles.container}>
-            <CollapsibleSection title={'Device'} initialState={true}>
+            <CollapsibleSection title={'Connect Device'} initialState={true}>
                 <InputRow>
                     <span>Connection</span>
                     <DropdownSelect
                         options={connectionOptions}
                         selected={selectedConnection}
-                        onSelect={selectConnection}
+                        onSelect={(i) => dispatch(selectConnection(i))}
                         disabled={false}
                     />
                 </InputRow>
@@ -35,8 +35,8 @@ const TelemetryController = (...props) => {
                     <DropdownSelect
                         options={protocolOptions}
                         selected={selectedProtocol}
-                        onSelect={selectProtocol}
-                        disabled={false}
+                        onSelect={(i) => dispatch(selectProtocol(i))}
+                        disabled={selectedConnection < 0}
                     />
                 </InputRow>
                 <InputRow>
@@ -44,15 +44,17 @@ const TelemetryController = (...props) => {
                     <DropdownSelect
                         options={portOptions}
                         selected={selectedPort}
-                        onSelect={selectPort}
-                        disabled={false}
+                        onSelect={(i) => dispatch(selectPort(i))}
+                        disabled={selectedConnection < 0}
                     />
                 </InputRow>
                 <InputRow>
-                    <PrimaryButton disabled={false}>Open {portOptions[selectedPort]}</PrimaryButton>
+                    <PrimaryButton disabled={selectedPort < 0}>Open {portOptions[selectedPort]}</PrimaryButton>
                 </InputRow>
             </CollapsibleSection>
-            <CollapsibleSection title={'Data'} initialState={true} />
+            <CollapsibleSection title={'Data'} initialState={true}>
+                THis is a section fsdf
+            </CollapsibleSection>
         </div>
     );
 };

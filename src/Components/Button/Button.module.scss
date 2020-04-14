@@ -35,7 +35,6 @@
 }
 
 .disabled {
-    cursor: default;
-    background-color: white;
+    background-color: var(--fill-disabled);
     color: var(--text-disabled);
 }

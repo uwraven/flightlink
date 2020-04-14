@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './DropdownSelect.module.scss';
-import PropTypes from 'prop-types';
 import Dropdown from 'Components/Core/Dropdown/Dropdown';
 import { ReactComponent as ArrowIcon } from 'Assets/Icons/arrow-down.svg';
 
@@ -54,15 +53,6 @@ const DropdownSelect = ({
             }}
         </Dropdown>
     );
-};
-
-DropdownSelect.propTypes = {
-    selected: PropTypes.number.isRequired,
-    options: PropTypes.arrayOf(PropTypes.string),
-    callback: PropTypes.func.isRequired,
-    innerLabel: PropTypes.string,
-    style: PropTypes.string,
-    placeholder: PropTypes.string.isRequired
 };
 
 export default DropdownSelect;
