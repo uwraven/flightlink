@@ -4,8 +4,8 @@ import { CollapsibleSubsection, CollapsibleSection } from 'Components/Collapsibl
 import InputRow from 'Components/Presentation/InputRow/InputRow';
 import DropdownSelect from 'Components/DropdownSelect/DropdownSelect';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectConnection, selectProtocol, selectPort, openPort } from 'Redux/Record/Device/DeviceSlice';
-import { PrimaryButton } from 'Components/Button/Button';
+import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Redux/Record/Device/DeviceSlice';
+import { PrimaryButton, DestructiveButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
 
 const TelemetryController = (...props) => {
@@ -31,7 +31,7 @@ const TelemetryController = (...props) => {
                         options={connectionOptions}
                         selected={selectedConnection}
                         onSelect={(i) => dispatch(selectConnection(i))}
-                        disabled={false}
+                        disabled={openingPort}
                         className={styles.dropdown}
                     />
                 </InputRow>
@@ -41,7 +41,7 @@ const TelemetryController = (...props) => {
                         options={protocolOptions}
                         selected={selectedProtocol}
                         onSelect={(i) => dispatch(selectProtocol(i))}
-                        disabled={selectedConnection < 0}
+                        disabled={selectedConnection < 0 || openingPort}
                         className={styles.dropdown}
                     />
                 </InputRow>
@@ -51,17 +51,23 @@ const TelemetryController = (...props) => {
                         options={portOptions}
                         selected={selectedPort}
                         onSelect={(i) => dispatch(selectPort(i))}
-                        disabled={selectedConnection < 0}
+                        disabled={selectedConnection < 0 || openingPort}
                         className={styles.dropdown}
                     />
                 </InputRow>
                 <InputRow>
-                    <PrimaryButton
-                        disabled={selectedPort < 0}
-                        loading={openingPort}
-                        onClick={() => dispatch(openPort(portOptions[selectedPort]))}>
-                        {`Open ${portOptions[selectedPort] || ''}`}
-                    </PrimaryButton>
+                    {!portOpen ? (
+                        <PrimaryButton
+                            disabled={selectedPort < 0 || openingPort}
+                            loading={openingPort}
+                            onClick={() => dispatch(openPort(portOptions[selectedPort]))}>
+                            {`Open ${portOptions[selectedPort] || ''}`}
+                        </PrimaryButton>
+                    ) : (
+                        <DestructiveButton disabled={false} onClick={() => dispatch(closePort())}>
+                            {`Close ${portOptions[selectedPort] || ''}`}
+                        </DestructiveButton>
+                    )}
                 </InputRow>
             </CollapsibleSection>
             <CollapsibleSection title={'Data'} initialState={true}>

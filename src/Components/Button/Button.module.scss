@@ -9,6 +9,15 @@
 .primary {
     background-color: var(--positive);
     color: white;
+}
+
+.destructive {
+    background-color: white;
+    color: var(--red);
+}
+
+.primary,
+.destructive {
     border: 1px solid var(--border-m);
     flex-grow: 1;
     justify-content: center;
@@ -20,11 +29,6 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-}
-
-.destructive {
-    color: var(--red);
-    background-color: white;
 }
 
 .positive {

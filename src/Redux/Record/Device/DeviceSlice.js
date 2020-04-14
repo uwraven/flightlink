@@ -42,6 +42,11 @@ const DeviceSlice = createSlice({
             state.portOpen = false;
             state.openingPort = false;
             state.portError = action.payload;
+        },
+        setPortClosedSuccess(state, action) {
+            state.portOpen = false;
+            state.openingPort = false;
+            state.portError = null;
         }
     }
 });
@@ -53,7 +58,8 @@ export const {
     setPortOptions,
     setPortStartOpen,
     setPortOpenSuccess,
-    setPortOpenFailed
+    setPortOpenFailed,
+    setPortClosedSuccess
 } = DeviceSlice.actions;
 export default DeviceSlice.reducer;
 
@@ -90,6 +96,7 @@ export const openPort = (path) => async (dispatch) => {
                 if (response.status === 200) {
                     dispatch(setPortOpenSuccess());
                 } else {
+                    dispatch(setPortOpenFailed(response.errorMessage));
                     throw new Error('Failed to open port.');
                 }
             }
@@ -98,4 +105,22 @@ export const openPort = (path) => async (dispatch) => {
         console.log(err);
         dispatch(setPortOpenFailed(err.message));
     }
+};
+
+export const closePort = () => async (dispatch) => {
+    try {
+        window.arcc.api.sendRequest(
+            {
+                type: API.requests.ACTION,
+                action: API.actions.CLOSESERIAL
+            },
+            (response) => {
+                if (response.status === 200) {
+                    dispatch(setPortClosedSuccess());
+                } else {
+                    console.log('what to do here');
+                }
+            }
+        );
+    } catch (err) {}
 };

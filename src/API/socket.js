@@ -35,7 +35,7 @@ function receiveMessage(message) {
                 if (responseObj.callback) try {
                     responseObj.callback(packet);
                 } catch(err) {
-                    console.log(err.message);
+                    console.log(err.message, packet);
                 }
                 api.messageQueue.splice(mIndex, 1);
             } else {

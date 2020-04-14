@@ -7,7 +7,6 @@ const Button = ({ className, children, onClick, disabled, loading, width, ...pro
     return (
         <div
             onClick={() => {
-                console.log('click');
                 if (!disabled) onClick();
             }}
             className={[ styles.container, className, disabled && styles.disabled ].join(' ')}>
@@ -24,4 +23,12 @@ const PrimaryButton = ({ width, children, loading, loadingMessage, ...props }) =
     );
 };
 
-export { Button as default, PrimaryButton };
+const DestructiveButton = ({ width, children, ...props }) => {
+    return (
+        <Button width={width} className={styles.destructive} {...props}>
+            <p>{children}</p>
+        </Button>
+    );
+};
+
+export { Button as default, PrimaryButton, DestructiveButton };
