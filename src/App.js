@@ -42,10 +42,7 @@ const App = ({ ...props }) => {
     return (
         <div className={styles.app}>
             <ApplicationHeader />
-            <div className={styles.main}>
-                {/* <SelectedPage /> */}
-                <TelemetryController />
-            </div>
+            <SelectedPage />
             {commandPaletteOpen && <CommandPalette onCollapse={() => dispatch(setCommandPaletteOpen(false))} />}
             <Footer websocketConnected={websocketConnected} />
         </div>

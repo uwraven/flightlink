@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './DropdownSelect.module.scss';
 import Dropdown from 'Components/Core/Dropdown/Dropdown';
 import { ReactComponent as ArrowIcon } from 'Assets/Icons/arrow-down.svg';
@@ -13,12 +13,15 @@ const DropdownSelect = ({
     className,
     ...props
 }) => {
+    const wrapper = useRef();
+
     return (
         <Dropdown className={[ styles.container, className ].join(' ')}>
             {(open, setOpen) => {
                 return (
                     <div
                         className={styles.wrapper}
+                        ref={wrapper}
                         onClick={() =>
                             setOpen((prevOpen) => {
                                 if (!disabled) return !prevOpen;
@@ -33,7 +36,13 @@ const DropdownSelect = ({
                         </div>
                         {open &&
                         options.length > 0 && (
-                            <div className={styles.dropdown}>
+                            <div
+                                className={styles.dropdown}
+                                style={{
+                                    top: Math.ceil(wrapper.current.offsetTop + wrapper.current.clientHeight),
+                                    left: Math.floor(wrapper.current.offsetLeft),
+                                    minWidth: wrapper.current.clientWidth
+                                }}>
                                 {label && <span>{label}</span>}
                                 {options.map((option, i) => {
                                     return (

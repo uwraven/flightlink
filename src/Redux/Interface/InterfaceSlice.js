@@ -5,7 +5,9 @@ const InterfaceSlice = createSlice({
     initialState: {
         commandPaletteOpen: true,
         consoleOpen: false,
-        selectedTab: 0
+        selectedTab: 0,
+        renderOpen: false,
+        streamOpen: true
     },
     reducers: {
         setCommandPaletteOpen(state, action) {
@@ -18,9 +20,22 @@ const InterfaceSlice = createSlice({
         },
         setConsoleOpen(state, action) {
             state.consoleOpen = action.payload;
+        },
+        setRenderOpen(state, action) {
+            state.renderOpen = action.payload;
+        },
+        setStreamOpen(state, action) {
+            state.streamOpen = action.payload;
         }
     }
 });
 
-export const { setCommandPaletteOpen, setSelectedTab } = InterfaceSlice.actions;
+export const {
+    setCommandPaletteOpen,
+    setSelectedTab,
+    setConsoleOpen,
+    setRenderOpen,
+    setStreamOpen
+} = InterfaceSlice.actions;
+
 export default InterfaceSlice.reducer;

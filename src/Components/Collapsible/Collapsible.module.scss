@@ -17,8 +17,10 @@
     @extend .target;
     justify-content: flex-start;
     background-color: var(--white);
+    border-top: 1px solid var(--border-l);
     border-bottom: 1px solid var(--border-l);
     padding: var(--b);
+    font-weight: 500;
 
     .arrow {
         margin-right: var(--b);

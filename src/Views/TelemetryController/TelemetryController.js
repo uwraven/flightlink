@@ -5,9 +5,11 @@ import InputRow from 'Components/Presentation/InputRow/InputRow';
 import DropdownSelect from 'Components/DropdownSelect/DropdownSelect';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Redux/Record/Device/DeviceSlice';
+import { setRenderOpen, setStreamOpen } from 'Redux/Interface/InterfaceSlice';
 import { PrimaryButton, DestructiveButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import Checkbox from 'Components/Checkbox/Checkbox';
+import Toggle from 'Components/Toggle/Toggle';
 
 const TelemetryController = (...props) => {
     const dispatch = useDispatch();
@@ -23,9 +25,13 @@ const TelemetryController = (...props) => {
         portError
     } = useSelector((state) => state.device);
 
+    const { renderOpen, streamOpen } = useSelector((state) => state.interface);
+
+    const { configurationOptions, selectedConfigurationOption } = useSelector((state) => state.signal);
+
     return (
         <Resizable right={true} handle={4} xmin={192} xmax={512} className={styles.container}>
-            <CollapsibleSection title={'Connect Device'} initialState={true}>
+            <CollapsibleSection title={'Connect Device'} initialState={true} header={true} footer={true}>
                 <InputRow>
                     <span>Connection</span>
                     <DropdownSelect
@@ -72,12 +78,12 @@ const TelemetryController = (...props) => {
                     )}
                 </InputRow>
             </CollapsibleSection>
-            <CollapsibleSection title={'Data'} initialState={true}>
+            <CollapsibleSection title={'Data'} initialState={true} header={true} footer={false}>
                 <InputRow>
                     <span>Configuration</span>
                     <DropdownSelect
-                        options={[ 'config' ]}
-                        selected={0}
+                        options={configurationOptions}
+                        selected={selectedConfigurationOption}
                         onSelect={() => {}}
                         disabled={false}
                         className={styles.dropdown}
@@ -89,12 +95,17 @@ const TelemetryController = (...props) => {
                 </InputRow>
                 <InputRow>
                     <span>3D Render</span>
-                    <Checkbox on={true} onClick={() => {}} />
+                    <Toggle on={renderOpen} onClick={() => dispatch(setRenderOpen(!renderOpen))} />
                 </InputRow>
                 <InputRow>
                     <span>Stream</span>
-                    <Checkbox on={false} onClick={() => {}} />
+                    <Toggle on={streamOpen} onClick={() => dispatch(setStreamOpen(!streamOpen))} />
                 </InputRow>
+                <CollapsibleSubsection title={'Signals'} initialState={true} header={true} footer={true}>
+                    <InputRow>
+                        <span>help</span>
+                    </InputRow>
+                </CollapsibleSubsection>
             </CollapsibleSection>
         </Resizable>
     );

@@ -4,12 +4,13 @@ import styles from './Record.module.scss';
 import Telemetry from './Telemetry/Telemetry';
 import MainController from './MainController/MainController';
 import SerialManager from './SerialManager/SerialManager';
+import TelemetryController from 'Views/TelemetryController/TelemetryController';
 
 const Record = ({ ...props }) => {
     return (
-        <div className={styles.container}>
-            {/* <SerialManager /> */}
-            <Telemetry />
+        <div className={styles.main}>
+            <TelemetryController />
+            {/* <Telemetry /> */}
         </div>
     );
 };

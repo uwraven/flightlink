@@ -42,8 +42,8 @@ class Telemetry extends Component {
             buffer: [],
             plotLength: 50,
             interface: {
-                renderer: true,
-                streams: true,
+                renderer: false,
+                streams: false,
                 live: false
             }
         };

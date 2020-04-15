@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Collapsible.module.scss';
 import { ReactComponent as ArrowIcon } from 'Assets/Icons/arrow-down.svg';
 
-const Collapsible = ({ target, disabled, children, header, footer, initialState, className = '', ...props }) => {
+const Collapsible = ({ target, disabled, children, header, footer, initialState, className, ...props }) => {
     const [ open, setOpen ] = useState(initialState);
     return (
         <div className={className}>
@@ -14,11 +14,10 @@ const Collapsible = ({ target, disabled, children, header, footer, initialState,
     );
 };
 
-const CollapsibleSection = ({ title, onClick, disabled, initialState, ...props }) => {
+const CollapsibleSection = ({ title, onClick, disabled, footer, header, ...props }) => {
     return (
         <Collapsible
             className={styles.sectionContainer}
-            initialState={initialState}
             target={(open, setOpen) => (
                 <div className={styles.sectionTarget} onClick={() => setOpen((prev) => !prev)}>
                     <span>{title}</span>
@@ -29,17 +28,17 @@ const CollapsibleSection = ({ title, onClick, disabled, initialState, ...props }
                 </div>
             )}
             header={(open, setOpen) => {
-                return open && <div className={styles.header} />;
+                return open ? header === true ? <div className={styles.header} /> : header || '' : '';
             }}
             footer={(open, setOpen) => {
-                return open && <div className={styles.footer} />;
+                return open ? footer === true ? <div className={styles.footer} /> : footer || '' : '';
             }}
             {...props}
         />
     );
 };
 
-const CollapsibleSubsection = ({ title, onClick, disabled, children, ...props }) => {
+const CollapsibleSubsection = ({ title, onClick, disabled, footer, header, ...props }) => {
     return (
         <Collapsible
             className={styles.subsectionContainer}
@@ -51,9 +50,15 @@ const CollapsibleSubsection = ({ title, onClick, disabled, children, ...props })
                     />
                     <span>{title}</span>
                 </div>
-            )}>
-            {children}
-        </Collapsible>
+            )}
+            header={(open, setOpen) => {
+                return open ? header === true ? <div className={styles.header} /> : header || '' : '';
+            }}
+            footer={(open, setOpen) => {
+                return open ? footer === true ? <div className={styles.footer} /> : footer || '' : '';
+            }}
+            {...props}
+        />
     );
 };
 

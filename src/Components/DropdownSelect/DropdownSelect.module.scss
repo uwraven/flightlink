@@ -35,9 +35,9 @@
 }
 
 .dropdown {
-    position: absolute;
+    position: fixed;
     top: var(--height);
-    min-width: 100%;
+    // min-width: 100%;
     z-index: 1;
     background-color: white;
     box-sizing: border-box;

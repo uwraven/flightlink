@@ -1,21 +1,16 @@
 .container {
-    height: 18px;
-    width: 36px;
+    height: calc(var(--input-s) + 2px);
+    width: calc(var(--input-s) * 2);
     background-color: white;
-    border-radius: 9px;
+    border-radius: var(--input-s);
     transition: background-color 100ms;
     border: 1px solid var(--border-medium);
-    cursor: pointer;
 }
 
 .button {
-    // width: 20px;
-    // height: 20px;
-    width: 16px;
-    height: 16px;
-    // fill: white;
-    border-radius: 12px;
-    // background-color: var(--positive);
+    width: var(--input-s);
+    height: var(--input-s);
+    border-radius: var(--input-s);
     background-color: var(--fill);
     transition: background-color 200ms, transform 100ms, box-shadow 100ms;
     transform: translateX(1px) translateY(1px);
@@ -23,6 +18,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
 
     .relish {
         width: 2px;
@@ -39,12 +35,11 @@
 
 .buttonOn {
     // transform: translateX(19px) translateY(-1px);
-    transform: translateX(19px) translateY(1px);
+    transform: translateX(var(--input-s)) translateY(1px);
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     .relish {
         background-color: var(--positive);
     }
-
 }

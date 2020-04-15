@@ -60,6 +60,7 @@ const Resizable = ({
     const mouseMove = (e) => {
         if (_resizing.current.x && (left || right || x)) {
             let dx = e.pageX - _target.current.x;
+            console.log(dx);
             let width = Math.min(Math.max(size.width + dx, xmin), xmax);
             div.current.style.width = `${width}px`;
         }
@@ -113,7 +114,6 @@ const Resizable = ({
         }
 
         if (direction.top || direction.right || direction.bottom || direction.left) {
-            console.log('resize pleaseeeee');
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
         }
