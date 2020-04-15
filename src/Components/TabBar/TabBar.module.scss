@@ -7,11 +7,14 @@
 
 .tab {
     cursor: pointer;
-    padding: var(--b-m) 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-bottom: 2px solid transparent;
     color: var(--label-light);
     box-sizing: border-box;
-    margin: 0 var(--b-m);
+    margin: 0 var(--b);
 }
 
 .tabSelected {

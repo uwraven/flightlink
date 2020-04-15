@@ -14,13 +14,14 @@
 
     --border-medium: #e5e5e5;
     --border-light: #e8e8e8;
+
+    --border-d: #d8d8d8;
     --border-m: #e5e5e5;
     --border-l: #efefef;
 
     --fill-l: #fafafa;
     --fill-lm: #f8f8f8;
     --fill-m: #efefef;
-
     --fill-h: #f8f8f8;
 
     --fill-disabled: #f8f8f8;
@@ -53,6 +54,9 @@
     --f-l: 1.4rem;
     --f-xl: 1.6rem;
 
+    --input-xs: 1.0rem;
+    --input-s: 1.4rem;
     --height: 1.8rem;
     --height-input-row: calc(var(--height) * 1.5);
+    --height-l: 3.0rem;
 }

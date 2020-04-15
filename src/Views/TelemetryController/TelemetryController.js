@@ -60,6 +60,7 @@ const TelemetryController = (...props) => {
                         <PrimaryButton
                             disabled={selectedPort < 0 || openingPort}
                             loading={openingPort}
+                            loadingMessage={'Opening...'}
                             onClick={() => dispatch(openPort(portOptions[selectedPort]))}>
                             {`Open ${portOptions[selectedPort] || ''}`}
                         </PrimaryButton>
@@ -71,9 +72,20 @@ const TelemetryController = (...props) => {
                 </InputRow>
             </CollapsibleSection>
             <CollapsibleSection title={'Data'} initialState={true}>
-                {portOpen && 'open'}
-                {openingPort && 'opening'}
-                {portError}
+                <InputRow>
+                    <span>Configuration</span>
+                    <DropdownSelect
+                        options={[ 'config' ]}
+                        selected={0}
+                        onSelect={() => {}}
+                        disabled={false}
+                        className={styles.dropdown}
+                    />
+                </InputRow>
+                <InputRow>
+                    <span>Path</span>
+                    {/* <TextInput/> */}
+                </InputRow>
             </CollapsibleSection>
         </Resizable>
     );

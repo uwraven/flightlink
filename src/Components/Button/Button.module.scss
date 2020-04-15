@@ -31,6 +31,33 @@
     }
 }
 
+.iconButton {
+    border: 1px solid var(--border-m);
+    width: var(--height);
+    height: var(--height);
+
+    justify-content: center;
+    align-items: center;
+
+    svg {
+        width: calc(var(--height) / 1.4);
+        height: calc(var(--height) / 1.4);
+
+        box-sizing: border-box;
+        * {
+            stroke: var(--border-d);
+        }
+    }
+}
+
+.iconButtonOn {
+    svg {
+        * {
+            stroke: var(--positive);
+        }
+    }
+}
+
 .positive {
     color: white;
     background-color: var(--positive);

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styles from './Footer.module.scss';
+import styles from './ApplicationFooter.module.scss';
 import Button from '../../Components/Button/Button';
 
-class Footer extends Component {
+class ApplicationFooter extends Component {
     constructor(props) {
         super(props);
     }
@@ -14,16 +14,6 @@ class Footer extends Component {
         return (
             <div className={styles.container}>
                 <div className={styles.left}>
-                    {/* <Button 
-                        onClick={this.props.toggleCommPanel}
-                        type={"small"}>
-                            Toggle panel
-                    </Button>
-                    <Button 
-                        onClick={this.props.openConsole}
-                        type={"small"}>
-                            Open console
-                    </Button> */}
                     <p className={styles.socketStatus}>
                         {this.props.websocketConnected ? 'Socket OK' : 'Socket Disconnected'}
                     </p>
@@ -37,6 +27,4 @@ class Footer extends Component {
     }
 }
 
-Footer.propTypes = {};
-
-export default Footer;
+export default ApplicationFooter;

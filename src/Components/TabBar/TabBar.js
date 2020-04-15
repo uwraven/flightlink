@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './TabBar.module.scss';
 
-const TabBar = ({ options, selected, onClick, children, ...props }) => {
+const TabBar = ({ options, selected, onClick, children, className, ...props }) => {
     return (
-        <div className={[ styles.container, props.className ? props.className : '' ].join(' ')}>
+        <div className={[ styles.container, className ].join(' ')}>
             {options.map((option, i) => {
                 return (
                     <div

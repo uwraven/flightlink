@@ -3,15 +3,24 @@ import { createSlice } from '@reduxjs/toolkit';
 const InterfaceSlice = createSlice({
     name: 'interface',
     initialState: {
-        commandPaletteVisibility: true
+        commandPaletteOpen: true,
+        consoleOpen: false,
+        selectedTab: 0
     },
     reducers: {
-        setCommandPaletteVisibility(state, action) {
-            state.commandPaletteVisibility = action.payload;
+        setCommandPaletteOpen(state, action) {
+            state.commandPaletteOpen = action.payload;
+        },
+        setSelectedTab(state, action) {
+            if (action.payload !== state.selectedTab) {
+                state.selectedTab = action.payload;
+            }
+        },
+        setConsoleOpen(state, action) {
+            state.consoleOpen = action.payload;
         }
     }
 });
 
-export const { setCommandPaletteVisibility } = InterfaceSlice.actions;
-
+export const { setCommandPaletteOpen, setSelectedTab } = InterfaceSlice.actions;
 export default InterfaceSlice.reducer;

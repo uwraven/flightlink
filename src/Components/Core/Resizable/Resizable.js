@@ -6,8 +6,10 @@ const Resizable = ({
     y = false,
     xmin = 0,
     xmax = window.innerWidth,
+    xInitial,
     ymin = 0,
     ymax = window.innerHeight,
+    yInitial,
     top = false,
     bottom = false,
     right = false,
@@ -37,8 +39,8 @@ const Resizable = ({
     }, []);
 
     const [ size, setSize ] = useState({
-        width: 0,
-        height: 0
+        width: xInitial,
+        height: yInitial
     });
 
     const getDirection = (p, frame, margin) => {
@@ -78,10 +80,12 @@ const Resizable = ({
     };
 
     const mouseUp = (e) => {
-        setSize({
-            width: div.current.clientWidth,
-            height: div.current.clientHeight
-        });
+        if (div.current) {
+            setSize({
+                width: div.current.clientWidth,
+                height: div.current.clientHeight
+            });
+        }
         document.removeEventListener('mousemove', mouseMove);
         document.addEventListener('mouseup', mouseUp);
         document.body.style.cursor = 'default';

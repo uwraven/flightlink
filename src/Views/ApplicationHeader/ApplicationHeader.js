@@ -1,45 +1,39 @@
 import React, { Component } from 'react';
 import styles from './ApplicationHeader.module.scss';
+import TabBar from 'Components/TabBar/TabBar';
+import { IconButton } from 'Components/Button/Button';
+import { ReactComponent as UplinkIcon } from 'Assets/Icons/uplink.svg';
+import { ReactComponent as PaletteIcon } from 'Assets/Icons/palette.svg';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectedTab } from 'Redux/Interface/InterfaceSlice';
+import { setCommandPaletteOpen } from 'Redux/Interface/InterfaceSlice';
 
-class ApplicationHeader extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            fullScreen: window.isFullScreen
-        }
-        // this.enterFullScreen = this.enterFullScreen.bind(this);
-        // this.leaveFullScreen = this.leaveFullScreen.bind(this);
-    }
+const ApplicationHeader = ({ ...props }) => {
+    const dispatch = useDispatch();
 
-    // componentDidMount() {
-    //     window.addEventListener('enter-full-screen', this.enterFullScreen);
-    //     window.addEventListener('leave-full-screen', this.leaveFullScreen);
-    // }
-    
-    // componentWillUnmount() {
-    //     window.removeEventListener('enter-full-screen', this.enterFullScreen);
-    //     window.addEventListener('leave-full-screen', this.leaveFullScreen);
-    // }
+    const { selectedTab, consoleOpen, commandPaletteOpen } = useSelector((state) => state.interface);
 
-    // enterFullScreen() {
-    //     this.setState({fullScreen: true})
-    // }
-
-    // leaveFullScreen() {
-    //     this.setState({fullScreen: false})
-    // }
-
-    render() {
-        return (
-            <>
-                {!this.state.fullScreen &&
-                    <div className={styles.container}>
-                        {this.props.title}
-                    </div>
-                }
-            </>
-        );
-    }
-}
+    return (
+        <TabBar
+            options={[ 'Record', 'Configure' ]}
+            selected={selectedTab}
+            onClick={(i) => dispatch(setSelectedTab(i))}
+            className={styles.container}>
+            <div className={styles.titleBox}>
+                <div className={styles.title}>ARCC Raven</div>
+            </div>
+            <div className={styles.inner}>
+                <IconButton
+                    on={commandPaletteOpen}
+                    onClick={() => dispatch(setCommandPaletteOpen(!commandPaletteOpen))}>
+                    <PaletteIcon />
+                </IconButton>
+                <IconButton on={consoleOpen} onClick={() => {}}>
+                    <UplinkIcon />
+                </IconButton>
+            </div>
+        </TabBar>
+    );
+};
 
 export default ApplicationHeader;

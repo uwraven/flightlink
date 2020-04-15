@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
-import Footer from './Views/Footer/Footer';
+import Footer from './Views/ApplicationFooter/ApplicationFoooter';
 import styles from './app.module.scss';
 import './API/main';
 import Record from './Views/Record/Record';
@@ -9,20 +9,22 @@ import TabBar from './Components/TabBar/TabBar';
 import CommandPalette from './Views/CommandPalette/CommandPalette';
 import TelemetryController from 'Views/TelemetryController/TelemetryController';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCommandPaletteVisibility } from './Redux/Interface/InterfaceSlice';
+import { setCommandPaletteOpen } from './Redux/Interface/InterfaceSlice';
 import { setWebsocketConnection } from 'Redux/Record/RecordSlice';
 import { getPortOptions } from 'Redux/Record/Device/DeviceSlice';
 import API from './API/constants';
+import { ReactComponent as UplinkIcon } from 'Assets/Icons/uplink.svg';
+import { IconButton } from 'Components/Button/Button';
+import ApplicationHeader from 'Views/ApplicationHeader/ApplicationHeader';
 
 const App = ({ ...props }) => {
     const pages = [ Record, Configure ];
 
     const dispatch = useDispatch();
-    const { commandPaletteVisibility } = useSelector((state) => state.interface);
+    const { commandPaletteOpen, selectedTab } = useSelector((state) => state.interface);
     const { websocketConnected } = useSelector((state) => state.record);
 
-    const [ page, setPage ] = useState(0);
-    const SelectedPage = pages[page] || Record;
+    const SelectedPage = pages[selectedTab] || Record;
 
     useEffect(
         () => {
@@ -39,19 +41,12 @@ const App = ({ ...props }) => {
 
     return (
         <div className={styles.app}>
-            <TabBar
-                options={[ 'Record', 'Configure' ]}
-                selected={page}
-                onClick={(index) => {
-                    if (index !== page) setPage(index);
-                }}
-                className={styles.tabbar}
-            />
+            <ApplicationHeader />
             <div className={styles.main}>
                 {/* <SelectedPage /> */}
                 <TelemetryController />
             </div>
-            {commandPaletteVisibility && <CommandPalette />}
+            {commandPaletteOpen && <CommandPalette onCollapse={() => dispatch(setCommandPaletteOpen(false))} />}
             <Footer websocketConnected={websocketConnected} />
         </div>
     );
