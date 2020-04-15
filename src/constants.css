@@ -54,8 +54,8 @@
     --f-l: 1.4rem;
     --f-xl: 1.6rem;
 
-    --input-xs: 1.0rem;
-    --input-s: 1.4rem;
+    --input-xs: 0.8rem;
+    --input-s: 1.2rem;
     --height: 1.8rem;
     --height-input-row: calc(var(--height) * 1.5);
     --height-l: 3.0rem;

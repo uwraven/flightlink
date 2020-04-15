@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Redux/Record/Device/DeviceSlice';
 import { PrimaryButton, DestructiveButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
+import Checkbox from 'Components/Checkbox/Checkbox';
 
 const TelemetryController = (...props) => {
     const dispatch = useDispatch();
@@ -83,8 +84,16 @@ const TelemetryController = (...props) => {
                     />
                 </InputRow>
                 <InputRow>
-                    <span>Path</span>
+                    <span>Folder</span>
                     {/* <TextInput/> */}
+                </InputRow>
+                <InputRow>
+                    <span>3D Render</span>
+                    <Checkbox on={true} onClick={() => {}} />
+                </InputRow>
+                <InputRow>
+                    <span>Stream</span>
+                    <Checkbox on={false} onClick={() => {}} />
                 </InputRow>
             </CollapsibleSection>
         </Resizable>
