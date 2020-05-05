@@ -5,16 +5,11 @@ import styles from './app.module.scss';
 import './API/main';
 import Record from './Views/Record/Record';
 import Configure from './Views/Configure/Configure';
-import TabBar from './Components/TabBar/TabBar';
 import CommandPalette from './Views/CommandPalette/CommandPalette';
-import TelemetryController from 'Views/TelemetryController/TelemetryController';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCommandPaletteOpen } from './Redux/Interface/InterfaceSlice';
 import { setWebsocketConnection } from 'Redux/Record/RecordSlice';
 import { getPortOptions } from 'Redux/Record/Device/DeviceSlice';
-import API from './API/constants';
-import { ReactComponent as UplinkIcon } from 'Assets/Icons/uplink.svg';
-import { IconButton } from 'Components/Button/Button';
 import ApplicationHeader from 'Views/ApplicationHeader/ApplicationHeader';
 
 const App = ({ ...props }) => {

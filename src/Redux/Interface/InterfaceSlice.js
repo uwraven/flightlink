@@ -5,7 +5,7 @@ const InterfaceSlice = createSlice({
     initialState: {
         commandPaletteOpen: true,
         consoleOpen: false,
-        selectedTab: 0,
+        selectedTab: 1,
         renderOpen: false,
         streamOpen: true
     },

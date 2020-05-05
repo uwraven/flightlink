@@ -60,7 +60,6 @@ const Resizable = ({
     const mouseMove = (e) => {
         if (_resizing.current.x && (left || right || x)) {
             let dx = e.pageX - _target.current.x;
-            console.log(dx);
             let width = Math.min(Math.max(size.width + dx, xmin), xmax);
             div.current.style.width = `${width}px`;
         }
