@@ -7,6 +7,12 @@
     box-sizing: border-box;
     border: 1px solid var(--border-m);
     border-radius: var(--radius);
+    outline: none;
+}
+
+.container:focus:not(.on) {
+    border-color: var(--border-m);
+    background-color: var(--fill-lm);
 }
 
 .check {

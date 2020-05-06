@@ -6,18 +6,19 @@ const Table = ({rows, row, initialSelection = -1, ...props}) => {
     return(
         <div className={styles.tableContainer}>
             {
-                rows.map((id, i) => row(id, i))
+                rows.map((key, i) => row(key, i))
             }
         </div>
     )
 }
 
-const TableRow = ({selected, setSelected, children, onClick, ...props}) => {
+const TableRow = ({selected, className, setSelected, children, onClick, ...props}) => {
     return(
         <div 
             className={[
                 styles.tableRow,
-                selected && styles.tableRowSelected
+                selected && styles.tableRowSelected,
+                className
             ].join(" ")}
             onClick={onClick}
         >

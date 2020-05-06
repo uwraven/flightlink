@@ -19,6 +19,7 @@
 .configurationSelector {
     @extend .column;
     justify-content: space-between;
+    overflow-y: scroll;
 }
 
 .configurationPanel {
@@ -35,4 +36,13 @@
     padding: var(--b-l);
     background-color: white;
     border-top: 1px solid var(--border-l);
+}
+
+.emptyConfigContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    color: var(--text-placeholder);
+    background-color: var(--fill-lm);
 }

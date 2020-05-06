@@ -1,10 +1,19 @@
 .container {
     flex-grow: 1;
+    // outline: none;
 }
 
 .wrapper {
     position: relative;
     width: 100%;
+    outline: none;
+}
+
+.wrapper:focus {
+    .selected {
+        border-color: var(--border-m);
+        background-color: var(--fill-l);
+    }
 }
 
 .selected {

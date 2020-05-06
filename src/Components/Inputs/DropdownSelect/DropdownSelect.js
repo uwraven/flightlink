@@ -20,12 +20,20 @@ const DropdownSelect = ({
             {(open, setOpen) => {
                 return (
                     <div
+                        tabIndex={0}
                         className={styles.wrapper}
                         ref={wrapper}
                         onClick={() =>
                             setOpen((prevOpen) => {
                                 if (!disabled) return !prevOpen;
-                            })}>
+                            })}
+                        onKeyDown={(e) => {
+                            if (e.keyCode === 13 && !disabled) {
+                                setOpen((prevOpen) => !prevOpen)
+                            }
+                        }}
+                            
+                            >
                         <div className={[ styles.selected, open && styles.selectedOpen ].join(' ')}>
                             {selected > -1 ? (
                                 <span className={styles.selection}>{options[selected]}</span>

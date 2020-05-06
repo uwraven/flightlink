@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import styles from './TelemetryController.module.scss';
 import { CollapsibleSubsection, CollapsibleSection } from 'Components/Collapsible/Collapsible';
 import InputRow from 'Components/Presentation/InputRow/InputRow';
-import DropdownSelect from 'Components/DropdownSelect/DropdownSelect';
+import DropdownSelect from 'Components/Inputs/DropdownSelect/DropdownSelect';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Redux/Record/Device/DeviceSlice';
 import { setRenderOpen, setStreamOpen } from 'Redux/Interface/InterfaceSlice';
 import { PrimaryButton, DestructiveButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
-import Checkbox from 'Components/Checkbox/Checkbox';
 import Toggle from 'Components/Toggle/Toggle';
 
 const TelemetryController = (...props) => {

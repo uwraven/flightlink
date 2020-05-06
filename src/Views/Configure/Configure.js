@@ -4,6 +4,9 @@ import Table, { TableRow } from 'Components/Table/Table';
 import { CollapsibleSection } from 'Components/Collapsible/Collapsible';
 import { PrimaryButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
+import SignalConfiguration from './SignalConfiguration/SignalConfiguration';
+import { setSelectedConfigurationId } from 'Redux/Configure/ConfigureSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const rows = [
@@ -15,7 +18,8 @@ const rows = [
 const Configure = (props) => {
 
     // TODO: redux
-    const [selected, setSelected] = useState(1);
+    const dispatch = useDispatch();
+    const { selectedConfigurationId } = useSelector((state) => state.configure);
 
     return(
         <div className={styles.container}>
@@ -23,9 +27,9 @@ const Configure = (props) => {
                 <CollapsibleSection title={"Configurations"} initialState={true} >
                     <Table
                         rows={rows}
-                        row={(id, i) => 
-                            <TableRow selected={i === selected} onClick={() => setSelected(i)}>
-                                {id}
+                        row={(key, i) => 
+                            <TableRow selected={key === selectedConfigurationId} onClick={() => dispatch(setSelectedConfigurationId(key))}>
+                                {key}
                             </TableRow>
                         }
                     />
@@ -36,16 +40,10 @@ const Configure = (props) => {
                     </PrimaryButton>
                 </div>
             </Resizable>
-            <div className={styles.configurationPanel}>
-                {/* this should be broken into a separate view */}
-                <div className={styles.titleBar}>
-                    {/* pass id to name field here */}
-                </div>
-                <Resizable right={true} xmin={144} handle={4} xmax={344} xInitial={312} className={styles.signalSelector}>
-                    TEST
-                    {/* Pass id to form component here */}
-                </Resizable>
-            </div>
+            
+            { selectedConfigurationId ? <SignalConfiguration configurationId={"0"}/> : <div className={styles.emptyConfigContainer}>
+                No Configuration Selected
+            </div> }
         </div>
     )
 }
