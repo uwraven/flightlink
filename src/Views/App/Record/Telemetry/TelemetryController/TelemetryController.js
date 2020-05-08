@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './TelemetryController.module.scss';
-import Toggle from '../../../../Components/Toggle/Toggle';
-import DropdownSelect from '../../../../Components/Inputs/DropdownSelect/DropdownSelect';
+import Toggle from '../../../../../Components/Toggle/Toggle';
+import DropdownSelect from '../../../../../Components/Inputs/DropdownSelect/DropdownSelect';
 
 class TelemetryController extends Component {
     constructor(props) {

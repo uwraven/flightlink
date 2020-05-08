@@ -1,0 +1,38 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    -webkit-app-region: drag;
+    background-color: var(--fill-l);
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+.mainContainer {
+    flex-grow: 1;
+}
+
+.actionContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding: var(--b-l) var(--b-l);
+    border-top: 1px solid var(--border-m);
+}
+
+.content {
+    padding: var(--b-xxl);
+}
+
+.title {
+    font-weight: 500;
+    font-size: 2.0rem;
+    margin-bottom: var(--b-s);
+}
+
+.version {
+    font-weight: 400;
+    font-size: var(--f);
+    color: var(--label-dark);
+}

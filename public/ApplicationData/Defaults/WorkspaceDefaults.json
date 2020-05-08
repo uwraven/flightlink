@@ -1,0 +1,25 @@
+{
+    "id": "",
+    "name": "New Workspace",
+    "interface": {
+        "window": {
+            "width": 1200,
+            "height": 800
+        },
+        "fullscreen": false
+    },
+    "contents": {
+        "configurations": {},
+        "commands": {},
+        "record": {
+            "default": {
+                "connection": null,
+                "protocol": null,
+                "port": null
+            }
+        }
+    },
+    "status": {
+        "new": true
+    }
+}

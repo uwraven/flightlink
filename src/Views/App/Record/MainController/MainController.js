@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import styles from './MainController.module.scss';
-import Switch from '../../../Components/Switch/Switch';
+import Switch from '../../../../Components/Switch/Switch';
 
 class MainController extends Component {
     constructor(props) {

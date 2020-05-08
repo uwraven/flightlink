@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Button.module.scss';
-import { style } from '../../utility';
 
 const Button = ({ className, children, onClick, disabled, loading, width, ...props }) => {
     return (
@@ -23,6 +22,14 @@ const PrimaryButton = ({ width, children, loading, loadingMessage, ...props }) =
     );
 };
 
+const SecondaryButton = ({ width, children, loading, loadingMessage, ...props }) => {
+    return (
+        <Button width={width} className={styles.secondary} {...props}>
+            <p>{loading ? loadingMessage ? loadingMessage : 'loading...' : children}</p>
+        </Button>
+    );
+};
+
 const DestructiveButton = ({ width, children, ...props }) => {
     return (
         <Button width={width} className={styles.destructive} {...props}>
@@ -39,4 +46,4 @@ const IconButton = ({ children, on, ...props }) => {
     );
 };
 
-export { Button as default, PrimaryButton, DestructiveButton, IconButton };
+export { Button as default, PrimaryButton, SecondaryButton, DestructiveButton, IconButton };

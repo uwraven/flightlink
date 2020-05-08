@@ -27,7 +27,8 @@ const TableRow = ({selected, className, setSelected, children, onClick, ...props
     )
 }
 
+
 export {
     Table as default,
-    TableRow
+    TableRow,
 }

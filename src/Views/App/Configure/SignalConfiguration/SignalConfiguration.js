@@ -4,7 +4,8 @@ import Table, { TableRow } from 'Components/Table/Table';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import SignalEditor from './SignalEditor/SignalEditor';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedSignalId } from 'Redux/Configure/SignalEditorSlice';
+import { setSelectedSignalId } from 'Store/Configure/SignalEditorSlice';
+import LCTableView from 'Components/LCTableView/LCTableView';
 
 const SignalConfiguration = ({configurationId, ...props}) => {
 
@@ -36,8 +37,18 @@ const SignalConfiguration = ({configurationId, ...props}) => {
                                 <span className={styles.majorLabel}>{key}</span>
                             </TableRow>
                         }}
-                    >
-                    </Table>
+                    />
+                    <LCTableView
+                        selectedId={selectedSignalId}
+                        rows={["1", "2", "3", "4", "5", "6", "7", "8"]}
+                        row={(id, index) => {
+                            return (
+                                <p>
+                                    {id}
+                                </p>
+                            )
+                        }}
+                    />
                 </Resizable>
                     { selectedSignalId ? <SignalEditor/> : <div className={styles.emptySignalContainer}>Select signal to edit</div> }
             </div>

@@ -5,7 +5,7 @@ import { CollapsibleSection } from 'Components/Collapsible/Collapsible';
 import { PrimaryButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import SignalConfiguration from './SignalConfiguration/SignalConfiguration';
-import { setSelectedConfigurationId } from 'Redux/Configure/ConfigureSlice';
+import { setSelectedConfigurationId } from 'Store/Configure/ConfigureSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 

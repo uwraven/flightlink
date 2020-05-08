@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ApplicationFooter.module.scss';
-import Button from '../../Components/Button/Button';
+import Button from '../../../Components/Button/Button';
 
 class ApplicationFooter extends Component {
     constructor(props) {

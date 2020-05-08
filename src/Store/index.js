@@ -5,8 +5,9 @@ import RecordSlice from './Record/RecordSlice';
 import SignalSlice from './Record/Signal/Signal';
 import ConfigureSlice from './Configure/ConfigureSlice';
 import SignalEditorSlice from './Configure/SignalEditorSlice';
+import ApplicationSlice from './Application/ApplicationSlice';
 
-export default combineReducers({
+export const appReducer = combineReducers({
     interface: InterfaceSlice,
     record: RecordSlice,
     device: DeviceSlice,
@@ -14,3 +15,7 @@ export default combineReducers({
     configure: ConfigureSlice,
     signalEditor: SignalEditorSlice
 });
+
+export const splashReducer = combineReducers({
+    application: ApplicationSlice
+})

@@ -1,14 +1,15 @@
 {
     "workspace": {
         "recent": [],
-        "workspaces": {
-        }
+        "open": [],
+        "workspaces": {}
     },
     "interface": {
         "window": {
             "width": 1200,
             "height": 800
-        }
+        },
+        "fullscreen": false
     },
     "preferences": {
 

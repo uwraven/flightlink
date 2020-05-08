@@ -5,8 +5,8 @@ import { IconButton } from 'Components/Button/Button';
 import { ReactComponent as UplinkIcon } from 'Assets/Icons/uplink.svg';
 import { ReactComponent as PaletteIcon } from 'Assets/Icons/palette.svg';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedTab } from 'Redux/Interface/InterfaceSlice';
-import { setCommandPaletteOpen } from 'Redux/Interface/InterfaceSlice';
+import { setSelectedTab } from 'Store/Interface/InterfaceSlice';
+import { setCommandPaletteOpen } from 'Store/Interface/InterfaceSlice';
 
 const ApplicationHeader = ({ ...props }) => {
     const dispatch = useDispatch();

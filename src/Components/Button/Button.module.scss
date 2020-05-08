@@ -11,12 +11,18 @@
     color: white;
 }
 
+.secondary {
+    background-color: var(--fill-m);
+    color: var(--placeholder);
+}
+
 .destructive {
     background-color: white;
     color: var(--red);
 }
 
 .primary,
+.secondary,
 .destructive {
     border: 1px solid var(--border-m);
     flex-grow: 1;

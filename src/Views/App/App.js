@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { connect } from 'react-redux';
-import Footer from './Views/ApplicationFooter/ApplicationFoooter';
+import Footer from './ApplicationFooter/ApplicationFoooter';
 import styles from './app.module.scss';
-import './API/main';
-import Record from './Views/Record/Record';
-import Configure from './Views/Configure/Configure';
-import CommandPalette from './Views/CommandPalette/CommandPalette';
+import 'API/main';
+import Record from './Record/Record';
+import Configure from './Configure/Configure';
+import CommandPalette from './CommandPalette/CommandPalette';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCommandPaletteOpen } from './Redux/Interface/InterfaceSlice';
-import { setWebsocketConnection } from 'Redux/Record/RecordSlice';
-import { getPortOptions } from 'Redux/Record/Device/DeviceSlice';
-import ApplicationHeader from 'Views/ApplicationHeader/ApplicationHeader';
+import { setCommandPaletteOpen } from '../../Store/Interface/InterfaceSlice';
+import { setWebsocketConnection } from 'Store/Record/RecordSlice';
+import { getPortOptions } from 'Store/Record/Device/DeviceSlice';
+import ApplicationHeader from 'Views/App/ApplicationHeader/ApplicationHeader';
 
 const App = ({ ...props }) => {
     const pages = [ Record, Configure ];
