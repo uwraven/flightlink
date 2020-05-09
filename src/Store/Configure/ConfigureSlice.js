@@ -7,7 +7,7 @@ const ConfigureSlice = createSlice({
         selectedSignalId: "1",
         loadingConfigurations: false,
         configurationsLoaded: false,
-        configurations: []
+        configurations: [],
     },
     reducers: {
         setSelectedConfigurationId(state, action) {

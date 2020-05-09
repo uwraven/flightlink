@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import styles from './SignalConfiguration.module.scss';
 import Table, { TableRow } from 'Components/Table/Table';
 import Resizable from 'Components/Core/Resizable/Resizable';
@@ -7,10 +7,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedSignalId } from 'Store/Configure/SignalEditorSlice';
 import LCTableView from 'Components/LCTableView/LCTableView';
 
+
+let signalArray = new Array(100);
+signalArray.fill(0);
+signalArray = signalArray.map((signal, i) => `row: ${i}`)
+
 const SignalConfiguration = ({configurationId, ...props}) => {
 
     const dispatch = useDispatch();
     const { selectedSignalId } = useSelector((state) => state.signalEditor);
+
+    // move to Store
+    const [ signals, setSignals ] = useState(signalArray);
+
+    const onDragSuccess = (from, to) => {
+        setSignals(prev => {
+            const signalArr = [...prev];
+            signalArr.splice(to, 0, signalArr.splice(from, 1));
+            return signalArr;
+        })
+    }
 
     return(
         <div className={styles.container}>
@@ -40,8 +56,10 @@ const SignalConfiguration = ({configurationId, ...props}) => {
                     />
                     <LCTableView
                         selectedId={selectedSignalId}
-                        rows={["1", "2", "3", "4", "5", "6", "7", "8"]}
-                        row={(id, index) => {
+                        rows={signals}
+                        onDragPropose={() => {}}
+                        onDragSuccess={onDragSuccess}
+                        row={(id, selected, dragging) => {
                             return (
                                 <p>
                                     {id}
