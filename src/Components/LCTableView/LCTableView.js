@@ -24,7 +24,7 @@ const LCTableView = ({
 
         let dy;
         let row = ref.current;
-        let currentRowHeight = ref.current.clientHeight;
+        let currentRowHeight = row.clientHeight;
 
         screenTarget.current = {
             x: event.screenX,
@@ -33,10 +33,16 @@ const LCTableView = ({
         draggingRef.current = ref;
         setDraggingId(id);
 
+        let validDragAction = false;
+
         const onGlobalMouseMove = (e) => {
             dy = e.screenY - screenTarget.current.y;
             row.style.transform = `translateY(${dy}px)`;
-            row.style.pointerEvents = `none`;
+            if (!validDragAction) {
+                // Drag has not started yet
+                row.style.pointerEvents = `none`;
+            }
+            validDragAction = true;
         }
 
         const onMouseUp = (e) => {
@@ -44,8 +50,11 @@ const LCTableView = ({
             window.removeEventListener("mouseup", onMouseUp)
             row.style.transform = `none`;
             row.style.pointerEvents = `all`;
+            if (validDragAction) {
+                onDragSuccess(initialIndex, targetRowIndex.current);
+            }
             draggingRef.current = null;
-            onDragSuccess(initialIndex, targetRowIndex.current);
+            targetRowIndex.current = -1;
         }
 
         window.addEventListener("mousemove", onGlobalMouseMove);
@@ -55,20 +64,29 @@ const LCTableView = ({
     const onRowMouseMove = (event, id, ref, index) => {
         if (draggingRef.current) {
             let row = ref.current;
+            const draggingIndex = rows.indexOf(draggingId);
             const rect = row.getBoundingClientRect();
             let progress = (event.clientY - Math.round(rect.top)) / rect.height;
             if (progress > 0.5 && index !== targetRowIndex.current) {
                 onDragPropose(index);
                 targetRowIndex.current = index;
-            } else if (progress < 0.5 && index === 0 && targetRowIndex.current !== 0) {
+            } 
+            else if (progress < 0.5 && index === 0 && targetRowIndex.current !== 0) {
+                // Catch set at 0 index
                 onDragPropose(index);
                 targetRowIndex.current = index;
+            }
+            else if (progress < 0.5 && draggingIndex === index - 1) {
+                // Catch replace self 
+                onDragPropose(index);
+                targetRowIndex.current = draggingIndex;
             }
         }
     }
 
     const onRowMouseLeave = (event, id, ref, index) => {
         const row = ref.current;
+        // onDragProposeExit()
     }
 
     useEffect(() => {

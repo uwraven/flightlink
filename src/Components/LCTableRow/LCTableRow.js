@@ -22,9 +22,8 @@ const LCTableRow = ({children, onMouseDown, onMouseMove, onMouseLeave, ...props}
                 onMouseLeave(e, ref);
             }}
             style={{
-                transition: `height 200ms, padding-top 100ms`,
+                transition: `height 100ms, padding-top 100ms`,
                 overflow: `visible`,
-                backgroundColor: `red`,
             }}
             >
             {children}
