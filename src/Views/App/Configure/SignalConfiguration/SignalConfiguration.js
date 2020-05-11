@@ -1,30 +1,31 @@
 import React, {useState, useLayoutEffect} from 'react';
 import styles from './SignalConfiguration.module.scss';
-import Table, { TableRow } from 'Components/Table/Table';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import SignalEditor from './SignalEditor/SignalEditor';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedSignalId } from 'Store/Configure/SignalEditorSlice';
-import LCTableView from 'Components/LCTableView/LCTableView';
+import { setSelectedSignalId } from 'Store/Configure/ConfigureSlice';
+import LCTableView from 'Components/LCTable/LCTableView';
+import SignalTableRow from './SignalTableRow/SignalTableRow';
 
-
-let signalArray = new Array(100);
+let signalArray = new Array(12);
 signalArray.fill(0);
-signalArray = signalArray.map((signal, i) => `row: ${i}`)
+signalArray = signalArray.map((signal, i) => `${i}`)
 
 const SignalConfiguration = ({configurationId, ...props}) => {
 
     const dispatch = useDispatch();
-    const { selectedSignalId } = useSelector((state) => state.signalEditor);
+    const { selectedSignalId, signalArr } = useSelector((state) => state.configure);
 
     // move to Store
     const [ signals, setSignals ] = useState(signalArray);
 
     const onDragSuccess = (from, to) => {
         setSignals(prev => {
-            const signalArr = [...prev];
-            signalArr.splice(to, 0, signalArr.splice(from, 1));
-            return signalArr;
+            let arr = [...prev];
+            // console.log("ONDRAGSUCCESS", "prev", prev, from , to)
+            arr.splice(to, 0, arr.splice(from, 1)[0]);
+            // console.log("ONDRAGSUCCESS", "arr", arr)
+            return arr;
         })
     }
 
@@ -41,34 +42,33 @@ const SignalConfiguration = ({configurationId, ...props}) => {
                     handle={4} 
                     className={styles.tableContainer}
                 >
-                    <Table
-                        rows={["1", "2"]}
-                        row={(key) => {
-                            const selected = key === selectedSignalId;
-                            return <TableRow
-                                className={[styles.tableRow, selected && styles.selectedRow].join(" ")}
-                                selected={selected} 
-                                onClick={() => dispatch(setSelectedSignalId(key))}>
-                                <span className={styles.minorLabel}>{key}</span>
-                                <span className={styles.majorLabel}>{key}</span>
-                            </TableRow>
-                        }}
-                    />
                     <LCTableView
+                        className={styles.table}
                         selectedId={selectedSignalId}
                         rows={signals}
-                        onDragPropose={() => {}}
+                        onDragPropose={(id) => {
+                            // console.log(id)
+                        }}
                         onDragSuccess={onDragSuccess}
-                        row={(id, selected, dragging) => {
-                            return (
-                                <p>
-                                    {id}
-                                </p>
-                            )
+                        onRowSelect={(id) => {
+                            // console.log("ONROWSELECT", "selected row ID", id, `[${typeof id}]`)
+                            dispatch(setSelectedSignalId(id))
+                        }}
+                        row={(id, index, selected, dragging) => {
+                            const rowStyle = [
+                                styles.row,
+                                selected && styles.selectedRow,
+                                dragging && styles.draggingRow
+                            ].join(' ');
+                            return (<SignalTableRow id={id} selected={selected} dragging={dragging}/>)
                         }}
                     />
+                    <div className={styles.addSignalButton}>
+                        <span>Add Signal</span>
+                    </div>
+
                 </Resizable>
-                    { selectedSignalId ? <SignalEditor/> : <div className={styles.emptySignalContainer}>Select signal to edit</div> }
+                    { selectedSignalId ? <SignalEditor id={selectedSignalId}/> : <div className={styles.emptySignalContainer}>Select signal to edit</div> }
             </div>
         </div>
     )

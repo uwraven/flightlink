@@ -115,6 +115,7 @@ const Resizable = ({
         if (direction.top || direction.right || direction.bottom || direction.left) {
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
+            e.preventDefault();
         }
     };
 

@@ -7,8 +7,8 @@
 .tableRow {
     width: 100%;
     box-sizing: border-box;
-    min-height: var(--height-m);
-    padding: var(--b) var(--b-l);
+    height: var(--height-m);
+    padding: 0 var(--b-l);
     border-bottom: 1px solid var(--border-l);
     display: flex;
     flex-direction: row;

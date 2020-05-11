@@ -25,6 +25,7 @@
     flex-shrink: 0;
     border-right: 1px solid var(--border-l);
     overflow-y: scroll;
+    background-color: var(--fill-l);
 }
 
 .minorLabel {
@@ -52,4 +53,16 @@
     flex-grow: 1;
     color: var(--text-placeholder);
     background-color: var(--fill-lm);
+}
+
+// Table styling
+.table {
+    background-color: var(--fill-l);
+}
+
+.addSignalButton {
+    padding: var(--b) var(--b-l);
+    color: var(--positive);
+    background-color: white;
+    border-bottom: 1px solid var(--border-l);
 }

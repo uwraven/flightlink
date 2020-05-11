@@ -8,13 +8,15 @@ const ConfigureSlice = createSlice({
         loadingConfigurations: false,
         configurationsLoaded: false,
         configurations: [],
+        signals: [],
     },
     reducers: {
         setSelectedConfigurationId(state, action) {
             state.selectedConfigurationId = (action.payload === state.selectedConfigurationId) ? null : action.payload
         },
         setSelectedSignalId(state, action) {
-            state.selectedSignalId = (action.payload === state.selectedSignalId ? null : action.payload);
+            console.log("Dispatch setSelectedSignalID", action.payload, `[${typeof action.payload}]`)
+            state.selectedSignalId = (action.payload === state.selectedSignalId ? "" : action.payload);
         },
         setConfigurationsLoading(state, action) {
             state.loadingConfigurations = true;
