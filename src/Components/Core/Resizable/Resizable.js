@@ -116,6 +116,7 @@ const Resizable = ({
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
             e.preventDefault();
+            e.stopPropagation();
         }
     };
 
@@ -141,7 +142,7 @@ const Resizable = ({
     };
 
     return (
-        <div ref={div} className={className} onMouseDown={mouseDown} onMouseMove={mouseHover} onMouseOut={resetCursor}>
+        <div ref={div} className={className} onMouseDownCapture={mouseDown} onMouseMove={mouseHover} onMouseOut={resetCursor}>
             {props.children}
         </div>
     );
