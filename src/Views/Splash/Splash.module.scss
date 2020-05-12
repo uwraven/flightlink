@@ -2,7 +2,7 @@
     width: 100vw;
     height: 100vh;
     -webkit-app-region: drag;
-    background-color: var(--fill-l);
+    background-color: var(--fill-ul);
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -11,18 +11,37 @@
 
 .mainContainer {
     flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.content {
+    padding: var(--b-xxl);
+    flex-grow: 1;
+    border-right: 1px solid var(--border-m);
+}
+
+.tableContainer {
+    flex-basis: 244px;
+    background-color: var(--fill-l);
 }
 
 .actionContainer {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: space-between;
     padding: var(--b-l) var(--b-l);
     border-top: 1px solid var(--border-m);
 }
 
-.content {
-    padding: var(--b-xxl);
+.leftActions {
+    padding: 0 var(--b-l)
+}
+
+.rightActions {
+    display: flex;
+    flex-direction:  row;
 }
 
 .title {
@@ -35,4 +54,13 @@
     font-weight: 400;
     font-size: var(--f);
     color: var(--label-dark);
+}
+
+.button {
+    width: 80px;
+    flex-grow: 0;
+}
+
+.button:not(:last-child) {
+    margin-right: var(--b-l);
 }

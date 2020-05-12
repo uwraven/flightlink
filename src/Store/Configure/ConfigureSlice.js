@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const ConfigureSlice = createSlice({
     name: 'configure',
     initialState: {
-        selectedConfigurationId: "1",
-        selectedSignalId: "1",
+        selectedConfigurationId: null,
+        selectedSignalId: null,
         loadingConfigurations: false,
         configurationsLoaded: false,
         configurations: [],
@@ -25,6 +25,14 @@ const ConfigureSlice = createSlice({
         setConfigurationsLoadingSuccess(state, action) {
             state.loadingConfigurations = false;
             state.configurationsLoaded = true;
+        },
+        setSignalOrder(state, action) {
+            const { from, to } = action.payload;
+            let signals = state.signals;
+            signals.splice(to, 0, signals.splice(from, 1)[0]);
+            signals.map((signal, i) => {
+                
+            })
         }
     }
 });
@@ -32,6 +40,7 @@ const ConfigureSlice = createSlice({
 export const { 
     setSelectedConfigurationId,
     setSelectedSignalId,
+    setSignalOrder
  } = ConfigureSlice.actions;
 
 export default ConfigureSlice.reducer;

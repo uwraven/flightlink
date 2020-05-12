@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCommandPaletteOpen } from '../../Store/Interface/InterfaceSlice';
 import { setWebsocketConnection } from 'Store/Record/RecordSlice';
 import { getPortOptions } from 'Store/Record/Device/DeviceSlice';
+import { getConfigurations } from 'Store/Configure/ConfigureSlice';
 import ApplicationHeader from 'Views/App/ApplicationHeader/ApplicationHeader';
 
 const App = ({ ...props }) => {
@@ -26,6 +27,7 @@ const App = ({ ...props }) => {
                 dispatch(setWebsocketConnection(true));
                 dispatch(getPortOptions());
             });
+            dispatch(getConfigurations());
             return () => {
                 window.arcc.api.closeSocket();
             };

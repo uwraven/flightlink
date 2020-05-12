@@ -2,37 +2,45 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Button.module.scss';
 
-const Button = ({ className, children, onClick, disabled, loading, width, ...props }) => {
+const Button = ({ buttonStyle, className, children, onClick, disabled, loading, ...props }) => {
     return (
         <div
             onClick={() => {
                 if (!disabled && onClick) onClick();
             }}
-            className={[ styles.container, className, disabled && styles.disabled ].join(' ')}>
+            className={[ styles.container, buttonStyle, className, disabled && styles.disabled ].join(' ')}>
             {children}
         </div>
     );
 };
 
-const PrimaryButton = ({ width, children, loading, loadingMessage, ...props }) => {
+const PrimaryButton = ({ children, loading, loadingMessage, ...props }) => {
     return (
-        <Button width={width} className={styles.primary} {...props}>
+        <Button buttonStyle={styles.primary} {...props}>
             <p>{loading ? loadingMessage ? loadingMessage : 'loading...' : children}</p>
         </Button>
     );
 };
 
-const SecondaryButton = ({ width, children, loading, loadingMessage, ...props }) => {
+const SecondaryButton = ({ children, loading, loadingMessage, ...props }) => {
     return (
-        <Button width={width} className={styles.secondary} {...props}>
+        <Button buttonStyle={styles.secondary} {...props}>
             <p>{loading ? loadingMessage ? loadingMessage : 'loading...' : children}</p>
         </Button>
     );
 };
 
-const DestructiveButton = ({ width, children, ...props }) => {
+const TextButton = ({ children, loading, loadingMessage, ...props }) => {
     return (
-        <Button width={width} className={styles.destructive} {...props}>
+        <button className={styles.textButton} {...props}>
+            <p>{loading ? loadingMessage ? loadingMessage : 'loading...' : children}</p>
+        </button> 
+    )
+}
+
+const DestructiveButton = ({ children, ...props }) => {
+    return (
+        <Button buttonStyle={styles.destructive} {...props}>
             <p>{children}</p>
         </Button>
     );
@@ -46,4 +54,4 @@ const IconButton = ({ children, on, ...props }) => {
     );
 };
 
-export { Button as default, PrimaryButton, SecondaryButton, DestructiveButton, IconButton };
+export { Button as default, PrimaryButton, SecondaryButton, DestructiveButton, IconButton, TextButton };

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { application } from '../../constants';
+import { APP } from '../../constants';
 const { ipcRenderer } = window.require('electron');
 
 const ApplicationSlice = createSlice({
@@ -43,10 +43,10 @@ export const {
 export default ApplicationSlice.reducer;
 
 export const loadWorkspaces = () => async (dispatch) => {
-    ipcRenderer.send(application.channels.getWorkspaces)
+    ipcRenderer.send(APP.GET_WORKSPACES)
     dispatch(setLoadingWorkspacesStart)
 }
 
 export const openSelectedWorkspace = (id) => async (dispatch) => {
-    ipcRenderer.send(application.channels.openSelectedWorkspace);
+    ipcRenderer.send(APP.OPEN_SELECTED_WORKSPACE);
 }

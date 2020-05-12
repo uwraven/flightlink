@@ -22,7 +22,9 @@
     --border-l: #efefef;
     --border-ul: #f8f8f8;
 
-    --fill-l: #fafafa;
+    --fill-ul: #fafafa;
+    /* --fill-l: #fafafa; */
+    --fill-l: #f4f4f4;
     --fill-lm: #f8f8f8;
     --fill-m: #efefef;
     --fill-h: #f8f8f8;

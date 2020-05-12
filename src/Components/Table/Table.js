@@ -28,7 +28,17 @@ const TableRow = ({selected, className, setSelected, children, onClick, ...props
 }
 
 
+const TableHeader = ({title, ...props}) => {
+    return(
+        <div className={styles.tableHeader}>
+            { (title) ? <span className={styles.tableHeaderTitle}>{title}</span>
+            : props.children }
+        </div>
+    )
+}
+
 export {
     Table as default,
     TableRow,
+    TableHeader
 }

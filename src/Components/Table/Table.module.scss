@@ -20,3 +20,14 @@
     background-color: var(--positive);
     color: white;
 }
+
+.tableHeader {
+    padding: var(--b-l);
+    background-color: var(--fill-l);
+    border-bottom: 1px solid var(--border-l);
+}
+
+.tableHeaderTitle {
+    color: var(--primary);
+    font-weight: 500;
+}

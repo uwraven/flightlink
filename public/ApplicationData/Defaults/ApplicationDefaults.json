@@ -2,7 +2,9 @@
     "workspace": {
         "recent": [],
         "open": [],
-        "workspaces": {}
+        "workspaces": [
+            "default_0"
+        ]
     },
     "interface": {
         "window": {

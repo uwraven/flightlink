@@ -1,4 +1,4 @@
-const {app, BrowserWindow, dialog, ipcMain } = require('electron');
+const {app, BrowserWindow, dialog, ipcMain, Menu, MenuItem } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -9,8 +9,8 @@ const uuid = require('uuid');
 
 let applicationStore;
 
-// app.on('ready', startup);
-app.on('ready', openEmptyApplicationWindow)
+app.on('ready', startup);
+// app.on('ready', openEmptyApplicationWindow)
 
 app.on('will-finish-launching', () => {
 
@@ -26,13 +26,19 @@ app.on('activate', () => {
 
 })
 
-ipcMain.on('application.getWorkspaces', (event, arg) => {
-    event.reply("application.getWorkspaces", applicationStore.contents.workspace.workspaces);
+ipcMain.on('app.getWorkspaces', (event, arg) => {
+    event.reply('app.getWorkspaces', applicationStore.contents.workspace.workspaces);
 })
 
-ipcMain.on('application.openSelectedWorkspace', (event, arg) => {
+ipcMain.on('app.openSelectedWorkspace', (event, arg) => {
     console.log("opening workspace");
     console.log(applicationStore.contents.workspace.workspaces[id])
+})
+
+ipcMain.on('app.createWorkspace', (event, arg) => {
+    console.log("workspaces:", applicationStore.contents.workspace.workspaces)
+    createWorkspace();
+    // event.reply('')
 })
 
 function startup() {
@@ -105,7 +111,7 @@ function openSplash() {
     }).catch(error => {});
 }
 
-function createWorkspace() {
+function createWorkspace(event) {
     let workspaceId = uuid.v1();
 
     // Open file dialog
@@ -116,20 +122,33 @@ function createWorkspace() {
     }).then((result) => {
         if (result.canceled) {
             // Dialog cancelled, do nothing
+            event.reply('app.createWorkspace', {
+                success: false,
+                error: null
+            })
             return;
         } else {
             const directoryPath = result.filePaths[0];
             if (directoryPath) {
-                console.log(directoryPath);
+                console.log("directoryPath:", directoryPath);
                 const workspaceContents = {...WorkspaceDefaults};
                 workspaceContents.id = workspaceId;
                 workspaceContents.path = `${directoryPath}/workspace.json`;
-                fs.writeFile(JSON.stringify(workspaceContents)).then(() => {
-                    // Successfully created a workspace file
-                    // Open a workspace
-                    // This might be a race, should check
-                    openWorkspace(workspaceContents.id);
-                });
+                if (!fs.existsSync(workspaceContents.path)) {
+                    fs.writeFile(workspaceContents.path, JSON.stringify(workspaceContents), 'utf8', (err) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("created workspace");
+                            openWorkspace(workspaceId);
+                        }
+                    })
+                } else {
+                    event.reply('app.createWorkspace', {
+                        success: false,
+                        error: "Workspace already exists at this location"
+                    })
+                }
             }
         }
     }).catch((err) => {
@@ -141,6 +160,7 @@ function createWorkspace() {
 
 function loadApplicationStore() {
     let userDataPath = app.getPath('userData');
+    console.log(userDataPath);
     let applicationStorePath = `${userDataPath}/application.json`;
     applicationStore = new Store(applicationStorePath);
 
