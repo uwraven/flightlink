@@ -1,0 +1,11 @@
+.container {
+    width: 216px;
+    border-right: 1px solid var(--border-m);
+    flex-shrink: 0;
+    overflow-y: scroll;
+}
+
+.dropdown {
+    width: 60%;
+    flex-grow: 0;
+}

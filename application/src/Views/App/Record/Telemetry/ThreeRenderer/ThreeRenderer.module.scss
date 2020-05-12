@@ -1,0 +1,28 @@
+.panelLeft {
+    position: absolute;
+    top: var(--b-xl);
+    left: var(--b-xl);
+    display: flex;
+    flex-direction: column;
+    font-size: var(--f-s);
+}
+
+.vectorLabel {
+    padding-bottom: var(--b-l);
+}
+
+.vectorLabelRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.vectorLabelRow > span:first-child {
+    padding-right: var(--b-l);
+}
+
+.panelRight {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

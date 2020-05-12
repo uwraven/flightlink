@@ -1,0 +1,16 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    min-height: 100vh;
+}
+
+.tabbar {
+    border-bottom: 1px solid var(--border-medium);
+    width: 100vw;
+    flex-shrink: 0;
+}
+
+.main {
+    flex-grow: 1;
+}

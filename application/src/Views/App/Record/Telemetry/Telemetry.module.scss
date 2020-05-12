@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.content {
+    overflow-y: scroll;
+    flex-basis: 70%;
+    flex-grow: 1;
+}
+
+.content::-webkit-scrollbar {
+    display: none;
+}
+
+.threeContainerFullWidth {
+    height: 40vh;
+}
+
+.threeRenderer {
+    // ThreeJS div container
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    background-color: var(--scene-bg-light);
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid var(--border-medium);
+
+    // ThreeJS rendering canvas
+    canvas {
+        flex-grow: 1;
+        outline: none;
+    }
+}
+
+.plotsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.plotContainer {
+    flex-basis: 50%;
+    margin: var(--b-m) 0;
+}
+
+.plot {
+    canvas {
+        border: 1px solid var(--border-medium);
+        width: 300px;
+        height: 150px;
+    }
+}

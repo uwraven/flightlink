@@ -1,0 +1,58 @@
+{
+    "id": "default_0",
+    "name": "New Workspace",
+    "interface": {
+        "window": {
+            "width": 1200,
+            "height": 800
+        },
+        "fullscreen": false
+    },
+    "contents": {
+        "configurations": {
+            "default": {
+                "id": "default",
+                "name": "default",
+                "signals": [
+                    {
+                        "id": "d0",
+                        "name": "position",
+                        "units": "m",
+                        "bufferIndex": 0,
+                        "length": 3,
+                        "stream": true,
+                        "render": false,
+                        "signalMode": null,
+                        "renderMode": null,
+                        "renderedModelId": null,
+                        "parentId": null
+                    },
+                    {
+                        "id": "d1",
+                        "name": "velocity",
+                        "units": "m/s",
+                        "bufferIndex": 3,
+                        "length": 3,
+                        "stream": true,
+                        "render": false,
+                        "signalMode": null,
+                        "renderMode": null,
+                        "renderedModelId": null,
+                        "parentId": null
+                    }
+                ]
+            }
+        },
+        "commands": {},
+        "record": {
+            "default": {
+                "connection": null,
+                "protocol": null,
+                "port": null
+            }
+        }
+    },
+    "status": {
+        "new": true
+    }
+}

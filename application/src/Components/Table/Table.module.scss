@@ -1,0 +1,33 @@
+.tableContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.tableRow {
+    width: 100%;
+    box-sizing: border-box;
+    height: var(--height-m);
+    padding: 0 var(--b-l);
+    border-bottom: 1px solid var(--border-l);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.tableRowSelected {
+    background-color: var(--positive);
+    color: white;
+}
+
+.tableHeader {
+    padding: var(--b-l);
+    background-color: var(--fill-l);
+    border-bottom: 1px solid var(--border-l);
+}
+
+.tableHeaderTitle {
+    color: var(--primary);
+    font-weight: 500;
+}

@@ -1,0 +1,39 @@
+.row {
+    padding: 0 var(--b-l);
+    height: var(--height-m);
+    background-color: white;
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--border-l);
+    box-sizing: border-box;
+    box-shadow: none;
+    transition: transform 100ms, box-shadow 100ms;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.selectedRow {
+    background-color: var(--positive);
+    color: white;
+
+    .indicesLabel {
+        color: white;
+    }
+
+    .name {
+        color: white;
+    }
+}
+
+.draggingRow {
+    border: 1px solid var(--border-l);
+    // border-bottom: none;
+    box-shadow: 0 3px 10px var(--box-shadow-color);
+    transform: scale(1.03);
+}
+
+.indicesLabel {
+    color: var(--label);
+    flex-basis: 25%;
+}

@@ -1,0 +1,61 @@
+.container {
+    border-left: 1px solid var(--border-medium);
+    flex-grow: 0;
+    flex-basis: 20vw;
+    min-width: 15vw;
+    max-width: 25vw;
+}
+
+.configurationContainer {
+    border-bottom: 1px solid var(--border-medium);
+    padding: var(--b);
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.dataContainer {
+    padding: var(--b);
+}
+
+.dataControls {
+    margin-bottom: var(--b-m);
+}
+
+.streamElementContainer {
+    margin-bottom: 16px;
+}
+
+.streamName {
+    font-size: 14px;
+}
+
+.streamUnitLabel {
+    font-size: 14px;
+    color: gray;
+}
+
+.streamDataTable {
+    font-family: monospace;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: var(--b) 0;
+    border: 1px solid var(--border-light);
+
+    .row {
+        padding: var(--b-s);
+    }
+
+    .row:nth-child(odd) {
+        background: var(--fill-light);
+    }
+}

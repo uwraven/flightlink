@@ -1,0 +1,30 @@
+html {
+    font-size: 12px;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+        'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1.0rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-user-select: none;
+    /* overflow: scroll; */
+    overflow-x: hidden;
+}
+
+#root {
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+div::-webkit-scrollbar {
+    display: none;
+}
