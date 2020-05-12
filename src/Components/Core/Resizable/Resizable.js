@@ -20,6 +20,7 @@ const Resizable = ({
     ...props
 }) => {
     const div = useRef();
+    const _executeResize = useRef(false);
 
     const _target = useRef({
         x: 0,
@@ -56,6 +57,15 @@ const Resizable = ({
             left: left
         };
     };
+
+    const onClick = (e) => {
+        if (_executeResize.current) {
+            // Prevent on click of child elements on drag release
+            e.preventDefault();
+            e.stopPropagation();
+            _executeResize.current = false;
+        }
+    }
 
     const mouseMove = (e) => {
         if (_resizing.current.x && (left || right || x)) {
@@ -113,8 +123,11 @@ const Resizable = ({
         }
 
         if (direction.top || direction.right || direction.bottom || direction.left) {
+            _executeResize.current = true;
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
+            // Prevent mouse move events in child
+            // i.e. with draggable table rows
             e.preventDefault();
             e.stopPropagation();
         }
@@ -142,7 +155,14 @@ const Resizable = ({
     };
 
     return (
-        <div ref={div} className={className} onMouseDownCapture={mouseDown} onMouseMove={mouseHover} onMouseOut={resetCursor}>
+        <div 
+            ref={div} 
+            className={className} 
+            onClickCapture={onClick} 
+            onMouseDownCapture={mouseDown} 
+            onMouseMoveCapture={mouseHover} 
+            onMouseOutCapture={resetCursor}
+        >
             {props.children}
         </div>
     );
