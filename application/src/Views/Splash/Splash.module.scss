@@ -22,8 +22,55 @@
 }
 
 .tableContainer {
-    flex-basis: 244px;
+    flex-basis: 128px;
+    max-width: 256px;
     background-color: var(--fill-l);
+}
+
+.workspaceRow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: inherit;
+    padding: var(--b) var(--b-l);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.workspaceLabel {
+    width: 100%;
+    p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.workspaceName {
+    @extend .workspaceLabel; 
+}
+
+.workspacePath {
+    @extend .workspaceLabel;
+    color: var(--label);
+}
+
+.selectedRow {
+    .workspaceName {
+        color: white
+    }
+    
+    .workspacePath {
+        color: white;
+    }
+    
+}
+
+
+.emptyTable {
+    padding: var(--b-l);
+    color: var(--label);
 }
 
 .actionContainer {

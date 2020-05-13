@@ -12,7 +12,7 @@ const Table = ({rows, row, initialSelection = -1, ...props}) => {
     )
 }
 
-const TableRow = ({selected, className, setSelected, children, onClick, ...props}) => {
+const TableRow = ({selected, className, children, onClick, ...props}) => {
     return(
         <div 
             className={[

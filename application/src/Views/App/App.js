@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Footer from './ApplicationFooter/ApplicationFoooter';
 import styles from './app.module.scss';
-import 'API/main';
 import Record from './Record/Record';
 import Configure from './Configure/Configure';
 import CommandPalette from './CommandPalette/CommandPalette';
@@ -23,14 +22,14 @@ const App = ({ ...props }) => {
 
     useEffect(
         () => {
-            window.arcc.api.openSocket(8080).then(() => {
-                dispatch(setWebsocketConnection(true));
-                dispatch(getPortOptions());
-            });
-            dispatch(getConfigurations());
-            return () => {
-                window.arcc.api.closeSocket();
-            };
+            // window.arcc.api.openSocket(8080).then(() => {
+            //     dispatch(setWebsocketConnection(true));
+            //     dispatch(getPortOptions());
+            // });
+            // dispatch(getConfigurations());
+            // return () => {
+            //     window.arcc.api.closeSocket();
+            // };
         },
         [ dispatch ]
     );

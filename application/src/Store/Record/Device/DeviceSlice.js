@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import API from 'API/constants';
 
 const DeviceSlice = createSlice({
     name: 'device',
@@ -64,63 +63,63 @@ export const {
 export default DeviceSlice.reducer;
 
 export const getPortOptions = () => async (dispatch) => {
-    try {
-        window.arcc.api.sendRequest(
-            {
-                type: API.requests.ACTION,
-                action: API.actions.LISTSERIAL
-            },
-            (response) => {
-                if (response.status === 200) {
-                    dispatch(setPortOptions(response.payload.map((port) => port.path)));
-                } else {
-                    throw new Error('failed to register ports');
-                }
-            }
-        );
-    } catch (err) {}
+    // try {
+    //     window.arcc.api.sendRequest(
+    //         {
+    //             type: API.requests.ACTION,
+    //             action: API.actions.LISTSERIAL
+    //         },
+    //         (response) => {
+    //             if (response.status === 200) {
+    //                 dispatch(setPortOptions(response.payload.map((port) => port.path)));
+    //             } else {
+    //                 throw new Error('failed to register ports');
+    //             }
+    //         }
+    //     );
+    // } catch (err) {}
 };
 
 export const openPort = (path) => async (dispatch) => {
-    try {
-        dispatch(setPortStartOpen());
-        window.arcc.api.sendRequest(
-            {
-                type: API.requests.ACTION,
-                action: API.actions.OPENSERIAL,
-                payload: {
-                    path: path
-                }
-            },
-            (response) => {
-                if (response.status === 200) {
-                    dispatch(setPortOpenSuccess());
-                } else {
-                    dispatch(setPortOpenFailed(response.errorMessage));
-                    throw new Error('Failed to open port.');
-                }
-            }
-        );
-    } catch (err) {
-        console.log(err);
-        dispatch(setPortOpenFailed(err.message));
-    }
+    // try {
+    //     dispatch(setPortStartOpen());
+    //     window.arcc.api.sendRequest(
+    //         {
+    //             type: API.requests.ACTION,
+    //             action: API.actions.OPENSERIAL,
+    //             payload: {
+    //                 path: path
+    //             }
+    //         },
+    //         (response) => {
+    //             if (response.status === 200) {
+    //                 dispatch(setPortOpenSuccess());
+    //             } else {
+    //                 dispatch(setPortOpenFailed(response.errorMessage));
+    //                 throw new Error('Failed to open port.');
+    //             }
+    //         }
+    //     );
+    // } catch (err) {
+    //     console.log(err);
+    //     dispatch(setPortOpenFailed(err.message));
+    // }
 };
 
 export const closePort = () => async (dispatch) => {
-    try {
-        window.arcc.api.sendRequest(
-            {
-                type: API.requests.ACTION,
-                action: API.actions.CLOSESERIAL
-            },
-            (response) => {
-                if (response.status === 200) {
-                    dispatch(setPortClosedSuccess());
-                } else {
-                    console.log('what to do here');
-                }
-            }
-        );
-    } catch (err) {}
+    // try {
+    //     window.arcc.api.sendRequest(
+    //         {
+    //             type: API.requests.ACTION,
+    //             action: API.actions.CLOSESERIAL
+    //         },
+    //         (response) => {
+    //             if (response.status === 200) {
+    //                 dispatch(setPortClosedSuccess());
+    //             } else {
+    //                 console.log('what to do here');
+    //             }
+    //         }
+    //     );
+    // } catch (err) {}
 };

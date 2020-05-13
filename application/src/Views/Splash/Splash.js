@@ -1,47 +1,24 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import styles from './Splash.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
-import { APP } from '../../constants';
 import { 
     loadWorkspaces, 
     setLoadingWorkspacesSuccess,
     setLoadingWorkspacesFailure,
-    setWorkspaces
+    createWorkspace,
+    setSelectedWorkspace,
 } from 'Store/Application/ApplicationSlice';
 import { PrimaryButton, SecondaryButton, TextButton } from 'Components/Button/Button';
 import Table, {TableRow, TableHeader} from 'Components/Table/Table';
 
-const { ipcRenderer } = window.electron
-
 const Splash = ({}) => {
 
     const dispatch = useDispatch();
-    const { workspaces, selectedWorkspace } = useSelector((state) => state.application);
-    const [creatingWorkspace, setCreatingWorkspace] = useState(false);
+    const { workspaces, selectedWorkspace, creatingWorkspace } = useSelector((state) => state.application);
 
     useLayoutEffect(() => {
-        const onLoadWorkspaces = (event, payload) => {
-            dispatch(setLoadingWorkspacesSuccess())
-            dispatch(setWorkspaces(Object.values(payload)))
-        }
         dispatch(loadWorkspaces());
-        ipcRenderer.on(APP.GET_WORKSPACES, onLoadWorkspaces);
-        return () => {
-            ipcRenderer.removeListener(APP.GET_WORKSPACES, onLoadWorkspaces)
-        }
     }, [dispatch]);
-
-    const createWorkspace = () => {
-        setCreatingWorkspace(true);
-        const onCreateWorkspace = (event, payload) => {
-            ipcRenderer.removeAllListeners(APP.CREATE_WORKSPACE, onCreateWorkspace)
-        }
-        ipcRenderer.send(APP.CREATE_WORKSPACE)
-        ipcRenderer.on(APP.CREATE_WORKSPACE, (event, success) => {
-            console.log(success);
-            if (!success) setCreatingWorkspace(false);
-        })
-    }
 
     return(
         <div className={styles.container}>
@@ -52,18 +29,34 @@ const Splash = ({}) => {
                 </div>
                 <div className={styles.tableContainer}>
                     <TableHeader title={"Workspaces"}/>
-                    <Table rows={["1"]} row={(id, index) => 
-                        <TableRow>
-                            <p>{workspaces[id]}</p>
-                            <p>{}</p>
-                        </TableRow>
-                    }/>
+                    {
+                        (workspaces.length > 0) ? 
+                        <Table rows={workspaces} row={(workspace, index) => {
+                            const selected = workspace.id === selectedWorkspace;
+                            return (
+                                <TableRow 
+                                    className={[styles.workspaceRow, selected && styles.selectedRow].join(' ')} 
+                                    onClick={() => dispatch(setSelectedWorkspace(workspace.id))} 
+                                    selected={selected}
+                                >
+                                    <div className={styles.workspaceName}><p>{workspace.name}</p></div>
+                                    <div className={styles.workspacePath}><p>{
+                                        workspace.path.split('/').slice(0, -1).join('/')
+                                    }</p></div>
+                                </TableRow>
+                            )}
+                        }/>
+                        :
+                        <div className={styles.emptyTable}>
+                            No current workspaces
+                        </div>
+                    }
                 </div>
             </div>
             <div className={styles.actionContainer}>
                 <div className={styles.leftActions}>
                     <TextButton 
-                        onClick={createWorkspace} 
+                        onClick={() => dispatch(createWorkspace())} 
                         loading={creatingWorkspace}
                         disabled={creatingWorkspace}
                         loadingMessage={"Creating Workspace..."}
@@ -72,7 +65,7 @@ const Splash = ({}) => {
                     </TextButton>
                 </div>
                 <div className={styles.rightActions}>
-                    <SecondaryButton className={styles.button}>Cancel</SecondaryButton>
+                    <SecondaryButton className={styles.button}>Close</SecondaryButton>
                     <PrimaryButton
                         className={styles.button}
                         disabled={!selectedWorkspace}

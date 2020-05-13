@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { APP } from '../../constants';
-const { ipcRenderer } = window.electron
 
 const ApplicationSlice = createSlice({
     name: 'application',
@@ -8,6 +6,7 @@ const ApplicationSlice = createSlice({
         loadingWorkspaces: false,
         workspacesLoaded: false,
         selectedWorkspace: null,
+        creatingWorkspace: false,
         workspaces: [],
     },
     reducers: {
@@ -21,6 +20,9 @@ const ApplicationSlice = createSlice({
         setLoadingWorkspacesFailed(state, action) {
             state.workspacesLoaded = false;
             state.loadingWorkspaces = false;
+        },
+        setCreatingWorkspace(state, action) {
+            state.creatingWorkspace = action.payload;
         },
         setWorkspaces(state, action) {
             state.workspaces = action.payload;
@@ -36,6 +38,7 @@ export const {
     setLoadingWorkspacesStart,
     setLoadingWorkspacesSuccess,
     setLoadingWorkspacesFailed,
+    setCreatingWorkspace,
     setSelectedWorkspace,
     setWorkspaces
 } = ApplicationSlice.actions;
@@ -43,10 +46,19 @@ export const {
 export default ApplicationSlice.reducer;
 
 export const loadWorkspaces = () => async (dispatch) => {
-    ipcRenderer.send(APP.GET_WORKSPACES)
-    dispatch(setLoadingWorkspacesStart)
+    dispatch(setLoadingWorkspacesStart())
+    const response = await window.arcc.app.getWorkspaces();
+    dispatch(setWorkspaces(response))
+}
+
+export const createWorkspace = () => async (dispatch) => {
+    dispatch(setCreatingWorkspace(true));
+    const response = await window.arcc.app.createWorkspace();
+    console.log("RESPONSE", response);
+    dispatch(setCreatingWorkspace(false));
+    dispatch(loadWorkspaces())
 }
 
 export const openSelectedWorkspace = (id) => async (dispatch) => {
-    ipcRenderer.send(APP.OPEN_SELECTED_WORKSPACE);
+    // ipcRenderer.send(APP.OPEN_SELECTED_WORKSPACE);
 }
