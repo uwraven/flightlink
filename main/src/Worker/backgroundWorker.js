@@ -1,6 +1,7 @@
 const SerialPort = require('serialport');
 const WebSocket = require('ws');
 // const FileSystem = require('fs');
+const { SERIAL } = require('../API/constants');
 
 // valid types
 const requests = {
@@ -16,7 +17,7 @@ const actions = {
     CLOSESERIAL: 'CLOSESERIAL'
 };
 
-var openRequests = [];
+let openRequests = [];
 
 // Open a websocket server
 const server = new WebSocket.Server({
@@ -25,7 +26,7 @@ const server = new WebSocket.Server({
 });
 
 // Open an empty serialport connection
-var serialport;
+let serialport;
 
 // On connection to a client
 // Only allow a single connection

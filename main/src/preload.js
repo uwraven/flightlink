@@ -1,2 +1,2 @@
-window.electron = require('electron');
-window.ws = require('ws');
+const api = require('./API/index.js');
+window.arcc = api;

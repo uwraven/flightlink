@@ -6,8 +6,26 @@ const { Store } = require('./ApplicationData/store');
 const ApplicationDefaults = require('./ApplicationData/Defaults/applicationDefaults.json');
 const WorkspaceDefaults = require('./ApplicationData/Defaults/WorkspaceDefaults.json');
 const uuid = require('uuid');
+const { APP, SERIAL } = require('./API/constants');
+const { createWorkspaceFile } = require('./files');
 
 let applicationStore;
+let splashWindow;
+
+const webPreferences = {
+    allowRunningInsecureContent: false,
+    // contextIsolation: true,
+    enableRemoteModule: false,
+    nativeWindowOpen: false,
+    nodeIntegration: false,
+    nodeIntegrationWorker: false,
+    nodeIntegrationInSubFrames: false,
+    safeDialogs: true,
+    // sandbox: true,
+    webSecurity: true,
+    webviewTag: false,
+    preload: path.join(__dirname, 'preload.js')
+}
 
 app.on('ready', startup);
 // app.on('ready', openEmptyApplicationWindow)
@@ -26,81 +44,84 @@ app.on('activate', () => {
 
 })
 
-ipcMain.on('app.getWorkspaces', (event, arg) => {
-    event.reply('app.getWorkspaces', applicationStore.contents.workspace.workspaces);
-})
+ipcMain.on(APP.GET_WORKSPACES, onGetWorkspaces)
 
-ipcMain.on('app.openSelectedWorkspace', (event, arg) => {
-    console.log("opening workspace");
-    console.log(applicationStore.contents.workspace.workspaces[id])
-})
+ipcMain.on(APP.OPEN_WORKSPACE_BY_ID, onOpenWorkspaceById)
 
-ipcMain.on('app.createWorkspace', (event, arg) => {
-    console.log("workspaces:", applicationStore.contents.workspace.workspaces)
-    createWorkspace();
-    // event.reply('')
-})
+ipcMain.on(APP.CREATE_WORKSPACE, onCreateWorkspace)
 
 function startup() {
-    // Get data from the application store json
-    loadApplicationStore();
-    if (applicationStore.contents.workspace.open.length > 0) {
-        // Application store contains previously open workspaces
-        // Open previously open workspaces rather than send user to the splash screen
-        applicationStore.contents.workspace.open.map((id) => openWorkspace(id));
-    } else {
-        // No previously open workspaces
-        // Open to splash
+    // Async get data from the application store json
+    loadApplicationStore().then(() => {
         openSplash();
-    }
+    }).catch(() => {
+
+    });
+    // if (applicationStore.contents.workspace.open.length > 0) {
+    //     // Application store contains previously open workspaces
+    //     // Open previously open workspaces rather than send user to the splash screen
+    //     applicationStore.contents.workspace.open.map((id) => openWorkspace(id));
+    // } else {
+    //     // No previously open workspaces
+    //     // Open to splash
+    //     openSplash();
+    // }
 }
 
 
-function openWorkspace(id) {
+async function onOpenWorkspaceById(event, response) {
 
-    let workspaceWindow, workspaceWorker;
+    let id = response;
+    let workspace = applicationStore.contents.workspaces.find(workspace => workspace.id === id);
+    applicationStore.contents.workspaces.map(workspace => console.log(workspace))
 
-    let workspaceStore = new Store(workspace.path)
-    if (workspaceStore.load()) {
+    console.log("id:", id);
+    console.log("workspace:", workspace);
 
-        // Instantiate workspace window
-        workspaceWindow = new BrowserWindow({
-            width: workspaceStore.interface.window.width || ApplicationDefaults.interface.window.width,
-            height: workspaceStore.interface.window.height || ApplicationDefaults.interface.window.height,
-            fullscreen: workspaceStore.interface.fullscreen || ApplicationDefaults.interface.fullscreen,
-            webPreferences: {
-                nodeIntegration: true,
-            }
-        })
+    if (workspace) {
 
-        // Instantiate workspace worker
-        workspaceWorker = new BrowserWindow({
-            show: false,
-            webPreferences: {
-                nodeIntegration: true
-            }
-        })
+        let workspaceWindow, workspaceWorker;
 
-        // Set this workspace as open and add to recent applications
-        if (!applicationStore.workspace.open.includes(id)) applicationStore.workspace.open.push(id);
-        applicationStore.recent.splice(applicationStore.recent.indexOf(id), 0);
-        applicationStore.recent.push(id);
-        
-    } else {
-        // workspace path can't be loaded, open to splash screen
+        // let workspaceStore = new Store(workspace.path)
+        if (true) {
+
+            // Instantiate workspace window
+            workspaceWindow = new BrowserWindow({
+                width: 1200,
+                height: 800,
+                fullscreen: false,
+                webPreferences: webPreferences
+            })
+
+            // Instantiate workspace worker
+            workspaceWorker = new BrowserWindow({
+                show: false,
+                webPreferences: {...webPreferences, nodeIntegration: true }
+            })
+
+            workspaceWindow.loadURL('http://localhost:3000/index.html/#app').then(result => {
+                workspaceWindow.webContents.openDevTools();
+            })
+
+            workspaceWorker.loadURL('http://localhost:3000/backgroundWorker.html').then(result => {
+                
+            })
+
+            return true;
+            
+        } else {
+            // workspace path can't be loaded, open to splash screen
+            return false;
+        }
     }
 }
 
 function openSplash() {
-    let splashWindow;
 
     splashWindow = new BrowserWindow({
         width: 600,
         height: 450,
-        webPreferences: {
-            nodeIntegration: false,
-            preload: `${__dirname}/preload.js`
-        },
+        webPreferences: webPreferences,
         resizable: false,
         frame: false
     });
@@ -116,61 +137,60 @@ function openSplash() {
     // }).catch(error => {});
 }
 
-function createWorkspace(event) {
-    let workspaceId = uuid.v1();
+function onGetWorkspaces(event, arg) {
+    event.reply(APP.GET_WORKSPACES, applicationStore.contents.workspaces);
+}
 
+async function onCreateWorkspace(event, arg) {
     // Open file dialog
-    dialog.showOpenDialog({
-        title: "",
-        defaultPath: app.getPath('desktop'),
-        properties: ["openDirectory", "createDirectory"]
-    }).then((result) => {
+    try {
+        const result = await dialog.showOpenDialog(splashWindow, {
+            title: "",
+            defaultPath: app.getPath('desktop'),
+            properties: ["openDirectory", "createDirectory"],
+        });
         if (result.canceled) {
             // Dialog cancelled, do nothing
-            event.reply('app.createWorkspace', {
+            event.reply(APP.CREATE_WORKSPACE, {
                 success: false,
                 error: null
-            })
+            }) 
             return;
-        } else {
+        } else try {
             const directoryPath = result.filePaths[0];
             if (directoryPath) {
-                console.log("directoryPath:", directoryPath);
-                const workspaceContents = {...WorkspaceDefaults};
-                workspaceContents.id = workspaceId;
-                workspaceContents.path = `${directoryPath}/workspace.json`;
-                if (!fs.existsSync(workspaceContents.path)) {
-                    fs.writeFile(workspaceContents.path, JSON.stringify(workspaceContents), 'utf8', (err) => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log("created workspace");
-                            openWorkspace(workspaceId);
-                        }
-                    })
-                } else {
-                    event.reply('app.createWorkspace', {
-                        success: false,
-                        error: "Workspace already exists at this location"
+                let newWorkspace = await createWorkspaceFile(directoryPath);
+                console.log(newWorkspace);
+                applicationStore.contents.workspaces.push(newWorkspace);
+                console.log(applicationStore.contents.workspaces)
+                let saved = await applicationStore.save()
+                if (saved) {
+                    event.reply(APP.CREATE_WORKSPACE, {
+                        success: true,
+                        error: null
                     })
                 }
+                console.log("saved: ", saved);
             }
+        } catch(err) {
+
         }
-    }).catch((err) => {
-        // Error during resolution
-        return;
-    })   
+    } catch(err) {
+
+    }
 }
 
 
-function loadApplicationStore() {
+async function loadApplicationStore() {
     let userDataPath = app.getPath('userData');
-    console.log(userDataPath);
     let applicationStorePath = `${userDataPath}/application.json`;
     applicationStore = new Store(applicationStorePath);
 
-    if (applicationStore.load()) {
+    if (await applicationStore.load()) {
         // application defaults loaded into memory properly
+        // map stored workspaces and check that they exist before making available to UI
+        applicationStore.contents.workspaces = applicationStore.contents.workspaces.filter(workspace => fs.existsSync(workspace.path))
+        await applicationStore.save();
         return;
     } else {
         // defaults file does not exist, write defaults to application.json
@@ -181,6 +201,7 @@ function loadApplicationStore() {
         }) ;
         return;
     }
+    
 }
 
 function openEmptyApplicationWindow() {
