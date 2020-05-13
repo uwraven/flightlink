@@ -7,6 +7,7 @@ import {
     setLoadingWorkspacesFailure,
     createWorkspace,
     setSelectedWorkspace,
+    openSelectedWorkspace
 } from 'Store/Application/ApplicationSlice';
 import { PrimaryButton, SecondaryButton, TextButton } from 'Components/Button/Button';
 import Table, {TableRow, TableHeader} from 'Components/Table/Table';
@@ -67,6 +68,7 @@ const Splash = ({}) => {
                 <div className={styles.rightActions}>
                     <SecondaryButton className={styles.button}>Close</SecondaryButton>
                     <PrimaryButton
+                        onClick={() => dispatch(openSelectedWorkspace(selectedWorkspace))}
                         className={styles.button}
                         disabled={!selectedWorkspace}
                     >Open</PrimaryButton>

@@ -61,4 +61,7 @@ export const createWorkspace = () => async (dispatch) => {
 
 export const openSelectedWorkspace = (id) => async (dispatch) => {
     // ipcRenderer.send(APP.OPEN_SELECTED_WORKSPACE);
+    console.log("open selected", id);
+    const response = await window.arcc.app.openWorkspace(id)
+    console.log(response);
 }
