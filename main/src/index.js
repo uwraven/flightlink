@@ -85,12 +85,16 @@ async function onOpenWorkspaceById(event, response) {
         // let workspaceStore = new Store(workspace.path)
         if (true) {
 
+            // Close splash screen if still open
+            splashWindow.close()
+
             // Instantiate workspace window
             workspaceWindow = new BrowserWindow({
                 width: 1200,
                 height: 800,
                 fullscreen: false,
-                webPreferences: webPreferences
+                webPreferences: webPreferences,
+                backgroundColor: `#ffffff`
             })
 
             // Instantiate workspace worker
@@ -100,7 +104,7 @@ async function onOpenWorkspaceById(event, response) {
             })
 
             workspaceWindow.loadURL('http://localhost:3000/index.html/#app').then(result => {
-                workspaceWindow.webContents.openDevTools();
+                // workspaceWindow.webContents.openDevTools();
             })
 
             workspaceWorker.loadURL('http://localhost:3000/backgroundWorker.html').then(result => {
@@ -130,6 +134,9 @@ function openSplash() {
         splashWindow.on('closed', () => splashWindow = null);
     })
 
+    splashWindow.on('close', (event) => {
+        console.log(event);
+    })
     // splashWindow.loadURL(isDev ? 
     //     'http://localhost:3000/index.html/#splash' : 
     //     `file://${path.join(__dirname, '/build/index.html/#splash')}`).then(result => {
