@@ -7,15 +7,16 @@ import {
     setLoadingWorkspacesFailure,
     createWorkspace,
     setSelectedWorkspace,
-    openSelectedWorkspace
-} from 'Store/Application/ApplicationSlice';
+    openSelectedWorkspace,
+    quitApplication
+} from 'Store/ApplicationSlice';
 import { PrimaryButton, SecondaryButton, TextButton } from 'Components/Button/Button';
 import Table, {TableRow, TableHeader} from 'Components/Table/Table';
 
 const Splash = ({}) => {
 
     const dispatch = useDispatch();
-    const { workspaces, selectedWorkspace, creatingWorkspace } = useSelector((state) => state.application);
+    const { workspaceIds, workspaceEntities, selectedWorkspace, creatingWorkspace } = useSelector((state) => state.application);
 
     useLayoutEffect(() => {
         dispatch(loadWorkspaces());
@@ -31,14 +32,16 @@ const Splash = ({}) => {
                 <div className={styles.tableContainer}>
                     <TableHeader title={"Workspaces"}/>
                     {
-                        (workspaces.length > 0) ? 
-                        <Table rows={workspaces} row={(workspace, index) => {
-                            const selected = workspace.id === selectedWorkspace;
+                        (workspaceIds.length > 0) ? 
+                        <Table rows={workspaceIds} row={(id, index) => {
+                            const selected = id === selectedWorkspace;
+                            const workspace = workspaceEntities[id];
                             return (
                                 <TableRow 
                                     className={[styles.workspaceRow, selected && styles.selectedRow].join(' ')} 
                                     onClick={() => dispatch(setSelectedWorkspace(workspace.id))} 
                                     selected={selected}
+                                    key={id}
                                 >
                                     <div className={styles.workspaceName}><p>{workspace.name}</p></div>
                                     <div className={styles.workspacePath}><p>{
@@ -66,7 +69,12 @@ const Splash = ({}) => {
                     </TextButton>
                 </div>
                 <div className={styles.rightActions}>
-                    <SecondaryButton className={styles.button}>Close</SecondaryButton>
+                    <SecondaryButton 
+                        className={styles.button}
+                        onClick={() => dispatch(quitApplication())}
+                        >
+                            Cancel
+                    </SecondaryButton>
                     <PrimaryButton
                         onClick={() => dispatch(openSelectedWorkspace(selectedWorkspace))}
                         className={styles.button}

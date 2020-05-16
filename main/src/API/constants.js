@@ -1,8 +1,12 @@
 const APP = {
-    GET_WORKSPACES: "app.getWorkspaces",
+    GET_WORKSPACES: "app.getWorkspaceIds",
     OPEN_WORKSPACE_BY_ID: "app.openWorkspaceById",
+    GET_WORKSPACE_BY_ID: 'app.getWorkspaceById',
     CREATE_WORKSPACE: "app.createWorkspace",
-    SAVE_WORKSPACE: "app.saveWorkspace"
+    SAVE_WORKSPACE_BY_ID: "app.saveWorkspaceById",
+    UPDATE_WORKSPACE: "app.updateWorkspace",
+    CLOSE_WORKSPACE_BY_ID: "app.closeWorkspaceById",
+    QUIT: 'app.quit'
 }
 
 const SOCKET = {

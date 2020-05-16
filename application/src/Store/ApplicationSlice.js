@@ -7,7 +7,8 @@ const ApplicationSlice = createSlice({
         workspacesLoaded: false,
         selectedWorkspace: null,
         creatingWorkspace: false,
-        workspaces: [],
+        workspaceEntities: [],
+        workspaceIds: {}
     },
     reducers: {
         setLoadingWorkspacesStart(state, action) {
@@ -25,7 +26,9 @@ const ApplicationSlice = createSlice({
             state.creatingWorkspace = action.payload;
         },
         setWorkspaces(state, action) {
-            state.workspaces = action.payload;
+            const {entities, all} = action.payload
+            state.workspaceEntities = entities;
+            state.workspaceIds = all;
         },
         setSelectedWorkspace(state, action) {
             state.selectedWorkspace = action.payload;
@@ -40,28 +43,31 @@ export const {
     setLoadingWorkspacesFailed,
     setCreatingWorkspace,
     setSelectedWorkspace,
-    setWorkspaces
+    setWorkspaces,
 } = ApplicationSlice.actions;
 
 export default ApplicationSlice.reducer;
 
 export const loadWorkspaces = () => async (dispatch) => {
     dispatch(setLoadingWorkspacesStart())
-    const response = await window.arcc.app.getWorkspaces();
-    dispatch(setWorkspaces(response))
+    const workspaces = await window.arcc.app.getWorkspaces();
+    dispatch(setLoadingWorkspacesSuccess());
+    dispatch(setWorkspaces(workspaces))
 }
 
 export const createWorkspace = () => async (dispatch) => {
     dispatch(setCreatingWorkspace(true));
     const response = await window.arcc.app.createWorkspace();
-    console.log("RESPONSE", response);
     dispatch(setCreatingWorkspace(false));
     dispatch(loadWorkspaces())
 }
 
 export const openSelectedWorkspace = (id) => async (dispatch) => {
-    // ipcRenderer.send(APP.OPEN_SELECTED_WORKSPACE);
     console.log("open selected", id);
     const response = await window.arcc.app.openWorkspace(id)
     console.log(response);
+}
+
+export const quitApplication = () => async (dispatch) => {
+    await window.arcc.app.quitApplication();
 }

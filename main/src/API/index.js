@@ -7,10 +7,10 @@ const {
 } = require('./Socket/index');
 
 const {
-    getWorkspaces,
-    createWorkspace,
-    openWorkspace
+    quitApplication
 } = require('./App/index');
+
+const workspace = require('./App/workspace');
 
 module.exports = {
     socket: {
@@ -21,8 +21,7 @@ module.exports = {
         removeListener
     },
     app: {
-        getWorkspaces,
-        createWorkspace,
-        openWorkspace
+        workspace: workspace,
+        quitApplication
     }
 }

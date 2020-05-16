@@ -1,10 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import InterfaceSlice from './Interface/InterfaceSlice';
-import DeviceSlice from './Record/Device/DeviceSlice';
-import RecordSlice from './Record/RecordSlice';
-import SignalSlice from './Record/Signal/Signal';
-import ConfigureSlice from './Configure/ConfigureSlice';
-import ApplicationSlice from './Application/ApplicationSlice';
+import InterfaceSlice from './InterfaceSlice';
+import DeviceSlice from './DeviceSlice';
+import RecordSlice from './RecordSlice';
+import SignalSlice from './SignalSlice';
+import ConfigureSlice from './ConfigureSlice';
+import ApplicationSlice from './ApplicationSlice';
+import WorkspaceSlice from './Workspace';
 
 export const appReducer = combineReducers({
     interface: InterfaceSlice,
@@ -12,6 +13,7 @@ export const appReducer = combineReducers({
     device: DeviceSlice,
     signal: SignalSlice,
     configure: ConfigureSlice,
+    workspace: WorkspaceSlice
 });
 
 export const splashReducer = combineReducers({

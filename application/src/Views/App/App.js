@@ -5,10 +5,11 @@ import Record from './Record/Record';
 import Configure from './Configure/Configure';
 import CommandPalette from './CommandPalette/CommandPalette';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCommandPaletteOpen } from '../../Store/Interface/InterfaceSlice';
-import { setWebsocketConnection } from 'Store/Record/RecordSlice';
-import { getPortOptions } from 'Store/Record/Device/DeviceSlice';
-import { getConfigurations } from 'Store/Configure/ConfigureSlice';
+import { setCommandPaletteOpen } from '../../Store/InterfaceSlice';
+import { setWebsocketConnection } from 'Store/RecordSlice';
+import { getPortOptions } from 'Store/DeviceSlice';
+import { getConfigurations } from 'Store/ConfigureSlice';
+import { getWorkspace } from 'Store/Workspace';
 import ApplicationHeader from 'Views/App/ApplicationHeader/ApplicationHeader';
 
 const App = ({ ...props }) => {
@@ -22,21 +23,14 @@ const App = ({ ...props }) => {
 
     useEffect(
         () => {
-            // window.arcc.api.openSocket(8080).then(() => {
-            //     dispatch(setWebsocketConnection(true));
-            //     dispatch(getPortOptions());
-            // });
-            // dispatch(getConfigurations());
-            // return () => {
-            //     window.arcc.api.closeSocket();
-            // };
+            dispatch(getWorkspace())
         },
         [ dispatch ]
     );
 
     return (
         <div className={styles.app}>
-            <ApplicationHeader />
+            <ApplicationHeader/>
             <SelectedPage />
             {commandPaletteOpen && <CommandPalette onCollapse={() => dispatch(setCommandPaletteOpen(false))} />}
             <Footer websocketConnected={websocketConnected} />

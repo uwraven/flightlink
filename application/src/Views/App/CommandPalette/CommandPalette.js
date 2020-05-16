@@ -1,7 +1,7 @@
 import React from 'react';
 import Resizable from '../../../Components/Core/Resizable/Resizable';
 import styles from './CommandPalette.module.scss';
-import { setCommandPaletteOpen } from 'Store/Interface/InterfaceSlice';
+import { setCommandPaletteOpen } from 'Store/InterfaceSlice';
 import { connect, useDispatch } from 'react-redux';
 
 const CommandPalette = ({ setHeight, ...props }) => {

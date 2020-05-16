@@ -14,15 +14,14 @@ function Store(file) {
         return new Promise((resolve, reject) => {
             fs.readFile((this.path), (err, data) => {
                 if (err) {
-                    reject(false);
+                    reject(err);
                 } else {
                     try {
                         this.contents = JSON.parse(data);
-                        console.log(this.contents);
                         resolve(true);
                     } catch(err) {
                         console.log("Error loading store", this.path);
-                        reject(false);
+                        reject(err);
                     }
                 }
             })
@@ -33,7 +32,7 @@ function Store(file) {
         return new Promise((resolve, reject) => {
             fs.writeFile(this.path, JSON.stringify(this.contents), (err) => {
                 if (err) {
-                    reject(false);
+                    reject(err);
                 } else {
                     resolve(true);
                 }

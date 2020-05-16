@@ -1,5 +1,9 @@
 {
-    "workspaces": [],
+    "workspaces": {
+        "entities": {
+        },
+        "all": []
+    },
     "interface": {
         "window": {
             "width": 1200,

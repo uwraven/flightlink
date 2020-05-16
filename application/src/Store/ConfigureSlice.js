@@ -46,11 +46,5 @@ export const {
 export default ConfigureSlice.reducer;
 
 export const getConfigurations = () => async (dispatch) => {
-    // Load configurations from memory
-    // They are stored in a flat JSON file under the system's application data directory
-    try {
-        
-    } catch(err) {
-        console.log(err);
-    }
+    
 }

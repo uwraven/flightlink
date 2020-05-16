@@ -3,7 +3,7 @@ import styles from './SignalConfiguration.module.scss';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import SignalEditor from './SignalEditor/SignalEditor';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedSignalId, setSignalOrder } from 'Store/Configure/ConfigureSlice';
+import { setSelectedSignalId, setSignalOrder } from 'Store/ConfigureSlice';
 import LCTableView from 'Components/LCTable/LCTableView';
 import SignalTableRow from './SignalTableRow/SignalTableRow';
 

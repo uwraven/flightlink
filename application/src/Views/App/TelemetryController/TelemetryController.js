@@ -4,8 +4,8 @@ import { CollapsibleSubsection, CollapsibleSection } from 'Components/Collapsibl
 import InputRow from 'Components/Presentation/InputRow/InputRow';
 import DropdownSelect from 'Components/Inputs/DropdownSelect/DropdownSelect';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Store/Record/Device/DeviceSlice';
-import { setRenderOpen, setStreamOpen } from 'Store/Interface/InterfaceSlice';
+import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Store/DeviceSlice';
+import { setRenderOpen, setStreamOpen } from 'Store/InterfaceSlice';
 import { PrimaryButton, DestructiveButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import Toggle from 'Components/Toggle/Toggle';

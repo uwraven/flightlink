@@ -1,58 +1,53 @@
 {
     "id": "default_0",
     "name": "New Workspace",
-    "interface": {
-        "window": {
-            "width": 1200,
-            "height": 800
-        },
-        "fullscreen": false
-    },
-    "contents": {
-        "configurations": {
+    "configurations": {
+        "entities": {
             "default": {
                 "id": "default",
-                "name": "default",
+                "name": "Default",
                 "signals": [
-                    {
-                        "id": "d0",
-                        "name": "position",
-                        "units": "m",
-                        "bufferIndex": 0,
-                        "length": 3,
-                        "stream": true,
-                        "render": false,
-                        "signalMode": null,
-                        "renderMode": null,
-                        "renderedModelId": null,
-                        "parentId": null
-                    },
-                    {
-                        "id": "d1",
-                        "name": "velocity",
-                        "units": "m/s",
-                        "bufferIndex": 3,
-                        "length": 3,
-                        "stream": true,
-                        "render": false,
-                        "signalMode": null,
-                        "renderMode": null,
-                        "renderedModelId": null,
-                        "parentId": null
-                    }
+                    "d0",
+                    "d1"
                 ]
             }
         },
-        "commands": {},
-        "record": {
-            "default": {
-                "connection": null,
-                "protocol": null,
-                "port": null
+        "all": ["default"]
+    },
+    "commands": {},
+    "recording": {
+        "connection": null,
+        "protocol": null,
+        "serialPort": null
+    },
+    "signals": {
+        "entities": {
+            "d0": {
+                "id": "d0",
+                "name": "position",
+                "units": "m",
+                "bufferIndex": 0,
+                "length": 3,
+                "stream": true,
+                "render": false,
+                "signalMode": null,
+                "renderMode": null,
+                "renderedModelId": null,
+                "parentId": null
+            },
+            "d1": {
+                "id": "d1",
+                "name": "velocity",
+                "units": "m/s",
+                "bufferIndex": 3,
+                "length": 3,
+                "stream": true,
+                "render": false,
+                "signalMode": null,
+                "renderMode": null,
+                "renderedModelId": null,
+                "parentId": null
             }
         }
-    },
-    "status": {
-        "new": true
     }
 }

@@ -10,6 +10,7 @@ const { APP, SERIAL } = require('./API/constants');
 const { createWorkspaceFile } = require('./files');
 
 let applicationStore;
+let workspaceStores = {};
 let splashWindow;
 
 const webPreferences = {
@@ -40,23 +41,19 @@ app.on('window-all-closed', () => {
     }
 })
 
-app.on('activate', () => {
-
-})
+app.on('activate', () => {})
 
 ipcMain.on(APP.GET_WORKSPACES, onGetWorkspaces)
-
-ipcMain.on(APP.OPEN_WORKSPACE_BY_ID, onOpenWorkspaceById)
-
 ipcMain.on(APP.CREATE_WORKSPACE, onCreateWorkspace)
+ipcMain.on(APP.OPEN_WORKSPACE_BY_ID, onOpenWorkspaceById)
+ipcMain.on(APP.GET_WORKSPACE_BY_ID, onGetWorkspaceById)
+ipcMain.on(APP.QUIT, onQuitApplication)
 
-function startup() {
+async function startup() {
     // Async get data from the application store json
-    loadApplicationStore().then(() => {
-        openSplash();
-    }).catch(() => {
+    await loadApplicationStore()
+    openSplash();
 
-    });
     // if (applicationStore.contents.workspace.open.length > 0) {
     //     // Application store contains previously open workspaces
     //     // Open previously open workspaces rather than send user to the splash screen
@@ -68,21 +65,34 @@ function startup() {
     // }
 }
 
+function openSplash() {
+    splashWindow = new BrowserWindow({
+        width: 600,
+        height: 450,
+        webPreferences: webPreferences,
+        resizable: false,
+        frame: false
+    });
+    splashWindow.loadURL('http://localhost:3000/index.html/#splash').then(result => {
+        splashWindow.on('closed', () => splashWindow = null);
+    })
+    splashWindow.on('close', (event) => {
+    })
+    // splashWindow.loadURL(isDev ? 
+    //     'http://localhost:3000/index.html/#splash' : 
+    //     `file://${path.join(__dirname, '/build/index.html/#splash')}`).then(result => {
+    //     splashWindow.on('closed', () => splashWindow = null);
+    // }).catch(error => {});
+}
 
-async function onOpenWorkspaceById(event, response) {
+async function onOpenWorkspaceById(event, arg) {
 
-    let id = response;
-    let workspace = applicationStore.contents.workspaces.find(workspace => workspace.id === id);
-    applicationStore.contents.workspaces.map(workspace => console.log(workspace))
-
-    console.log("id:", id);
-    console.log("workspace:", workspace);
+    let id = arg;
+    let workspace = applicationStore.contents.workspaces.entities[id];
 
     if (workspace) {
-
         let workspaceWindow, workspaceWorker;
 
-        // let workspaceStore = new Store(workspace.path)
         if (true) {
 
             // Close splash screen if still open
@@ -92,24 +102,28 @@ async function onOpenWorkspaceById(event, response) {
             workspaceWindow = new BrowserWindow({
                 width: 1200,
                 height: 800,
-                fullscreen: false,
-                webPreferences: webPreferences,
-                backgroundColor: `#ffffff`
+                webPreferences: {
+                    additionalArguments: [`--workspace-id=${id}`],
+                    ...webPreferences},
+                backgroundColor: `#ffffff`,
             })
 
             // Instantiate workspace worker
             workspaceWorker = new BrowserWindow({
                 show: false,
-                webPreferences: {...webPreferences, nodeIntegration: true }
+                webPreferences: {
+                    nodeIntegration: true,
+                    additionalArguments: [id],
+                    ...webPreferences }
             })
 
-            workspaceWindow.loadURL('http://localhost:3000/index.html/#app').then(result => {
+            workspaceWindow.loadURL(`http://localhost:3000/index.html/#app`).then(result => {
                 // workspaceWindow.webContents.openDevTools();
             })
 
             workspaceWorker.loadURL('http://localhost:3000/backgroundWorker.html').then(result => {
                 
-            })
+            })            
 
             return true;
             
@@ -120,29 +134,20 @@ async function onOpenWorkspaceById(event, response) {
     }
 }
 
-function openSplash() {
-
-    splashWindow = new BrowserWindow({
-        width: 600,
-        height: 450,
-        webPreferences: webPreferences,
-        resizable: false,
-        frame: false
-    });
-
-    splashWindow.loadURL('http://localhost:3000/index.html/#splash').then(result => {
-        splashWindow.on('closed', () => splashWindow = null);
-    })
-
-    splashWindow.on('close', (event) => {
-        console.log(event);
-    })
-    // splashWindow.loadURL(isDev ? 
-    //     'http://localhost:3000/index.html/#splash' : 
-    //     `file://${path.join(__dirname, '/build/index.html/#splash')}`).then(result => {
-    //     splashWindow.on('closed', () => splashWindow = null);
-    // }).catch(error => {});
+async function onGetWorkspaceById(event, arg) {
+    console.log("onGetWorkspaceById arg:", arg);
+    let id = arg;
+    const workspace = applicationStore.contents.workspaces.entities[id];
+    console.log(workspace)
+    try {
+        let workspaceStore = new Store(workspace.path);
+        await workspaceStore.load();
+        event.reply(APP.GET_WORKSPACE_BY_ID, workspaceStore.contents);
+    } catch(err) {
+        throw err;
+    }
 }
+
 
 function onGetWorkspaces(event, arg) {
     event.reply(APP.GET_WORKSPACES, applicationStore.contents.workspaces);
@@ -161,23 +166,19 @@ async function onCreateWorkspace(event, arg) {
             event.reply(APP.CREATE_WORKSPACE, {
                 success: false,
                 error: null
-            }) 
+            })
             return;
         } else try {
             const directoryPath = result.filePaths[0];
             if (directoryPath) {
                 let newWorkspace = await createWorkspaceFile(directoryPath);
-                console.log(newWorkspace);
-                applicationStore.contents.workspaces.push(newWorkspace);
-                console.log(applicationStore.contents.workspaces)
-                let saved = await applicationStore.save()
-                if (saved) {
-                    event.reply(APP.CREATE_WORKSPACE, {
-                        success: true,
-                        error: null
-                    })
-                }
-                console.log("saved: ", saved);
+                applicationStore.contents.workspaces.entities[newWorkspace.id] = newWorkspace;
+                applicationStore.contents.workspaces.all.push(newWorkspace.id);
+                await applicationStore.save()
+                event.reply(APP.CREATE_WORKSPACE, {
+                    success: true,
+                    error: null
+                })
             }
         } catch(err) {
 
@@ -187,25 +188,32 @@ async function onCreateWorkspace(event, arg) {
     }
 }
 
+async function onQuitApplication() {
+    // perform saving, etc...
+    await applicationStore.save();
+    app.quit();
+}
 
 async function loadApplicationStore() {
     let userDataPath = app.getPath('userData');
     let applicationStorePath = `${userDataPath}/application.json`;
     applicationStore = new Store(applicationStorePath);
 
-    if (await applicationStore.load()) {
+    try {
+        await applicationStore.load()
         // application defaults loaded into memory properly
         // map stored workspaces and check that they exist before making available to UI
-        applicationStore.contents.workspaces = applicationStore.contents.workspaces.filter(workspace => fs.existsSync(workspace.path))
+        applicationStore.contents.workspaces.all.filter((id) => {
+            const workspace = applicationStore.contents.workspaces.entities[id];
+            return fs.existsSync(workspace.path);
+        })
         await applicationStore.save();
         return;
-    } else {
-        // defaults file does not exist, write defaults to application.json
-        // TODO: fix Store.js
+    } catch(err) {
         applicationStore.contents = {...ApplicationDefaults};
         fs.writeFile(applicationStorePath, JSON.stringify(ApplicationDefaults), (err) => {
-            if (err) console.log(err);
-        }) ;
+            if (err) throw err;
+        });
         return;
     }
     
@@ -243,7 +251,6 @@ function openEmptyApplicationWindow() {
         splashWindow.on('closed', () => splashWindow = null);
     }).catch(error => {});
 }
-
 
 // function createWindow() {
 
