@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import SignalEditorSlice from './SignalEditorSlice'
 
 const ConfigurationEditorSlice = createSlice({
     name: 'configurationEditor',
@@ -8,14 +7,12 @@ const ConfigurationEditorSlice = createSlice({
     },
     reducers: {
         setSelectedConfigurationId(state, action) {
-            state.selectedConfigurationId = action.payload;
+            let id = action.payload;
+            state.selectedConfigurationId = (id === state.selectedConfigurationId) ? "" : id;
         },
     }
 })
 
 export const { setSelectedConfigurationId } = ConfigurationEditorSlice.actions
 
-export default combineReducers({
-    ...ConfigurationEditorSlice.reducer,
-    SignalEditorSlice
-})
+export default ConfigurationEditorSlice.reducer

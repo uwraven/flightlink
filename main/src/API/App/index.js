@@ -1,22 +1,12 @@
-const { ipcRenderer } = require('electron');
-const { APP } = require('../constants');
-
-async function quitApplication() {
-    console.log("quit");
-    return new Promise((resolve, reject) => {
-        try {
-            ipcRenderer.send(APP.QUIT)
-            resolve();
-        } catch(err) {
-            reject(err);
-        }
-    })
-}
+const { APP, WORKSPACE } = require('../constants');
+const { inject } = require('../inject'); 
 
 module.exports = {
-    getWorkspaces,
-    createWorkspace,
-    openWorkspace,
-    getWorkspaceById,
-    quitApplication
+    workspace: {
+        create: inject(WORKSPACE.CREATE),
+        open: inject(WORKSPACE.OPEN),
+        get: inject(WORKSPACE.GET),
+    },
+    getWorkspaceReferences: inject(APP.GET_WORKSPACE_REFERENCES),
+    quit: inject(APP.QUIT),
 }

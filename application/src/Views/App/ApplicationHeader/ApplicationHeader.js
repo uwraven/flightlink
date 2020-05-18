@@ -12,7 +12,7 @@ const ApplicationHeader = ({ ...props }) => {
     const dispatch = useDispatch();
 
     const { selectedTab, consoleOpen, commandPaletteOpen } = useSelector((state) => state.interface);
-    const { name } = useSelector((state) => state.workspace.name);
+    const { name } = useSelector((state) => state.workspace);
 
     return (
         <TabBar

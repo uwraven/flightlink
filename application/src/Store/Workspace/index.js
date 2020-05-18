@@ -1,41 +1,48 @@
 import { combineReducers } from 'redux';
 import { createSlice } from '@reduxjs/toolkit'
 import ConfigurationsSlice, { setConfigurations } from './ConfigurationsSlice';
-import SignalsSlice, { setSignals } from './SignalsSlice';
-import CommandsSlice, { setCommands } from './CommandsSlice';
+// import SignalsSlice, { setSignals } from './SignalsSlice';
+// import CommandsSlice, { setCommands } from './CommandsSlice';
+// import WorkspaceSlice from './WorkspaceSlice';
 
 const WorkspaceSlice = createSlice({
     name: 'workspace',
     initialState: {
-        id: window.arcc.workspaceId || "",
-        name: "",
+        name: ''
     },
     reducers: {
-        setWorkspaceName(state, action) {
+        onChangeWorkspaceName(state, action) {
             state.name = action.payload;
-        },
+        }
     }
 })
 
-export const {
-    setWorkspaceName
-} = WorkspaceSlice.actions;
+const ConfigurationSlice = createSlice({
+    name: 'configuration',
+    initialState: {
+        configurationEntities: {},
+        configurationIds: []
+    },
+    reducers: {
+        onLoadConfigurations(state, action) {
+            const { entities, all } = action.payload;
+            state.configurationEntities = entities;
+            state.configurationIds = all;
+        }
+    }
+})
 
-export const getWorkspace = () => async (dispatch) => {
-    const {
-        configurations,
-        commands,
-        recording,
-        signals,
-    } = await window.arcc.app.getWorkspaceById(window.arcc.workspaceId);
-    dispatch(setConfigurations(configurations));
-    dispatch(setSignals(signals));
-    dispatch(setCommands(commands));
-}
-
-export default combineReducers({
-    ...WorkspaceSlice.reducer,
-    configurations: ConfigurationsSlice,
-    signals: SignalsSlice,
-    commands: CommandsSlice
+const SignalSlice = createSlice({
+    name: 'configuration',
+    initialState: {
+        signalEntities: {},
+        signalIds: []
+    },
+    reducers: {
+        onLoadSignals(state, action) {
+            const { entities, all } = action.payload;
+            state.signalEntities = entities;
+            state.signalIds = all;
+        }
+    }
 })

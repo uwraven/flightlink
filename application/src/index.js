@@ -4,10 +4,10 @@ import App from './Views/App/App';
 import { HashRouter, Route } from 'react-router-dom';
 import './constants.css';
 import './index.css';
-import Splash from 'Views/Splash/Splash';
+import Launcher from 'Views/Launcher/Launcher';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { splashReducer, appReducer } from 'Store';
+import { launchReducer, appReducer } from 'Store';
 
 const Console = ({props}) => {
     return (<div>
@@ -15,8 +15,8 @@ const Console = ({props}) => {
     </div>);
 }
 
-const splashStore = configureStore({
-    reducer: splashReducer
+const launcherStore = configureStore({
+    reducer: launchReducer
 });
 
 const appStore = configureStore({
@@ -26,8 +26,8 @@ const appStore = configureStore({
 ReactDOM.render(
     <HashRouter basename="">
         <Route path={'/splash'}>
-            <Provider store={splashStore}>
-                <Splash/>
+            <Provider store={launcherStore}>
+                <Launcher/>
             </Provider>
         </Route>
         <Route path={'/app'}>

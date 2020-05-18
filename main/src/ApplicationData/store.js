@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 
 function Store(file) {
 
@@ -11,36 +10,40 @@ function Store(file) {
     }
 
     this.load = async () => {
-        return new Promise((resolve, reject) => {
-            fs.readFile((this.path), (err, data) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    try {
-                        this.contents = JSON.parse(data);
-                        resolve(true);
-                    } catch(err) {
-                        console.log("Error loading store", this.path);
-                        reject(err);
-                    }
-                }
-            })
+        fs.readFile(this.path, (err, data) => {
+            if (err) throw Error(err);
+            try { 
+                this.contents = JSON.parse(data);
+                return;
+            } catch(err) {
+                console.log("Error parsing json", this.path);
+                throw Error("Error parsing json")
+            }
         })
     }
 
     this.save = async () => {
-        return new Promise((resolve, reject) => {
-            fs.writeFile(this.path, JSON.stringify(this.contents), (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(true);
-                }
-            })
+        fs.writeFile(this.path, JSON.stringify(this.contents), (err) => {
+            if (err) throw Error(err);
+            return;
+        });
+    }
+
+    this.exists = () => {
+        return fs.existsSync(this.path)
+    }
+
+    this.validJSON = async () => {
+        fs.readFile(this.path, (err, data) => {
+            if (err) { throw Error(err) }
+            try {
+                JSON.parse(data);
+                return true;
+            } catch(err) {
+                return false;
+            }
         })
     }
 }
 
-module.exports = { 
-    Store
-}
+module.exports = Store

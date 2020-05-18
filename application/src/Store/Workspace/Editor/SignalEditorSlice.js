@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import SignalEditorSlice from './SignalEditorSlice'
 
 const SignalEditorSlice = createSlice({
     name: 'signalEditor',

@@ -3,71 +3,34 @@ import { createSlice } from '@reduxjs/toolkit';
 const ApplicationSlice = createSlice({
     name: 'application',
     initialState: {
-        loadingWorkspaces: false,
-        workspacesLoaded: false,
-        selectedWorkspace: null,
-        creatingWorkspace: false,
-        workspaceEntities: [],
-        workspaceIds: {}
+        workspaceReferenceEntities: [],
+        workspaceReferenceIds: {},
     },
     reducers: {
-        setLoadingWorkspacesStart(state, action) {
-            state.loadingWorkspaces = action.payload;
-        },
-        setLoadingWorkspacesSuccess(state, action) {
-            state.workspacesLoaded = true;
-            state.loadingWorkspaces = false;
-        },
-        setLoadingWorkspacesFailed(state, action) {
-            state.workspacesLoaded = false;
-            state.loadingWorkspaces = false;
-        },
-        setCreatingWorkspace(state, action) {
-            state.creatingWorkspace = action.payload;
-        },
-        setWorkspaces(state, action) {
+        setWorkspaceReferences(state, action) {
             const {entities, all} = action.payload
-            state.workspaceEntities = entities;
-            state.workspaceIds = all;
-        },
-        setSelectedWorkspace(state, action) {
-            state.selectedWorkspace = action.payload;
+            state.workspaceReferenceEntities = entities;
+            state.workspaceReferenceIds = all;
         },
     }
 })
 
 export const {
-    setLoadingWorkspaces,
-    setLoadingWorkspacesStart,
-    setLoadingWorkspacesSuccess,
-    setLoadingWorkspacesFailed,
-    setCreatingWorkspace,
-    setSelectedWorkspace,
-    setWorkspaces,
+    setWorkspaceReferences,
 } = ApplicationSlice.actions;
 
 export default ApplicationSlice.reducer;
 
-export const loadWorkspaces = () => async (dispatch) => {
-    dispatch(setLoadingWorkspacesStart())
-    const workspaces = await window.arcc.app.getWorkspaces();
-    dispatch(setLoadingWorkspacesSuccess());
-    dispatch(setWorkspaces(workspaces))
+export const getWorkspaceReferences = () => async (dispatch) => {
+    const workspaceReferences = await window.arcc.app.getWorkspaceReferences();
+    dispatch(setWorkspaceReferences(workspaceReferences))
 }
 
-export const createWorkspace = () => async (dispatch) => {
-    dispatch(setCreatingWorkspace(true));
-    const response = await window.arcc.app.createWorkspace();
-    dispatch(setCreatingWorkspace(false));
-    dispatch(loadWorkspaces())
-}
-
-export const openSelectedWorkspace = (id) => async (dispatch) => {
-    console.log("open selected", id);
-    const response = await window.arcc.app.openWorkspace(id)
-    console.log(response);
+export const openWorkspace = (id) => async (dispatch) => {
+    console.log(id);
+    const response = await window.arcc.app.workspace.open(id);
 }
 
 export const quitApplication = () => async (dispatch) => {
-    await window.arcc.app.quitApplication();
+    await window.arcc.app.quit();
 }

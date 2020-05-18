@@ -1,25 +1,27 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import styles from './Splash.module.scss';
+import styles from './Launcher.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
-    loadWorkspaces, 
-    setLoadingWorkspacesSuccess,
-    setLoadingWorkspacesFailure,
-    createWorkspace,
-    setSelectedWorkspace,
-    openSelectedWorkspace,
+    getWorkspaceReferences, 
+    openWorkspace,
     quitApplication
 } from 'Store/ApplicationSlice';
+import { 
+    setSelectedWorkspaceId,
+    createWorkspace
+} from 'Store/LauncherSlice';
 import { PrimaryButton, SecondaryButton, TextButton } from 'Components/Button/Button';
 import Table, {TableRow, TableHeader} from 'Components/Table/Table';
 
-const Splash = ({}) => {
+const Launcher = ({}) => {
 
     const dispatch = useDispatch();
-    const { workspaceIds, workspaceEntities, selectedWorkspace, creatingWorkspace } = useSelector((state) => state.application);
+    const { selectedWorkspaceId, creatingWorkspace } = useSelector((state) => state.launcher);
+    const { workspaceReferenceIds, workspaceReferenceEntities } = useSelector((state) => state.application);
 
     useLayoutEffect(() => {
-        dispatch(loadWorkspaces());
+        dispatch(getWorkspaceReferences());
+        console.log(workspaceReferenceIds, workspaceReferenceEntities)
     }, [dispatch]);
 
     return(
@@ -32,14 +34,14 @@ const Splash = ({}) => {
                 <div className={styles.tableContainer}>
                     <TableHeader title={"Workspaces"}/>
                     {
-                        (workspaceIds.length > 0) ? 
-                        <Table rows={workspaceIds} row={(id, index) => {
-                            const selected = id === selectedWorkspace;
-                            const workspace = workspaceEntities[id];
+                        (workspaceReferenceIds.length > 0) ? 
+                        <Table rows={workspaceReferenceIds} row={(id, index) => {
+                            const selected = id === selectedWorkspaceId;
+                            const workspace = workspaceReferenceEntities[id];
                             return (
                                 <TableRow 
                                     className={[styles.workspaceRow, selected && styles.selectedRow].join(' ')} 
-                                    onClick={() => dispatch(setSelectedWorkspace(workspace.id))} 
+                                    onClick={() => dispatch(setSelectedWorkspaceId(workspace.id))} 
                                     selected={selected}
                                     key={id}
                                 >
@@ -76,9 +78,9 @@ const Splash = ({}) => {
                             Cancel
                     </SecondaryButton>
                     <PrimaryButton
-                        onClick={() => dispatch(openSelectedWorkspace(selectedWorkspace))}
+                        onClick={() => dispatch(openWorkspace(selectedWorkspaceId))}
                         className={styles.button}
-                        disabled={!selectedWorkspace}
+                        disabled={!selectedWorkspaceId}
                     >Open</PrimaryButton>
                 </div>
             </div>
@@ -86,4 +88,4 @@ const Splash = ({}) => {
     )
 }
 
-export default Splash;
+export default Launcher;

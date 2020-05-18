@@ -3,14 +3,20 @@ import styles from './SignalConfiguration.module.scss';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import SignalEditor from './SignalEditor/SignalEditor';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedSignalId, setSignalOrder } from 'Store/ConfigureSlice';
 import LCTableView from 'Components/LCTable/LCTableView';
 import SignalTableRow from './SignalTableRow/SignalTableRow';
+
+
+// FIXME: Jesus
+const selectedSignalId = "";
+const signals = [];
+const setSelectedSignalId = () => {};
+const setSignalOrder = () => {}
 
 const SignalConfiguration = ({configurationId, ...props}) => {
 
     const dispatch = useDispatch();
-    const { selectedSignalId, signals } = useSelector((state) => state.configure);
+    // const { selectedSignalId, signals } = useSelector((state) => state.configure);
 
     const onDragSuccess = (from, to) => {
         dispatch(setSignalOrder({from: from, to: to}));

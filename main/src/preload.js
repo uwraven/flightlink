@@ -3,6 +3,9 @@ const args = process.argv;
 const id = args.find(arg => {
     return arg.split('=').includes("--workspace-id")
 })
-window.arcc = api;
-window.arcc['workspaceId'] = id.split('=')[1];
+console.log("PRELOAD")
+window.arcc = {
+    ...api,
+    workspaceId: id ? id.split('=')[1] : ''
+};
 

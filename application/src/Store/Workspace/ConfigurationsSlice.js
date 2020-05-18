@@ -9,13 +9,10 @@ const ConfigurationsSlice = createSlice({
         selectedConfigurationId: "",
     },
     reducers: {
-        setSelectedConfigurationId(state, action) {
-            state.selectedConfigurationId = action.payload;
-        },
         setConfigurations(state, action) {
-            const { configurationEntities, configurationIds } = action.payload;
-            state.configurationEntities = configurationEntities;
-            state.configurationIds = configurationIds;
+            const { entities, all } = action.payload;
+            state.configurationEntities = entities;
+            state.configurationIds = all;
         },
         createConfiguration(state, action) {
             let id = uuid.v1();

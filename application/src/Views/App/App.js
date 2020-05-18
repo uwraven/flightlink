@@ -8,8 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCommandPaletteOpen } from '../../Store/InterfaceSlice';
 import { setWebsocketConnection } from 'Store/RecordSlice';
 import { getPortOptions } from 'Store/DeviceSlice';
-import { getConfigurations } from 'Store/ConfigureSlice';
-import { getWorkspace } from 'Store/Workspace';
+import { getWorkspace } from 'Store/Workspace/WorkspaceSlice';
 import ApplicationHeader from 'Views/App/ApplicationHeader/ApplicationHeader';
 
 const App = ({ ...props }) => {
