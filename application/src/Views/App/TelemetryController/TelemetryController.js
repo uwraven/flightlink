@@ -4,8 +4,8 @@ import { CollapsibleSubsection, CollapsibleSection } from 'Components/Collapsibl
 import InputRow from 'Components/Presentation/InputRow/InputRow';
 import DropdownSelect from 'Components/Inputs/DropdownSelect/DropdownSelect';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Store/DeviceSlice';
-import { setRenderOpen, setStreamOpen } from 'Store/InterfaceSlice';
+import { selectConnection, selectProtocol, selectPort, openPort, closePort } from 'Store/Interface/Recorder/Device';
+import { setRenderOpen, setStreamOpen } from 'Store/Interface/Interface';
 import { PrimaryButton, DestructiveButton } from 'Components/Button/Button';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import Toggle from 'Components/Toggle/Toggle';
@@ -22,11 +22,12 @@ const TelemetryController = (...props) => {
         portOpen,
         openingPort,
         portError
-    } = useSelector((state) => state.device);
+    } = useSelector((state) => state.interface.recorder.device);
 
-    const { renderOpen, streamOpen } = useSelector((state) => state.interface);
+    const { renderOpen, streamOpen } = useSelector((state) => state.interface.dangerous);
 
-    const { configurationOptions, selectedConfigurationOption } = useSelector((state) => state.signal);
+    const { configurationIds, configurationEntities } = useSelector((state) => state.data.workspace.configurations);
+    const { selectedConfigurationId } = useSelector((state) => state.interface.recorder.device); 
 
     return (
         <Resizable right={true} handle={4} xmin={192} xmax={512} className={styles.container}>
@@ -81,8 +82,8 @@ const TelemetryController = (...props) => {
                 <InputRow>
                     <span>Configuration</span>
                     <DropdownSelect
-                        options={configurationOptions}
-                        selected={selectedConfigurationOption}
+                        options={configurationIds.map(id => configurationEntities[id].name)}
+                        selected={""}
                         onSelect={() => {}}
                         disabled={false}
                         className={styles.dropdown}

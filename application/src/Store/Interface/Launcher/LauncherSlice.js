@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getWorkspaceReferences } from 'Store/ApplicationSlice';
+import { getWorkspaceReferences } from 'Store/Data/Application/Application';
 
 const LauncherSlice = createSlice({
     name: 'launcher',

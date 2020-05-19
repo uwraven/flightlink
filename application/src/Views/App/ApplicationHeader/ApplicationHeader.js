@@ -5,14 +5,14 @@ import { IconButton } from 'Components/Button/Button';
 import { ReactComponent as UplinkIcon } from 'Assets/Icons/uplink.svg';
 import { ReactComponent as PaletteIcon } from 'Assets/Icons/palette.svg';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedTab } from 'Store/InterfaceSlice';
-import { setCommandPaletteOpen } from 'Store/InterfaceSlice';
+import { setSelectedTab } from 'Store/Interface/Interface';
+import { setCommandPaletteOpen } from 'Store/Interface/Interface';
 
 const ApplicationHeader = ({ ...props }) => {
     const dispatch = useDispatch();
 
-    const { selectedTab, consoleOpen, commandPaletteOpen } = useSelector((state) => state.interface);
-    const { name } = useSelector((state) => state.workspace);
+    const { selectedTab, consoleOpen, commandPaletteOpen } = useSelector((state) => state.interface.dangerous);
+    const { name } = useSelector((state) => state.data.workspace.meta);
 
     return (
         <TabBar

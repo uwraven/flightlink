@@ -1,5 +1,5 @@
 import React, {useState, useLayoutEffect} from 'react';
-import styles from './SignalConfiguration.module.scss';
+import styles from './SignalTable.module.scss';
 import Resizable from 'Components/Core/Resizable/Resizable';
 import SignalEditor from './SignalEditor/SignalEditor';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,10 +13,11 @@ const signals = [];
 const setSelectedSignalId = () => {};
 const setSignalOrder = () => {}
 
-const SignalConfiguration = ({configurationId, ...props}) => {
+const SignalTable = ({configurationId, ...props}) => {
 
     const dispatch = useDispatch();
-    // const { selectedSignalId, signals } = useSelector((state) => state.configure);
+    const { selectedConfigurationId } = useSelector((state) => state.interface.editor.configurations);
+    const { selectedSignalId } = useSelector((state) => state.interface.editor.signals);
 
     const onDragSuccess = (from, to) => {
         dispatch(setSignalOrder({from: from, to: to}));
@@ -54,15 +55,10 @@ const SignalConfiguration = ({configurationId, ...props}) => {
                     <div className={styles.addSignalButton}>
                         <span>Add Signal</span>
                     </div>
-
                 </Resizable>
-                    { selectedSignalId ? 
-                        <SignalEditor id={selectedSignalId}/> : 
-                        <div className={styles.emptySignalContainer}>Select signal to edit</div> 
-                    }
             </div>
         </div>
     )
 };
 
-export default SignalConfiguration
+export default SignalTable

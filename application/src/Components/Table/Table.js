@@ -38,7 +38,8 @@ const TableHeader = ({title, ...props}) => {
 }
 
 export {
-    Table as default,
     TableRow,
     TableHeader
 }
+
+export default Table;

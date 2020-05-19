@@ -16,12 +16,6 @@
     background-color: var(--fill-l);
 }
 
-.configurationSelector {
-    @extend .column;
-    justify-content: space-between;
-    overflow-y: scroll;
-}
-
 .configurationPanel {
     display: flex;
     flex-grow: 1;
@@ -32,13 +26,7 @@
     @extend .column;
 }
 
-.actionWrapper {
-    padding: var(--b-l);
-    background-color: white;
-    border-top: 1px solid var(--border-l);
-}
-
-.emptyConfigContainer {
+.empty {
     display: flex;
     align-items: center;
     justify-content: center;

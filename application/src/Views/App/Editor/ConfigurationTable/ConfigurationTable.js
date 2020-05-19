@@ -1,0 +1,46 @@
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import styles from './ConfigurationTable.module.scss';
+import Resizable from 'Components/Core/Resizable/Resizable';
+import { CollapsibleSection } from 'Components/Collapsible/Collapsible';
+import Table, { TableRow } from 'Components/Table/Table';
+import { PrimaryButton } from 'Components/Button/Button';
+import { setSelectedConfigurationId } from 'Store/Interface/Editor/ConfigurationEditor';
+
+
+const ConfigurationTable = ({...props}) => {
+
+    const dispatch = useDispatch();
+    const { configurationIds, configurationEntities } = useSelector((state) => state.data.workspace.configurations);
+    const { selectedConfigurationId } = useSelector((state) => state.interface.editor.configurations);
+
+    return(
+        <Resizable right={true} xmin={144} handle={4} xmax={344} className={styles.container}>
+            <CollapsibleSection title={"Configurations"} initialState={true}>
+                <Table
+                    rows={configurationIds}
+                    row={(id, index) => {
+                        const configuration = configurationEntities[id];
+                        const selected = id === selectedConfigurationId
+                        return(
+                            <TableRow
+                                key={id}
+                                selected={selected}
+                                onClick={() => dispatch(setSelectedConfigurationId(id))}
+                            >
+                                {configuration.name}
+                            </TableRow>
+                        )
+                    }}
+                />
+            </CollapsibleSection>
+            <div className={styles.actionWrapper}>
+                <PrimaryButton>
+                    New Configuration
+                </PrimaryButton>
+            </div>
+        </Resizable>
+    )
+}
+
+export default ConfigurationTable;

@@ -6,7 +6,7 @@ const RecordSlice = createSlice({
         websocketConnected: false
     },
     reducers: {
-        setWebsocketConnection(state, action) {
+        onWebsocketConnectionStatus(state, action) {
             state.websocketConnected = action.payload;
         }
     }

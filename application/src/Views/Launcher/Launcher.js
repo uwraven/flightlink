@@ -5,11 +5,11 @@ import {
     getWorkspaceReferences, 
     openWorkspace,
     quitApplication
-} from 'Store/ApplicationSlice';
+} from 'Store/Data/Application/Application';
 import { 
     setSelectedWorkspaceId,
     createWorkspace
-} from 'Store/LauncherSlice';
+} from 'Store/Interface/Launcher/LauncherSlice';
 import { PrimaryButton, SecondaryButton, TextButton } from 'Components/Button/Button';
 import Table, {TableRow, TableHeader} from 'Components/Table/Table';
 
@@ -21,7 +21,6 @@ const Launcher = ({}) => {
 
     useLayoutEffect(() => {
         dispatch(getWorkspaceReferences());
-        console.log(workspaceReferenceIds, workspaceReferenceEntities)
     }, [dispatch]);
 
     return(

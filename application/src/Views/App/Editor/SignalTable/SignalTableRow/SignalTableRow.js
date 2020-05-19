@@ -4,9 +4,8 @@ import styles from './SignalTableRow.module.scss';
 
 const SignalTableRow = ({signalId, selected, dragging, ...props}) => {
 
-    const signal = useSelector(state => state.configure.signals[signalId]) || 
-    {initialIndex: 0, length: 3, name: "signal"};
-    
+    const signal = useSelector(state => state.data.workspace.signals[signalId])
+
     const rowStyle = [
         styles.row,
         selected && styles.selectedRow,

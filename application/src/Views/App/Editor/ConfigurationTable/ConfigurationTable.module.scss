@@ -1,0 +1,16 @@
+.container {
+    width: 216px;
+    border-right: 1px solid var(--border-l);
+    flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--fill-l);
+    justify-content: space-between;
+    overflow-y: scroll;
+}
+
+.actionWrapper {
+    padding: var(--b-l);
+    background-color: white;
+    border-top: 1px solid var(--border-l);
+}

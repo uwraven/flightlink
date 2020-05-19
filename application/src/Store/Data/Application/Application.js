@@ -19,8 +19,6 @@ export const {
     setWorkspaceReferences,
 } = ApplicationSlice.actions;
 
-export default ApplicationSlice.reducer;
-
 export const getWorkspaceReferences = () => async (dispatch) => {
     const workspaceReferences = await window.arcc.app.getWorkspaceReferences();
     dispatch(setWorkspaceReferences(workspaceReferences))
@@ -34,3 +32,5 @@ export const openWorkspace = (id) => async (dispatch) => {
 export const quitApplication = () => async (dispatch) => {
     await window.arcc.app.quit();
 }
+
+export default ApplicationSlice.reducer;
