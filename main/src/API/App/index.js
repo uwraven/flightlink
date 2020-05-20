@@ -9,11 +9,13 @@ module.exports = {
         get: injectWorkspaceEvent(WORKSPACE.GET),
         configurations: {
             create: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.CREATE),
-            edit: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.EDIT),
+            update: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.UPDATE),
             delete: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.DELETE)
         },
         signals: {
             create: injectWorkspaceEvent(WORKSPACE.SIGNALS.CREATE),
+            update: injectWorkspaceEvent(WORKSPACE.SIGNALS.UPDATE),
+            delete: injectWorkspaceEvent(WORKSPACE.SIGNALS.DELETE)
         }
     },
     quit: inject(APP.QUIT),

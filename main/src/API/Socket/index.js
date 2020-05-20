@@ -1,5 +1,5 @@
 const { SERIAL } = require('../constants');
-const uuid = require('uuid');
+const {nanoid} = require('nanoid');
 
 let socket;
 let messageQueue;
@@ -45,7 +45,7 @@ function receiveMessage(message) {
 }
 
 async function sendMessage(packet, callback) {
-    packet["id"] = uuid.v1();
+    packet["id"] = nanoid(10);
     socket.send(JSON.stringify(packet));
     if (callback) {
         return new Promise((resolve, reject) => {

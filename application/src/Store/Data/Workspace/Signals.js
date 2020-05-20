@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loadConfigurations } from './Configurations';
+import { configurationsUpdated } from './Configurations';
 
 const SignalsSlice = createSlice({
     name: 'signals',
@@ -41,7 +41,7 @@ export const loadSignal = (signalId) => async (dispatch) => {
 export const createSignal = (configurationId) =>  async (dispatch) => {
     const { signals, configurations } = await window.arcc.app.workspace.signals.create(configurationId);
     dispatch(loadSignals(signals));
-    dispatch(loadConfigurations(configurations))
+    dispatch(configurationsUpdated(configurations))
 }
 
 export const submitSignalProperty = (signal) => async (dispatch) => {

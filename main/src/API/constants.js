@@ -12,11 +12,13 @@ const WORKSPACE = {
     CLOSE: 'workspace.close',
     CONFIGURATIONS: {
         CREATE: 'workspace.configurations.create',
-        EDIT: 'workspace.configurations.edit',
+        UPDATE: 'workspace.configurations.update',
         DELETE: 'workspace.configurations.delete',
     },
     SIGNALS: {
-        CREATE: 'workspace.signals.create'
+        CREATE: 'workspace.signals.create',
+        UPDATE: 'workspace.signals.update',
+        DELETE: 'workspace.signals.delete',
     }
 };
 

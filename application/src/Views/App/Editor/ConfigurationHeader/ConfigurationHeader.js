@@ -10,12 +10,6 @@ const ConfigurationHeader = (props) => {
 
     return(
         <div className={styles.container}>
-            <TextInput
-                initialValue={configuration.name}
-                placeholder={"Configuration Name"}
-                onSubmit={() => {}}
-                width={120}
-            />
         </div>
     )
 }
