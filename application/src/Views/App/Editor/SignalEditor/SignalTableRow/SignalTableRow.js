@@ -20,6 +20,9 @@ const SignalTableRow = ({id, selected, dragging, ...props}) => {
             <p className={styles.name}>
                 {signal.name}
             </p>
+            <div className={styles.unit}>
+                {signal.units}
+            </div>
         </div>
     )
 }

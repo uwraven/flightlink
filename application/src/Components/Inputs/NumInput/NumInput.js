@@ -3,9 +3,7 @@ import styles from './NumInput.module.scss';
 
 const enterKeyCode = 13;
 
-const NumInput = ({onSubmit, valid, disabled = false, int, width, ...props}) => {
-
-    const [value, setValue] = useState(0);
+const NumInput = ({value, onChange, onSubmit, valid, disabled = false, int, width, ...props}) => {
     
     return (
         <input 
@@ -13,7 +11,7 @@ const NumInput = ({onSubmit, valid, disabled = false, int, width, ...props}) => 
             value={value}
             disabled={disabled}
             onChange={(e) => {
-                setValue(e.target.value);
+                onChange(e.target.value);
             }}
             onKeyDown={(e) => {
                 if (e.keyCode === enterKeyCode) {
@@ -22,7 +20,7 @@ const NumInput = ({onSubmit, valid, disabled = false, int, width, ...props}) => 
                 }
             }}
             onBlur={(e) => {
-                if (int) setValue(Math.round(e.target.value));
+                if (int) onSubmit(Math.round(e.target.value));
             }}
             className={[
                 styles.input,

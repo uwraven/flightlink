@@ -3,9 +3,7 @@ import styles from './TextInput.module.scss';
 
 const enterKeyCode = 13;
 
-const TextInput = ({onSubmit, valid, disabled = false, width, initialValue = "", ...props}) => {
-
-    const [value, setValue] = useState(initialValue);
+const TextInput = ({value, onChange, onSubmit, valid, disabled = false, width, ...props}) => {
     
     return (
         <input 
@@ -13,7 +11,10 @@ const TextInput = ({onSubmit, valid, disabled = false, width, initialValue = "",
             value={value}
             disabled={disabled}
             onChange={(e) => {
-                setValue(e.target.value);
+                onChange(e.target.value);
+            }}
+            onBlur={(e) => {
+                onSubmit(e.target.value);
             }}
             onKeyDown={(e) => {
                 if (e.keyCode === enterKeyCode) {
