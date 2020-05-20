@@ -26,7 +26,7 @@ export default LauncherSlice.reducer;
 
 export const createWorkspace = () => async (dispatch) => {
     dispatch(setCreatingWorkspace(true));
-    const response = await window.arcc.app.workspace.create();
+    const response = await window.arcc.app.createWorkspace();
     dispatch(getWorkspaceReferences())
     dispatch(setCreatingWorkspace(false));
 }

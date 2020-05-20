@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './ConfigurationTable.module.scss';
 import Resizable from 'Components/Core/Resizable/Resizable';
@@ -6,7 +6,7 @@ import { CollapsibleSection } from 'Components/Collapsible/Collapsible';
 import Table, { TableRow } from 'Components/Table/Table';
 import { PrimaryButton } from 'Components/Button/Button';
 import { setSelectedConfigurationId } from 'Store/Interface/Editor/ConfigurationEditor';
-
+import { createConfiguration } from 'Store/Data/Workspace/Configurations';
 
 const ConfigurationTable = ({...props}) => {
 
@@ -35,7 +35,7 @@ const ConfigurationTable = ({...props}) => {
                 />
             </CollapsibleSection>
             <div className={styles.actionWrapper}>
-                <PrimaryButton>
+                <PrimaryButton onClick={() => dispatch(createConfiguration())}>
                     New Configuration
                 </PrimaryButton>
             </div>

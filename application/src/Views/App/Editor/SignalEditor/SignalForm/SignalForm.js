@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import styles from './SignalEditor.module.scss';
+import styles from './SignalForm.module.scss';
 import TextInput from 'Components/Inputs/TextInput/TextInput';
 import Input from 'Components/Inputs/Input/Input';
 import Checkbox from 'Components/Inputs/Checkbox/Checkbox';
 import DropdownSelect from 'Components/Inputs/DropdownSelect/DropdownSelect';
 import NumInput from 'Components/Inputs/NumInput/NumInput';
 
-const SignalEditor = ({signalId, ...props}) => {
+const SignalForm = ({signalId, ...props}) => {
 
 // Redux hooks to get and set signal properties based on id
 
@@ -94,4 +94,4 @@ const SignalEditor = ({signalId, ...props}) => {
     )
 };
 
-export default SignalEditor
+export default SignalForm

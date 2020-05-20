@@ -3,9 +3,9 @@ import styles from './TextInput.module.scss';
 
 const enterKeyCode = 13;
 
-const TextInput = ({onSubmit, valid, disabled = false, width, ...props}) => {
+const TextInput = ({onSubmit, valid, disabled = false, width, initialValue = "", ...props}) => {
 
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(initialValue);
     
     return (
         <input 

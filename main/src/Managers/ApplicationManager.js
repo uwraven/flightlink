@@ -119,16 +119,15 @@ function ApplicationManager() {
         }
     }
 
-    this.onGetWorkspaceById = async (event, payload) => {
+    this.onWorkspaceEvent = async (event, { channel, workspaceId, payload }) => {
         try {
-            let id = payload;
-            let workspaceManager = this.workspaces[id];
-            return workspaceManager.store.contents;
+            console.log(channel, workspaceId, payload);
+            let workspace = this.workspaces[workspaceId];
+            return await workspace.handle(channel, payload);
         } catch(err) {
-            console.log("Error getting workspace by id:", err);
+            console.log("Error onWorkspaceEvent", err);
         }
     }
-
 }
 
 module.exports = ApplicationManager;

@@ -48,6 +48,7 @@
                 "renderedModelId": null,
                 "parentId": null
             }
-        }
+        },
+        "all": ["d0", "d1"]
     }
 }

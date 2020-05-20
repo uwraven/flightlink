@@ -1,14 +1,23 @@
 const APP = {
     GET_WORKSPACE_REFERENCES: "app.getWorkspaceReferences",
+    CREATE_WORKSPACE: "app.createWorkspace",
+    OPEN_WORKSPACE: "app.openWorkspace",
+    WORKSPACE_EVENT: "app.workspaceEvent",
     QUIT: 'app.quit'
 }
 
 const WORKSPACE = {
-    GET: 'workspace.getWorkspace',
+    GET: 'workspace.get',
     SAVE: 'workspace.save',
-    CREATE: 'workspace.create',
     CLOSE: 'workspace.close',
-    OPEN: 'workspace.open'
+    CONFIGURATIONS: {
+        CREATE: 'workspace.configurations.create',
+        EDIT: 'workspace.configurations.edit',
+        DELETE: 'workspace.configurations.delete',
+    },
+    SIGNALS: {
+        CREATE: 'workspace.signals.create'
+    }
 };
 
 const FLIGHTLINK = {

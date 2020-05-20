@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import uuid from 'uuid';
+import { loadConfigurations } from './Configurations';
 
 const SignalsSlice = createSlice({
     name: 'signals',
@@ -8,26 +8,10 @@ const SignalsSlice = createSlice({
         signalIds: [],
     },
     reducers: {
-        setSignals(state, action) {
-            const { signalEntities, signalIds } = action.payload;
-        },
-        createSignal(state, action) {
-            let id = uuid.v1()
-            const newSignal = {
-                id: id,
-                name: "",
-                units: "",
-                bufferIndex: null,
-                length: null,
-                stream: false,
-                render: false,
-                signalMode: null,
-                renderMode: null,
-                renderedModelId: null,
-                parentId: null
-            }
-            state.signalEntities = {...state.signalEntities, [id]: newSignal };
-            state.signalIds = [...state.signalIds, id];
+        loadSignals(state, action) {
+            const { entities, all } = action.payload;
+            state.signalEntities = entities;
+            state.signalIds = all;
         },
         setSignalProperty(state, action) {
             let { id, field, updatedValue } = action.payload
@@ -46,9 +30,22 @@ const SignalsSlice = createSlice({
 })
 
 export const {
-    setSignals,
+    loadSignals,
     setSignalProperty,
-    createSignal
 } = SignalsSlice.actions;
+
+export const loadSignal = (signalId) => async (dispatch) => {
+    
+}
+
+export const createSignal = (configurationId) =>  async (dispatch) => {
+    const { signals, configurations } = await window.arcc.app.workspace.signals.create(configurationId);
+    dispatch(loadSignals(signals));
+    dispatch(loadConfigurations(configurations))
+}
+
+export const submitSignalProperty = (signal) => async (dispatch) => {
+    const signals = await window.arcc.app.workspace.signals.updateSignal(signal)
+}
 
 export default SignalsSlice.reducer;

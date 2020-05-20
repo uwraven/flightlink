@@ -1,0 +1,8 @@
+.container {
+    height: var(--height-l);
+    border-bottom: 1px solid var(--border-l);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--b-l);
+    flex-shrink: 0;
+}

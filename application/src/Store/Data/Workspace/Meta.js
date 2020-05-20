@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { createSlice } from '@reduxjs/toolkit'
-import { setConfigurations } from './Configurations';
-import { setSignals } from './Signals';
+import { loadConfigurations } from './Configurations';
+import { loadSignals } from './Signals';
 
 const WorkspaceSlice = createSlice({
     name: 'workspace',
@@ -23,9 +23,13 @@ export const {
 export default WorkspaceSlice.reducer;
 
 export const getWorkspace = () => async (dispatch) => {
-    const response = await window.arcc.app.workspace.get(window.arcc.workspaceId);
-    dispatch(loadWorkspaceName(response.name));
-    dispatch(setConfigurations(response.configurations));
-    dispatch(setSignals(response.signals));
+    const {
+        configurations,
+        signals,
+        name
+    } = await window.arcc.app.workspace.get();
+    dispatch(loadWorkspaceName(name));
+    dispatch(loadConfigurations(configurations));
+    dispatch(loadSignals(signals));
     // dispatch(setCommands(commands));
 }

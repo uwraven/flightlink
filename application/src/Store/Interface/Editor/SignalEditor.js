@@ -7,7 +7,7 @@ const SignalEditorSlice = createSlice({
     },
     reducers: {
         setSelectedSignalId(state, action) {
-            state.selectSignalId = action.payload;
+            state.selectedSignalId = (action.payload === state.selectedSignalId) ? "" : action.payload;
         },
     }
 })

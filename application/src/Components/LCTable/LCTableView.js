@@ -22,6 +22,7 @@ const LCTableView = ({
     const draggingRowHeight = useRef(null);
     const draggingIdRef = useRef(null);
     const targetRowIndex = useRef(-1);
+    const dragTimerStart = useRef(null);
 
     const onMouseDown = (event, id, ref, initialIndex) => {
 
@@ -32,6 +33,8 @@ const LCTableView = ({
         let dy;
         let row = ref.current;
         let currentRowHeight = row.clientHeight;
+
+        dragTimerStart.current = Date.now();
 
         screenTarget.current = {
             x: event.screenX,
@@ -47,19 +50,23 @@ const LCTableView = ({
         let validDragAction = false;
 
         const onGlobalMouseMove = (e) => {
-            // dy = e.screenY - screenTarget.current.y - draggingRowOffset.current;
-            
-            row.style.top = `${e.screenY - dy}px`;
+            // dy = e.screenY - screenTarget.current.y - draggingRowOffset.current; 
+            row.style.top = `${e.screenY - dy}px`;           
             if (!validDragAction) {
                 // Drag has not started yet
-                row.style.width = `${row.clientWidth}px`;
-                row.style.position = `absolute`;
-                row.style.zIndex = `1`;
-                row.style.pointerEvents = `none`;
-                setDraggingId(draggingIdRef.current);
+                const elapsed = Date.now() - dragTimerStart.current;
+                if (elapsed > 75) {
+                    row.style.width = `${row.clientWidth}px`;
+                    row.style.position = `absolute`;
+                    row.style.zIndex = `1`;
+                    row.style.pointerEvents = `none`;
+                    setDraggingId(draggingIdRef.current);
+                    dragTimerStart.current = null;
+                    validDragAction = true;
+                }
+            } else {
+                row.style.top = `${e.screenY - dy}px`;
             }
-            validDragAction = true;
-
             // console.log("ONMOUSEMOVE", "dragging ID: ", id, `[${typeof id}]`)
         }
 

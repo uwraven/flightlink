@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+const { APP } = require('./constants');
 
 inject = (channel) => {
     return async function(args) {
@@ -7,6 +8,18 @@ inject = (channel) => {
     }
 }
 
+injectWorkspaceEvent = (channel) => {
+    return async function(payload) {
+        const args = {
+            workspaceId: window.arcc.workspaceId,
+            channel: channel,
+            payload: payload
+        };
+        return await ipcRenderer.invoke(APP.WORKSPACE_EVENT, args);
+    }
+}
+
 module.exports = {
-    inject
+    inject,
+    injectWorkspaceEvent
 }

@@ -7,6 +7,17 @@
     overflow: hidden;
 }
 
+.signalEditor {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+
+
+
+
+
 .column {
     width: 216px;
     border-right: 1px solid var(--border-l);
@@ -32,5 +43,5 @@
     justify-content: center;
     flex-grow: 1;
     color: var(--text-placeholder);
-    background-color: var(--fill-lm);
+    // background-color: var(--fill-ul);
 }

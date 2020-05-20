@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+.body {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.tableContainer {
+    width: 196px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border-l);
+    overflow-y: scroll;
+    background-color: var(--fill-ul);
+}
+
+// Table styling
+.table {
+    background-color: var(--fill-ul);
+}
+
+.addSignalButton {
+    padding: var(--b) var(--b-l);
+    color: var(--positive);
+    background-color: white;
+    border-bottom: 1px solid var(--border-l);
+}

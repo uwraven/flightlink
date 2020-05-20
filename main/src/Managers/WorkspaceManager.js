@@ -3,6 +3,7 @@ const uuid = require('uuid');
 const WorkspaceDefault = require('../ApplicationData/Defaults/WorkspaceDefaults.json');
 const fs = require("fs");
 const Store = require('../ApplicationData/store');
+const { WORKSPACE } = require('../API/constants');
 
 function WorkspaceManager(reference) {
     
@@ -47,6 +48,28 @@ function WorkspaceManager(reference) {
         }
     }
 
+    this.get = () => {
+        return this.store.contents;
+    }
+
+    this.createConfiguration = async () => {
+        console.log("createConfiguration")
+        try {
+            let id = uuid.v1();
+            const newConfiguration = {
+                id: id,
+                name: "New Configuration",
+                signals: []
+            }
+            this.store.contents.configurations.entities[id] = newConfiguration;
+            this.store.contents.configurations.all.push(id);
+            await this.store.save();
+            return this.store.contents;
+        } catch(err) {
+            console.log("Error creating configuration", err);
+        }
+    }
+
     this.save = async () => {
         try {
             await this.store.save();
@@ -64,6 +87,67 @@ function WorkspaceManager(reference) {
             console.log("Error closing workspace", err);
         }
     }
+
+    const get = () => {
+        return this.store.contents;
+    }
+
+    const createConfiguration = async () => {
+        try {
+            let id = uuid.v1();
+            const newConfiguration = {
+                id: id,
+                name: "New Configuration",
+                signals: []
+            }
+            this.store.contents.configurations.entities[id] = newConfiguration;
+            this.store.contents.configurations.all.push(id);
+            await this.store.save();
+            return this.store.contents.configurations;
+        } catch(err) {
+            console.log("Error creating configuration", err);
+        }
+    }
+
+    const createSignal = async (configurationId) => {
+        try {
+            const configuration = this.store.contents.configurations.entities[configurationId];
+            let bufferIndex = 0;
+            if (configuration.signals.length > 0) {
+                let precedingSignal = this.store.contents.signals.entities[configuration.signals.slice(-1)];
+                bufferIndex = precedingSignal.bufferIndex + precedingSignal.length
+            };
+            let id = uuid.v1();
+            const newSignal = {
+                id: id,
+                name: "New Signal",
+                units: "",
+                bufferIndex: bufferIndex,
+                length: 3,
+                stream: false,
+                render: false,
+                signalMode: null,
+                renderMode: null,
+                rendererdModelId: null,
+                parentId: null
+            }
+            this.store.contents.signals.entities[id] = newSignal;
+            this.store.contents.signals.all.push(id);
+            this.store.contents.configurations.entities[configurationId].signals.push(id);
+            await this.store.save();
+            return this.store.contents;
+        } catch(err) {
+            console.log("Error creating signal", err);
+        }
+    }
+
+    this.actions = {
+        [WORKSPACE.GET]: get,
+        [WORKSPACE.CONFIGURATIONS.CREATE]: createConfiguration,
+        [WORKSPACE.SIGNALS.CREATE]: createSignal
+    }
+
+    this.handle = async (channel, payload) => await this.actions[channel](payload);
 }
 
 WorkspaceManager.createWorkspace = async (path) => {

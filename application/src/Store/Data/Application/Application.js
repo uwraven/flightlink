@@ -25,8 +25,7 @@ export const getWorkspaceReferences = () => async (dispatch) => {
 }
 
 export const openWorkspace = (id) => async (dispatch) => {
-    console.log(id);
-    const response = await window.arcc.app.workspace.open(id);
+    await window.arcc.app.openWorkspace(id);
 }
 
 export const quitApplication = () => async (dispatch) => {
