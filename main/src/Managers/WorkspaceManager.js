@@ -1,4 +1,4 @@
-const { dialog, app, BrowserWindow } = require("electron");
+const { dialog, app, BrowserWindow, Menu, MenuItem, ipcMain } = require("electron");
 const {nanoid} = require('nanoid');
 const WorkspaceDefault = require('../ApplicationData/Defaults/WorkspaceDefaults.json');
 const fs = require("fs");
@@ -11,6 +11,8 @@ function WorkspaceManager(reference) {
     this.loaded = false;
     this.window = null;
     this.worker = null;
+
+    this.contextMenu = new Menu()
 
     this.load = async () => {
         try {
@@ -181,9 +183,27 @@ function WorkspaceManager(reference) {
         }
     }
 
+    const onContextEvent = async (contextOptions) => {
+        let contextMenu = new Menu();
+        const channelId = nanoid(10);
+        Object.values(contextOptions).map(option => {
+            contextMenu.append(new MenuItem({
+                label: option.label, 
+                position: option.position,
+                click: (menuItem, window, clickEvent) => {
+                    this.window.webContents.send(channelId, option);
+                    // ipcMain.invoke(channelId, `click was fired: ${event.target}`);
+                }
+            }))
+        })
+        await contextMenu.popup({});
+        return channelId;
+    }
+
 
     this.actions = {
         [WORKSPACE.GET]: get,
+        [WORKSPACE.CONTEXT]: onContextEvent,
         [WORKSPACE.CONFIGURATIONS.CREATE]: createConfiguration,
         [WORKSPACE.CONFIGURATIONS.UPDATE]: updateConfiguration,
         [WORKSPACE.CONFIGURATIONS.DELETE]: deleteConfiguration,
@@ -192,7 +212,7 @@ function WorkspaceManager(reference) {
         [WORKSPACE.SIGNALS.DELETE]: deleteSignal,
     }
 
-    this.handle = async (channel, payload) => await this.actions[channel](payload);
+    this.handle = async (event, channel, payload) => await this.actions[channel](payload);
 }
 
 WorkspaceManager.createWorkspace = async (path) => {

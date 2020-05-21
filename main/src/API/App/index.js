@@ -1,5 +1,6 @@
 const { APP, WORKSPACE } = require('../constants');
 const { inject, injectWorkspaceEvent } = require('../inject'); 
+const { contextEvent } = require('./contextEvent');
 
 module.exports = {
     getWorkspaceReferences: inject(APP.GET_WORKSPACE_REFERENCES),
@@ -7,10 +8,12 @@ module.exports = {
     openWorkspace: inject(APP.OPEN_WORKSPACE),
     workspace: {
         get: injectWorkspaceEvent(WORKSPACE.GET),
+        context: contextEvent,
         configurations: {
             create: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.CREATE),
             update: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.UPDATE),
-            delete: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.DELETE)
+            delete: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.DELETE),
+            duplicate: injectWorkspaceEvent(WORKSPACE.CONFIGURATIONS.DUPLICATE)
         },
         signals: {
             create: injectWorkspaceEvent(WORKSPACE.SIGNALS.CREATE),

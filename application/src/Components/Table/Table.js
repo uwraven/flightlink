@@ -21,6 +21,7 @@ const TableRow = ({selected, className, children, onClick, ...props}) => {
                 className
             ].join(" ")}
             onClick={onClick}
+            {...props}
         >
             {children}
         </div>

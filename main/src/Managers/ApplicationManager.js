@@ -123,7 +123,7 @@ function ApplicationManager() {
         try {
             console.log(channel, workspaceId, payload);
             let workspace = this.workspaces[workspaceId];
-            return await workspace.handle(channel, payload);
+            return await workspace.handle(event, channel, payload);
         } catch(err) {
             console.log("Error onWorkspaceEvent", err);
         }

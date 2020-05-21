@@ -3,8 +3,7 @@ const { APP } = require('./constants');
 
 inject = (channel) => {
     return async function(args) {
-        const response = await ipcRenderer.invoke(channel, args)
-        return response;
+        return await ipcRenderer.invoke(channel, args)
     }
 }
 

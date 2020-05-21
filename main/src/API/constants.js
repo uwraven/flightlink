@@ -10,10 +10,12 @@ const WORKSPACE = {
     GET: 'workspace.get',
     SAVE: 'workspace.save',
     CLOSE: 'workspace.close',
+    CONTEXT: 'workspace.context',
     CONFIGURATIONS: {
         CREATE: 'workspace.configurations.create',
         UPDATE: 'workspace.configurations.update',
         DELETE: 'workspace.configurations.delete',
+        DUPLICATE: 'workspace.configurations.duplicate'
     },
     SIGNALS: {
         CREATE: 'workspace.signals.create',

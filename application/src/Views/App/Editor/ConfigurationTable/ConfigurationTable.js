@@ -5,7 +5,7 @@ import Resizable from 'Components/Core/Resizable/Resizable';
 import { CollapsibleSection } from 'Components/Collapsible/Collapsible';
 import Table, { TableRow } from 'Components/Table/Table';
 import { PrimaryButton } from 'Components/Button/Button';
-import { setSelectedConfigurationId } from 'Store/Interface/Editor/ConfigurationEditor';
+import { setSelectedConfigurationId, configurationRowContext } from 'Store/Interface/Editor/ConfigurationEditor';
 import { createConfiguration } from 'Store/Data/Workspace/Configurations';
 
 const ConfigurationTable = ({...props}) => {
@@ -27,6 +27,7 @@ const ConfigurationTable = ({...props}) => {
                                 key={id}
                                 selected={selected}
                                 onClick={() => dispatch(setSelectedConfigurationId(id))}
+                                onContextMenu={() => dispatch(configurationRowContext(id))}
                             >
                                 {configuration.name}
                             </TableRow>

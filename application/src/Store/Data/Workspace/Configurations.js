@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { setSelectedSignalId } from 'Store/Interface/Editor/SignalEditor';
 
 const ConfigurationsSlice = createSlice({
     name: 'configurations',
@@ -27,6 +28,11 @@ export const createConfiguration = () => async (dispatch) => {
 
 export const deleteConfiguration = (configurationId) => async (dispatch) => {
     const newConfigurations = await window.arcc.app.workspace.configurations.delete(configurationId);
+    dispatch(configurationsUpdated(newConfigurations));
+}
+
+export const duplicateConfiguration = (configurationId) => async (dispatch) => {
+    const newConfigurations = await window.arcc.app.workspace.configurations.duplicate(configurationId);
     dispatch(configurationsUpdated(newConfigurations));
 }
 
