@@ -10,15 +10,17 @@ function Store(file) {
     }
 
     this.load = async () => {
-        fs.readFile(this.path, (err, data) => {
-            if (err) throw Error(err);
-            try { 
-                this.contents = JSON.parse(data);
-                return;
-            } catch(err) {
-                console.log("Error parsing json", this.path);
-                throw Error("Error parsing json")
-            }
+        return new Promise((resolve, reject) => {
+            fs.readFile(this.path, (err, data) => {
+                if (err) throw Error(err);
+                try {
+                    this.contents = JSON.parse(data);
+                    resolve();
+                } catch(err) {
+                    console.log("Error parsing json", this.path);
+                    reject("Error parsing json");
+                }
+            })
         })
     }
 

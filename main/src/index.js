@@ -6,9 +6,6 @@ const Store = require('./ApplicationData/store');
 const { APP, WORKSPACE } = require('./API/constants');
 const ApplicationManager = require('./Managers/ApplicationManager');
 
-let applicationStore;
-let splashWindow;
-
 const webPreferences = {
     allowRunningInsecureContent: false,
     // contextIsolation: true,

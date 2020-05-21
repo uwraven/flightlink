@@ -25,9 +25,9 @@
     background-color: var(--fill-ul);
 }
 
-.addSignalButton {
-    padding: var(--b) var(--b-l);
-    color: var(--positive);
+.actionContainer {
+    // height: var(--height-l);
+    padding: var(--b-s) var(--b-l);
     background-color: white;
     border-bottom: 1px solid var(--border-l);
 }

@@ -1,4 +1,4 @@
-const { dialog, app, BrowserWindow, Menu, MenuItem, ipcMain } = require("electron");
+const { dialog, app, BrowserWindow, Menu, MenuItem } = require("electron");
 const {nanoid} = require('nanoid');
 const WorkspaceDefault = require('../ApplicationData/Defaults/WorkspaceDefaults.json');
 const fs = require("fs");
@@ -55,7 +55,6 @@ function WorkspaceManager(reference) {
     }
 
     this.createConfiguration = async () => {
-        console.log("createConfiguration")
         try {
             let id = nanoid(10);
             const newConfiguration = {
@@ -123,12 +122,36 @@ function WorkspaceManager(reference) {
         }
     }
 
+    const duplicateConfiguration = async (configurationId) => {
+        try {
+            let configuration = this.store.contents.configurations.entities[configurationId];
+            let id = nanoid(10);
+            let newConfiguration = Object.assign({}, configuration);
+            newConfiguration.id = id;
+            this.store.contents.configurations.entities[id] = newConfiguration;
+            this.store.contents.configurations.all.push(id);
+            return this.store.contents.configurations;
+        } catch(err) {
+            console.log("Error duplicating configuration", err);
+        }
+    }
+
     const deleteConfiguration = async (configurationId) => {
         try {
-            delete this.store.contents.configurations.entities[configurationId];
-            const index = this.store.contents.configurations.all.indexOf(configurationId);
-            this.store.contents.configurations.all.splice(index, 1);
-            await this.store.save();
+            let configuration = this.store.contents.configurations.entities[configurationId];
+            let deleteDialog = await dialog.showMessageBox(this.window, {
+                type: 'question',
+                buttons: [ "Delete", "Cancel" ],
+                defaultId: 0,
+                message: `Are you sure you want to delete configuration ${configuration.name}?`,
+                detail: `This action cannot be undone.`
+            })
+            if (deleteDialog.response === 0) {
+                delete this.store.contents.configurations.entities[configurationId];
+                const index = this.store.contents.configurations.all.indexOf(configurationId);
+                this.store.contents.configurations.all.splice(index, 1);
+                await this.store.save();
+            }
             return this.store.contents.configurations;
         } catch(err) {
             console.log("Error deleting configuration", err);
@@ -192,7 +215,6 @@ function WorkspaceManager(reference) {
                 position: option.position,
                 click: (menuItem, window, clickEvent) => {
                     this.window.webContents.send(channelId, option);
-                    // ipcMain.invoke(channelId, `click was fired: ${event.target}`);
                 }
             }))
         })
@@ -207,6 +229,7 @@ function WorkspaceManager(reference) {
         [WORKSPACE.CONFIGURATIONS.CREATE]: createConfiguration,
         [WORKSPACE.CONFIGURATIONS.UPDATE]: updateConfiguration,
         [WORKSPACE.CONFIGURATIONS.DELETE]: deleteConfiguration,
+        [WORKSPACE.CONFIGURATIONS.DUPLICATE]: duplicateConfiguration,
         [WORKSPACE.SIGNALS.CREATE]: createSignal,
         [WORKSPACE.SIGNALS.UPDATE]: updateSignal,
         [WORKSPACE.SIGNALS.DELETE]: deleteSignal,

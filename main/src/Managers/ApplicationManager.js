@@ -47,9 +47,17 @@ function ApplicationManager() {
                 await this.store.save();
             } 
             await this.store.load();
-            launch();
+            if (this.store.contents.workspaces.open.length > 0) {
+                console.log(this.store.contents.workspaces.open);
+                this.store.contents.workspaces.open.map((id) => {
+                    this.onOpenWorkspaceById(null, id);
+                })
+            } else {
+                launch();
+            }
+            console.log(this.store.contents);
         } catch(err) {
-            console.log(err);
+            console.log("Error on ready", err);
         }
     }
 
@@ -113,7 +121,13 @@ function ApplicationManager() {
             this.workspaces[id] = workspaceManager;
             await workspaceManager.load();
             await workspaceManager.open(this.webPreferences);
-            launcherWindow.close();
+
+            if (!this.store.contents.workspaces.open.includes(id)) {
+                this.store.contents.workspaces.open.push(id);
+                await this.store.save();
+            }
+
+            if (launcherWindow) launcherWindow.close();
         } catch(err) {
             console.log("Error opening workspace by id:", err);
         }
@@ -121,7 +135,6 @@ function ApplicationManager() {
 
     this.onWorkspaceEvent = async (event, { channel, workspaceId, payload }) => {
         try {
-            console.log(channel, workspaceId, payload);
             let workspace = this.workspaces[workspaceId];
             return await workspace.handle(event, channel, payload);
         } catch(err) {
