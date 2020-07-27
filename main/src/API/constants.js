@@ -24,22 +24,27 @@ const WORKSPACE = {
     }
 };
 
-const FLIGHTLINK = {
-    DATA: "socket.data",
-    COMMAND: "socket.command",
-    RESPONSE: "socket.response"
-}
-
 const SERIAL = {
     LIST: "serial.list",
     OPEN: "serial.open",
     CLOSE: "serial.close",
 }
 
+const MQTT = {
+    CONNECT: "mqtt.connect",
+    PUBLISH: "mqtt.publish",
+    SUBSCRIBE: "mqtt.subscribe",
+    UNSUBSCRIBE: "mqtt.unsubscribe",
+}
+
+const TRANSPORTS = {
+    SERIAL,
+    MQTT
+}
+
 module.exports = {
     APP,
     WORKSPACE,
-    FLIGHTLINK,
-    SERIAL
+    TRANSPORTS
 }
 
