@@ -24,27 +24,28 @@ const WORKSPACE = {
     }
 };
 
-const SERIAL = {
-    LIST: "serial.list",
-    OPEN: "serial.open",
-    CLOSE: "serial.close",
-}
-
-const MQTT = {
-    CONNECT: "mqtt.connect",
-    PUBLISH: "mqtt.publish",
-    SUBSCRIBE: "mqtt.subscribe",
-    UNSUBSCRIBE: "mqtt.unsubscribe",
-}
-
-const TRANSPORTS = {
-    SERIAL,
-    MQTT
+const TRANSPORT = {
+    SERIAL: {
+        LIST: "transport.serial.list",
+        OPEN: "transport.serial.open",
+        CLOSE: "transport.serial.close",
+        WRITE: "transport.serial.write",
+        FLUSH: "transport.serial.flush"
+    },
+    MQTT: {
+        CONNECT: "transport.mqtt.connect",
+        PUBLISH: "transport.mqtt.publish",
+        SUBSCRIBE: "transport.mqtt.subscribe",
+        UNSUBSCRIBE: "transport.mqtt.unsubscribe",
+    },
+    CREATE: "transport.create",
+    DELETE: "transport.delete",
+    ACTION: "transport.action"
 }
 
 module.exports = {
     APP,
     WORKSPACE,
-    TRANSPORTS
+    TRANSPORT
 }
 

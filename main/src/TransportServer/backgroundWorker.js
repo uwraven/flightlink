@@ -1,7 +1,7 @@
 const SerialPort = require('serialport');
 const WebSocket = require('ws');
 // const FileSystem = require('fs');
-const { SERIAL } = require('../API/constants');
+const { SERIAL } = require('../API/keys');
 
 // valid types
 const requests = {
