@@ -7,32 +7,41 @@ function TransportManager() {
 
     this.handlePacket = function(packet) {
         try {
-            let type = packet.type.split('.')
-            if (type.length > 2) {
-                this.handleAction()
-            }
-            actions[packet.type](packet);
+            actions[packet.type](packet.payload);
         } catch(err) {
             // Type not found
         }
     }
 
-    this.createTransport = function(packet) {
-
+    this.createTransport = function(payload) {
+        try {
+            createTransport[payload.transport](payload.options)            
+        } catch(err) {
+            
+        }
     }
 
-    this.deleteTransport = function(packet) {
-
-    }
-
-    this.handleTransportAction = function(packet) {
-
+    this.handleTransportAction = function(payload) {
+        let transport = transports[payload.transportId];
+        if (transport) transport.handleAction(payload);
     }
 
     const actions = {
         [TRANSPORT.CREATE]: this.createTransport,
-        [TRANSPORT.DELETE]: this.deleteTransport,
-        [TRANSPORT.ACTION]: this.handleAction
+        [TRANSPORT.ACTION]: this.handleTransportAction,
     }
 
+    const createTransport = {
+        [TRANSPORT.MQTT.KEY]: (options) => {
+
+        },
+        [TRANSPORT.SERIAL.KEY]: (options) => {
+
+        }
+    }
+
+}
+
+module.exports = {
+    default: TransportManager
 }

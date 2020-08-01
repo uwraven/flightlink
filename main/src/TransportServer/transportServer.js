@@ -1,8 +1,11 @@
 const ws = require('ws');
+const transportManager = require('./transportManager');
 
 function TransportServer() {
 
     this.server = null;
+    this.transportManager = new TransportManager();
+
     let messageQueue = [];
 
     this.initialize = (port = 8080, opts = {perMessageDeflate: false}) => {
@@ -36,20 +39,24 @@ function TransportServer() {
         try {
             const packet = JSON.parse(message.data);
             if (packet.id) {
-                const messageIndex = messageQueue.findIndex(obj => obj.id === packet.id);
-                const responseObject = messageQueue[messageIndex];
-                if (responseObject.callback) try {
-                    responseObject.callback(packet);
-                } catch(err) {
-                    console.log(err.message, packet);
-                }
-                messageQueue.splice(messageIndex, 1);
+                onRegisteredPacket(packet);
             } else {
-                // this.handlePacket(packet);
+                this.transportManager.handlePacket(packet);
             }
         } catch(err) {
 
         }
+    }
+
+    const onRegisteredPacket = (packet) => {
+        const messageIndex = messageQueue.findIndex(obj => obj.id === packet.id);
+        const responseObject = messageQueue[messageIndex];
+        if (responseObject.callback) try {
+            responseObject.callback(packet);
+        } catch(err) {
+            console.log(err.message, packet);
+        }
+        messageQueue.splice(messageIndex, 1);
     }
 
     const onSocketClose = () => {

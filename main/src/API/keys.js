@@ -1,47 +1,62 @@
-const APP = {
-    GET_WORKSPACE_REFERENCES: "app.getWorkspaceReferences",
-    CREATE_WORKSPACE: "app.createWorkspace",
-    OPEN_WORKSPACE: "app.openWorkspace",
-    WORKSPACE_EVENT: "app.workspaceEvent",
-    QUIT: 'app.quit'
+
+// returns object with 'prefix/key' formatted values
+const prepend = (prefix, obj) => {
+    let newObj = {};
+    Object.keys(obj).map(key => {
+        newObj[key] = `${prefix}/${obj[key]}`;
+    })
+    return newObj;
 }
 
-const WORKSPACE = {
-    GET: 'workspace.get',
-    SAVE: 'workspace.save',
-    CLOSE: 'workspace.close',
-    CONTEXT: 'workspace.context',
-    CONFIGURATIONS: {
-        CREATE: 'workspace.configurations.create',
-        UPDATE: 'workspace.configurations.update',
-        DELETE: 'workspace.configurations.delete',
-        DUPLICATE: 'workspace.configurations.duplicate'
-    },
-    SIGNALS: {
-        CREATE: 'workspace.signals.create',
-        UPDATE: 'workspace.signals.update',
-        DELETE: 'workspace.signals.delete',
-    }
-};
+const APP = prepend('app', {
+    GET_WORKSPACE_REFERENCES: "getWorkspaceReferences",
+    CREATE_WORKSPACE: "createWorkspace",
+    OPEN_WORKSPACE: "openWorkspace",
+    WORKSPACE_EVENT: "workspaceEvent",
+    QUIT: 'quit'
+});
 
-const TRANSPORT = {
-    SERIAL: {
-        LIST: "transport.serial.list",
-        OPEN: "transport.serial.open",
-        CLOSE: "transport.serial.close",
-        WRITE: "transport.serial.write",
-        FLUSH: "transport.serial.flush"
-    },
-    MQTT: {
-        CONNECT: "transport.mqtt.connect",
-        PUBLISH: "transport.mqtt.publish",
-        SUBSCRIBE: "transport.mqtt.subscribe",
-        UNSUBSCRIBE: "transport.mqtt.unsubscribe",
-    },
-    CREATE: "transport.create",
-    DELETE: "transport.delete",
-    ACTION: "transport.action"
-}
+const WORKSPACE = prepend('workspace', {
+    GET: 'get',
+    SAVE: 'save',
+    CLOSE: 'close',
+    CONTEXT: 'context',
+    CONFIGURATIONS: prepend('configurations', {
+        CREATE: 'create',
+        UPDATE: 'update',
+        DELETE: 'delete',
+        DUPLICATE: 'duplicate'
+    }),
+    SIGNALS: prepend('signals', {
+        CREATE: 'create',
+        UPDATE: 'update',
+        DELETE: 'delete',
+    })
+});
+
+const TRANSPORT = prepend('transport', {
+    SERIAL: prepend('serial', {
+        KEY: "serial",
+        LIST: "list",
+        OPEN: "open",
+        CLOSE: "close",
+        WRITE: "write",
+        PARSER: prepend('parser', {
+            BYTE: "byte",
+            
+        })
+    }),
+    MQTT: prepend('mqtt', {
+        KEY: "mqtt",
+        CONNECT: "connect",
+        PUBLISH: "publish",
+        SUBSCRIBE: "subscribe",
+        UNSUBSCRIBE: "unsubscribe",
+    }),
+    CREATE: "create",
+    DELETE: "delete",
+    ACTION: "action"
+})
 
 module.exports = {
     APP,
