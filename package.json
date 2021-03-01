@@ -16,7 +16,7 @@
     "react-dom": "^16.12.0",
     "react-scripts": "^3.4.0",
     "serialport": "^8.0.6",
-    "three": "^0.112.1",
+    "three": "^0.125.0",
     "uuid": "^3.3.3",
     "webpack-glsl-loader": "^1.0.1"
   },
